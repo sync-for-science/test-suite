@@ -1,6 +1,8 @@
-API_URL = 'http://52.39.26.206:9000/api/fhir/'
-AUTH_USERNAME = 'demo'
-AUTH_PASSWORD = 'demo'
+import configparser
 
 def before_all(context):
-    context.api_url = 'http://52.39.26.206:9000/api/fhir/'
+    config = configparser.ConfigParser()
+    config.read('behave.ini')
+
+    context.api_url = config['api']['url']
+    context.auth = dict(config['auth'])
