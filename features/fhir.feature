@@ -10,3 +10,8 @@ Feature: requesting FHIR objects
         When I request a Patient by id smart-1288992
         Then the response code should be 200
         And it will have an ID
+
+    Scenario: Bundles have the right type
+        Given I am logged in
+        When I search for Patients
+        Then the bundle type will be searchset
