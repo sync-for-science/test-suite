@@ -2,6 +2,17 @@ import requests
 from behave import given, when, then, use_step_matcher
 from unittest import TestCase
 
+@when('I request a conformance statement')
+def step_impl(context):
+    url = "{url}metadata".format(url=context.api_url)
+    headers = {
+        'Authorization': context.authorization,
+        'Accept': 'application/json',
+    }
+    response = requests.get(url, headers=headers)
+
+    context.response = response
+
 @when('I request a {resource_type} by id {resource_id}')
 def step_impl(context, resource_type, resource_id):
     url = "{url}{resource_type}/{resource_id}".format(**{
