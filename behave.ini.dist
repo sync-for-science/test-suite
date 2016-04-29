@@ -2,6 +2,7 @@
 
 [api]
 url=http://localhost:9000/api/fhir/
+patient=smart-1288992
 
 [auth]
 username=demo

@@ -1,58 +1,30 @@
-import requests
 from behave import given, when, then, use_step_matcher
-from unittest import TestCase
+from features.steps import utils
 
-@when('I request a conformance statement')
-def step_impl(context):
-    url = "{url}metadata".format(url=context.api_url)
-    headers = {
-        'Authorization': context.authorization,
-        'Accept': 'application/json',
-    }
-    response = requests.get(url, headers=headers)
+ERROR_FIELD_MISSING = "Resource field '{field_name}' is missing"
+ERROR_FIELD_UNEXPECTED_VALUE = "Resource field '{field_name}' does not match expected '{expected}', got '{actual}'."
+ERROR_UNRESOLVED_REFERENCE = "Reference '{reference}' failed to resolve."
 
-    context.response = response
-
-@when('I request a {resource_type} by id {resource_id}')
-def step_impl(context, resource_type, resource_id):
-    url = "{url}{resource_type}/{resource_id}".format(**{
-        'url': context.api_url,
-        'resource_type': resource_type,
-        'resource_id': resource_id,
-    })
-    headers = {
-        'Authorization': context.authorization,
-        'Accept': 'application/json',
-    }
-    response = requests.get(url, headers=headers)
-
-    context.response = response
-
-@when('I search for {resource_type}s')
-def step_impl(context, resource_type):
-    url = "{url}{resource_type}?".format(url=context.api_url,
-                                         resource_type=resource_type)
-    headers = {
-        'Authorization': context.authorization,
-        'Accept': 'application/json',
-    }
-    response = requests.get(url, headers=headers)
-
-    context.response = response
-
-use_step_matcher("re")
-@then('it will have an? ID')
-def step_impl(context):
+@then('the {field_name} field will be {value}')
+def step_impl(context, field_name, value):
     resource = context.response.json()
 
-    assert resource['id'] is not None, \
-            "Resource id was missing"
+    assert resource[field_name] is not None, \
+            ERROR_FIELD_MISSING.format(field_name=field_name)
+    assert resource[field_name] == value, \
+            ERROR_FIELD_UNEXPECTED_VALUE.format(field_name=field_name,
+                                                expected=value,
+                                                actual=resource[field_name])
 
-@then('the bundle type will be searchset')
+@then('all references will resolve')
 def step_impl(context):
-    resource = context.response.json()
+    def check_reference(reference):
+        response = utils.get_resource(context, reference)
 
-    assert resource['resourceType'] == 'Bundle', \
-            "Resource was not a Bundle"
-    assert resource['type'] == 'searchset', \
-            "Bundle.type is not searchset"
+        assert int(response.status_code) == 200, \
+                ERROR_UNRESOLVED_REFERENCE.format(reference=reference)
+
+    resource = context.response.json()
+    found_references = utils.find_references(resource)
+
+    [check_reference(reference) for reference in found_references]
