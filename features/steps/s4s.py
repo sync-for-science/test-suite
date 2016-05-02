@@ -4,15 +4,15 @@ from features.steps import utils
 from urllib.parse import urlparse
 
 MU_CCDS_MAPPINGS = {
-    'Server metadata': '/metadata',
-    'Patient demographics': '/Patient/{patientId}',
-    'Smoking status': '/Observation?category=social-history&patient={patientId}',
-    'Problems': '/Condition?patient={patientId}',
-    'Lab results': '/Observation?category=laboratory?patient={patientId}',
-    'Vital signs': '/Observation?category=vital-signs?patient={patientId}',
-    'Procedures': '/Procedure?patient={patientId}',
-    'Immunizations': '/Immunization?patient={patientId}',
-    'Patient documents': '/DocumentReference?patient={patientId}',
+    'Server metadata': 'metadata',
+    'Patient demographics': 'Patient/{patientId}',
+    'Smoking status': 'Observation?category=social-history&patient={patientId}',
+    'Problems': 'Condition?patient={patientId}',
+    'Lab results': 'Observation?category=laboratory?patient={patientId}',
+    'Vital signs': 'Observation?category=vital-signs?patient={patientId}',
+    'Procedures': 'Procedure?patient={patientId}',
+    'Immunizations': 'Immunization?patient={patientId}',
+    'Patient documents': 'DocumentReference?patient={patientId}',
 }
 
 @parse.with_pattern(r"|".join(MU_CCDS_MAPPINGS))

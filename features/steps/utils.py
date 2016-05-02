@@ -22,7 +22,7 @@ def auth_request(context, endpoint, post_data):
     context.auth : dict
         Authentication details.
     endpoint : str
-        Endpoint to post to, probably "/token" or "/revoke".
+        Endpoint to post to, probably "token" or "revoke".
     post_data : dict
         POST data.
 

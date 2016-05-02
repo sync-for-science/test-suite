@@ -1,0 +1,27 @@
+{{#each features}}
+    <h2>Feature: {{ name }} {{result status}}</h2>
+    <pre>
+    {{~#each elements~}}
+        {{~> scenario this~}}
+    {{~/each~}}
+    </pre>
+    {{#each elements}}
+        <div class="{{#scenarioAllPassed}}collapse{{else}}collapse in{{/scenarioAllPassed}}" id="{{dashify location}}">
+            <h3>Scenario: {{ name }}</h3>
+            <div class="steps">
+            {{#each steps}}
+                <span class="{{ result.status }}">{{ keyword }} {{ name }} {{result result.status}}</span>
+                {{#if result.error_message}}
+                    <blockquote><small>
+                    {{#each result.error_message }}
+                        {{ this }}<br>
+                    {{/each}}
+                    </small></blockquote>
+                {{else}}
+                    <br>
+                {{/if}}
+            {{/each}}
+            </div>
+        </div>
+    {{/each}}
+{{/each}}
