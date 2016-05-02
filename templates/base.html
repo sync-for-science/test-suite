@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title>{% block title %}S4S Test Suite{% endblock %}</title>
+
+        <link rel="shortcut icon" href="/static/favicon.ico" />
+
+        {% block css %}{% endblock %}
+    </head>
+    <body>
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
+
+        <script src="/static/build/app.js"></script>
+        {% block javascript %}{% endblock %}
+    </body>
+</html>

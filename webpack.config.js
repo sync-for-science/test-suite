@@ -1,0 +1,53 @@
+var webpack = require('webpack')
+var path = require('path')
+
+var buildPath = path.resolve(__dirname, 'static', 'build');
+var mainPath = path.resolve(__dirname, 'app', 'main.js');
+
+module.exports = {
+  devtool: 'eval',
+  entry: {
+    app: [mainPath],
+  },
+  output: {
+    path: buildPath,
+    filename: '[name].js',
+    publicPath: '/static/build/',
+  },
+  plugins: [
+    new webpack.ProvidePlugin({
+      jQuery: 'jquery',
+    }),
+  ],
+  module: {
+    loaders: [
+      {
+        test: /\.less$/,
+        loaders: ['style', 'css', 'less'],
+      },
+      {
+        test: /\.css$/,
+        loaders: ['style', 'css'],
+      },
+      {
+        test: /\.hbs$/,
+        loaders: ['handlebars-loader'],
+      },
+      // the url-loader uses DataUrls.
+      // the file-loader emits files.
+      {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
+      {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream'},
+      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file'},
+      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml'},
+
+    ],
+  },
+
+  resolve: {
+    extensions: ['', '.webpack.js', '.js'],
+  },
+
+  node: {
+    fs: 'empty' // avoids error messages
+  },
+};

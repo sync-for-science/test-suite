@@ -1,7 +1,7 @@
 [behave]
 
 [api]
-url=http://localhost:9000/api/fhir/
+url=https://portal.demo.syncfor.science/api/fhir/
 patient=smart-1288992
 
 [auth]
@@ -9,4 +9,4 @@ username=demo
 password=demo
 client_id=app-demo
 client_secret=demo-secret-s4s
-token_url=http://localhost:9000/api/oauth/token
+url=https://portal.demo.syncfor.science/api/oauth/

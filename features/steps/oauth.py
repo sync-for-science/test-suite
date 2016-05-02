@@ -10,7 +10,7 @@ def step_impl(context):
         'scope': 'smart/portal offline_access',
         'client_id': context.auth['client_id'],
     }
-    response = utils.auth_request(context, '/token', post_data)
+    response = utils.auth_request(context, 'token', post_data)
 
     token_json = response.json()
     context.access_token = token_json['access_token']
@@ -26,7 +26,7 @@ def step_impl(context):
     post_data = {
         'token': context.access_token,
     }
-    utils.auth_request(context, '/revoke', post_data)
+    utils.auth_request(context, 'revoke', post_data)
 
 @when('I refresh my access token')
 def step_impl(context):
@@ -35,7 +35,7 @@ def step_impl(context):
         'refresh_token': context.refresh_token,
         'client_id': context.auth['client_id'],
     }
-    response = utils.auth_request(context, '/token', post_data)
+    response = utils.auth_request(context, 'token', post_data)
 
     token_json = response.json()
     context.access_token = token_json['access_token']

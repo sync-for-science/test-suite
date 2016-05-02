@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+    <h1>S4S Test Suite <span class="glyphicon glyphicon-ok"></span></h1>
+    <div class="row">
+        <div class="col-md-4">
+            <form>
+                <div class="form-group collapse" id="behave-ini-group">
+                    <textarea id="behave-ini" class="form-control" rows="15">{{ defaults }}</textarea>
+                </div>
+                <button type="button" class="btn btn-default" id="run-tests">Run tests</button>
+                <button type="button" class="btn btn-link" role="button" data-toggle="collapse" data-target="#behave-ini-group">Configuration</a>
+            </form>
+        </div>
+        <div class="col-md-8">
+            <div id="canvas"></div>
+        </div>
+    </div>
+{% endblock %}
