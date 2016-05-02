@@ -1,4 +1,10 @@
+## The following requirements were added by pip --freeze:
+Flask==0.10.1
+Jinja2==2.8
+MarkupSafe==0.23
+Werkzeug==0.11.9
 behave==1.2.5
+itsdangerous==0.24
 parse==1.6.6
 parse-type==0.3.4
 requests==2.9.1
