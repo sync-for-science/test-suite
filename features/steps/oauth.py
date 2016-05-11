@@ -1,42 +1,28 @@
-from behave import given, when, then
-from features.steps import utils
+# pylint: disable=missing-docstring,function-redefined
+from behave import given, when
+from testsuite.oauth import factory
+
 
 @given('I am logged in')
 def step_impl(context):
-    post_data = {
-        'username': context.auth['username'],
-        'password': context.auth['password'],
-        'grant_type': 'password',
-        'scope': 'smart/portal offline_access',
-        'client_id': context.auth['client_id'],
-    }
-    response = utils.auth_request(context, 'token', post_data)
+    context.smart = factory(context)
 
-    token_json = response.json()
-    context.access_token = token_json['access_token']
-    context.refresh_token = token_json['refresh_token']
-    context.authorization = "Bearer {access_token}".format(**token_json)
+    context.smart.request_offline_access()
+    context.authorization = context.smart.authorization()
+
 
 @given('I am not logged in')
 def step_impl(context):
     context.authorization = None
 
+
 @when('I revoke my access token')
 def step_impl(context):
-    post_data = {
-        'token': context.access_token,
-    }
-    utils.auth_request(context, 'revoke', post_data)
+    context.smart.revoke_access_token()
+    context.authorization = context.smart.authorization()
+
 
 @when('I refresh my access token')
 def step_impl(context):
-    post_data = {
-        'grant_type': 'refresh_token',
-        'refresh_token': context.refresh_token,
-        'client_id': context.auth['client_id'],
-    }
-    response = utils.auth_request(context, 'token', post_data)
-
-    token_json = response.json()
-    context.access_token = token_json['access_token']
-    context.authorization = "Bearer {access_token}".format(**token_json)
+    context.smart.refresh_access_token()
+    context.authorization = context.smart.authorization()

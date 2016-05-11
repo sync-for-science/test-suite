@@ -1,0 +1,9 @@
+[behave]
+
+[api]
+url=https://open-ic.epic.com/FHIR/api/FHIR/DSTU2/
+patient=Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
+
+[auth]
+strategy=none
+client_id=dd24090e-bc30-4a18-8355-fa3664bff207

@@ -1,7 +1,8 @@
-from behave import given, when, then, register_type
+# pylint: disable=missing-docstring
+from behave import when, register_type
 import parse
 from features.steps import utils
-from urllib.parse import urlparse
+
 
 MU_CCDS_MAPPINGS = {
     'Server metadata': 'metadata',
@@ -15,10 +16,12 @@ MU_CCDS_MAPPINGS = {
     'Patient documents': 'DocumentReference?patient={patientId}',
 }
 
+
 @parse.with_pattern(r"|".join(MU_CCDS_MAPPINGS))
 def parse_mu_ccds_mapping(mu_ccds):
     return MU_CCDS_MAPPINGS[mu_ccds]
 register_type(MU_CCDS=parse_mu_ccds_mapping)
+
 
 @when('I request {mu_ccds_query:MU_CCDS}')
 def step_impl(context, mu_ccds_query):
