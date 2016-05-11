@@ -1,5 +1,7 @@
+# pylint: disable=missing-docstring
 import configparser
 from flask import request
+
 
 def get_config():
     config = configparser.ConfigParser()

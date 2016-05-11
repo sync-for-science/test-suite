@@ -1,7 +1,7 @@
 var webpack = require('webpack')
 var path = require('path')
 
-var buildPath = path.resolve(__dirname, 'static', 'build');
+var buildPath = path.resolve(__dirname, 'testsuite', 'static', 'build');
 var mainPath = path.resolve(__dirname, 'app', 'main.js');
 
 module.exports = {

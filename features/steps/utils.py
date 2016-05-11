@@ -7,43 +7,13 @@ particular.
 """
 import requests
 
+
 ERROR_AUTH_REQUEST = """
 Authenticated POST to {endpoint} returned {status_code}.
 
 {text}
 """
 
-def auth_request(context, endpoint, post_data):
-    """ Send an authenticated request.
-
-    Parameters
-    ----------
-    context : behave.runner.Context
-    context.auth : dict
-        Authentication details.
-    endpoint : str
-        Endpoint to post to, probably "token" or "revoke".
-    post_data : dict
-        POST data.
-
-    Returns
-    -------
-    requests.models.Response
-        The returned response object.
-    """
-    client_auth = requests.auth.HTTPBasicAuth(context.auth['client_id'],
-                                              context.auth['client_secret'])
-
-    response = requests.post(context.auth['url'] + endpoint,
-                         auth=client_auth,
-                         data=post_data)
-
-    assert int(response.status_code) == 200, \
-            ERROR_AUTH_REQUEST.format(endpoint=endpoint,
-                                      status_code=response.status_code,
-                                      text=response.text)
-
-    return response
 
 def get_resource(context, resource):
     """ GET a provided FHIR API resource.
@@ -65,8 +35,11 @@ def get_resource(context, resource):
     requests.models.Response
         The returned response object.
     """
-    url = "{url}{resource}".format(url=context.api_url,
-                                   resource=resource)
+    if resource.startswith(('http://', 'https://')):
+        url = resource
+    else:
+        url = "{url}{resource}".format(url=context.api_url,
+                                       resource=resource)
     headers = {
         'Authorization': context.authorization,
         'Accept': 'application/json',
@@ -74,7 +47,8 @@ def get_resource(context, resource):
 
     return requests.get(url, headers=headers)
 
-def find_references(resource, found=[]):
+
+def find_references(resource, found=None):
     """ Find references to other resources.
 
     Look for key-value pairs in the form:
@@ -92,6 +66,9 @@ def find_references(resource, found=[]):
     str[]
         All of the found references.
     """
+    if found is None:
+        found = []
+
     if isinstance(resource, dict):
         for key in resource:
             if key == 'reference':
