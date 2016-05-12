@@ -1,4 +1,6 @@
 [behave]
+logging_level=DEBUG
+logging_format=%(message)s
 
 [api]
 url=https://open-ic.epic.com/FHIR/api/FHIR/DSTU2/

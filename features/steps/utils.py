@@ -45,7 +45,9 @@ def get_resource(context, resource):
         'Accept': 'application/json',
     }
 
-    return requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers)
+
+    return response
 
 
 def find_references(resource, found=None):
@@ -83,6 +85,8 @@ def find_references(resource, found=None):
     elif isinstance(resource, bool):
         pass
     elif isinstance(resource, int):
+        pass
+    elif isinstance(resource, float):
         pass
     else:
         raise ValueError("I've missed something.", resource)

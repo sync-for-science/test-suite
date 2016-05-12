@@ -3,6 +3,7 @@ It provides oAuth strategies for connecting to secure FHIR APIs.
 """
 from .smart import SmartStrategy
 from .none import NoneStrategy
+from .refresh_token import RefreshTokenStrategy
 
 
 class Strategy(object):
@@ -48,11 +49,34 @@ def smart_factory(context):
     # SMART oauth_uris extension spec. For at least our implementation, it
     # would be pretty clean to move that to DELETE /token.
     return SmartStrategy(client_id=context.auth['client_id'],
-                         username=context.auth['username'],
-                         password=context.auth['password'],
+                         username=context.auth.get('username', None),
+                         password=context.auth.get('password', None),
                          token_url=context.auth['url'] + 'token',
                          revoke_url=context.auth['url'] + 'revoke',
                          auth=auth)
+
+
+def refresh_token_factory(context):
+    """ Build a RefreshTokenStrategy object from a behave context.
+
+    Parameters
+    ----------
+    context : behave.runner.Context
+
+    Returns
+    -------
+    lib.oauth.RefreshTokenStrategy
+    """
+    import requests
+
+    # TODO: oauth_urls should be derived from a FHIR conformance statement.
+    # This is a bit tricky with /revoke, since that's not defined in the
+    # SMART oauth_uris extension spec. For at least our implementation, it
+    # would be pretty clean to move that to DELETE /token.
+    return RefreshTokenStrategy(client_id=context.auth['client_id'],
+                                client_secret=context.auth['client_secret'],
+                                token_url=context.auth['url'] + 'Access',
+                                refresh_token=context.auth['refresh_token'])
 
 
 def factory(context):
@@ -72,3 +96,5 @@ def factory(context):
         return smart_factory(context)
     if strategy == 'none':
         return NoneStrategy()
+    if strategy == 'refresh_token':
+        return refresh_token_factory(context)

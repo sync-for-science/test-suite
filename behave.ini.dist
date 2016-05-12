@@ -1,4 +1,6 @@
 [behave]
+logging_level=DEBUG
+logging_format=%(message)s
 
 [api]
 url=https://portal.demo.syncfor.science/api/fhir/
