@@ -2,7 +2,7 @@
 from behave import then
 
 
-ERROR_STATUS_CODE = 'response code was {status_code}'
+ERROR_STATUS_CODE = 'Response code was {status_code}'
 
 
 @then('the response code should be {response_code}')
