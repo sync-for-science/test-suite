@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block body %}
+    Loading....
+    <script src="/static/fhir-client.js"></script>
+    <script>
+        FHIR.oauth2.authorize({
+            "client_id": "f662d614-8b45-48c2-92f8-c84a20edccc3",
+            "scope": "launch patient/Patient.read patient/Observation.read patient/Condition.read patient/MedicationOrder.read patient/MedicationStatement.read patient/MedicationDispense.read patient/MedicationAdministration.read patient/AllergyIntolerance.read patient/Procedure.read patient/Immunization.read patient/DocumentReference.read"
+        });
+    </script>
+{% endblock %}

@@ -40,19 +40,16 @@ def smart_factory(context):
     lib.oauth.SmartStrategy
     """
     import requests
+    from testsuite import fhir
 
+    urls = fhir.get_oauth_uris(context.api_url)
     auth = requests.auth.HTTPBasicAuth(context.auth['client_id'],
                                        context.auth['client_secret'])
 
-    # TODO: oauth_urls should be derived from a FHIR conformance statement.
-    # This is a bit tricky with /revoke, since that's not defined in the
-    # SMART oauth_uris extension spec. For at least our implementation, it
-    # would be pretty clean to move that to DELETE /token.
     return SmartStrategy(client_id=context.auth['client_id'],
                          username=context.auth.get('username', None),
                          password=context.auth.get('password', None),
-                         token_url=context.auth['url'] + 'token',
-                         revoke_url=context.auth['url'] + 'revoke',
+                         urls=urls,
                          auth=auth)
 
 
@@ -67,15 +64,13 @@ def refresh_token_factory(context):
     -------
     lib.oauth.RefreshTokenStrategy
     """
-    import requests
+    from testsuite import fhir
 
-    # TODO: oauth_urls should be derived from a FHIR conformance statement.
-    # This is a bit tricky with /revoke, since that's not defined in the
-    # SMART oauth_uris extension spec. For at least our implementation, it
-    # would be pretty clean to move that to DELETE /token.
+    urls = fhir.get_oauth_uris(context.api_url)
+
     return RefreshTokenStrategy(client_id=context.auth['client_id'],
                                 client_secret=context.auth['client_secret'],
-                                token_url=context.auth['url'] + 'Access',
+                                urls=urls,
                                 refresh_token=context.auth['refresh_token'])
 
 

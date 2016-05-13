@@ -3,8 +3,12 @@ logging_level=DEBUG
 logging_format=%(message)s
 
 [api]
-url=https://fhir-open.sandboxcernerpowerchart.com/dstu2/d075cf8b-3261-481d-97e5-ba6c48d3b41f/
-patient=1696023
+url=https://fhir.sandboxcernerpowerchart.com/dstu2/d075cf8b-3261-481d-97e5-ba6c48d3b41f/
+patient=1316024
 
 [auth]
-strategy=none
+strategy=refresh_token
+refresh_token=69746025-cd6b-4129-ac7b-b11d04f625b5
+client_id=f662d614-8b45-48c2-92f8-c84a20edccc3
+client_secret=
+url=https://authorization.sandboxcerner.com/realms/d075cf8b-3261-481d-97e5-ba6c48d3b41f/protocols/smart/

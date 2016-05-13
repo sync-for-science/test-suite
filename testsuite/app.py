@@ -18,12 +18,6 @@ def index():
     return render_template('index.html', defaults=defaults)
 
 
-@app.route('/authorized/')
-def authorized():
-    from flask import jsonify
-    return jsonify(request.args)
-
-
 @app.route('/tests.json', methods=['POST'])
 def tests():
     from behave.configuration import Configuration
@@ -43,6 +37,16 @@ def tests():
     }
 
     return output.getvalue(), 200, headers
+
+
+@app.route('/authorized/')
+def authorized():
+    from flask import jsonify
+    return jsonify(request.args)
+
+@app.route('/launch/')
+def launch():
+    return render_template('launch.html')
 
 if __name__ == "__main__":
     app.config['FLASK_LOG_LEVEL'] = 'DEBUG'
