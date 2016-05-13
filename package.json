@@ -4,6 +4,8 @@
   "description": "Framework for testing S4S API implementations",
   "main": "index.js",
   "scripts": {
+    "build": "webpack",
+    "dev": "webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,8 +27,10 @@
     "jquery": "^2.2.3",
     "less": "^2.6.1",
     "less-loader": "^2.2.3",
+    "socket.io-client": "^1.4.6",
     "style-loader": "^0.13.1",
     "underscore": "^1.8.3",
-    "url-loader": "^0.5.7"
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.0"
   }
 }
