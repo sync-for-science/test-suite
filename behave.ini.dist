@@ -2,6 +2,9 @@
 logging_level=DEBUG
 logging_format=%(message)s
 
+[behave.formatters]
+json.chunked = app:ChunkedJsonFormatter
+
 [api]
 url=https://portal.demo.syncfor.science/api/fhir/
 patient=smart-1288992
