@@ -10,5 +10,5 @@ patient=Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
 strategy=smart
 client_id=6C12DFF424E74475A742B08972C4EA27
 client_secret=
-redirect_uri=http://52.40.29.13:9003/authorized/
+redirect_uri=http://tests.dev.syncfor.science:9003/authorized/
 scope=launch patient/*.read

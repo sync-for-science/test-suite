@@ -11,5 +11,5 @@ strategy=refresh_token
 client_id=f662d614-8b45-48c2-92f8-c84a20edccc3
 client_secret=
 scope=launch patient/Patient.read patient/Observation.read patient/Condition.read patient/MedicationOrder.read patient/MedicationStatement.read patient/MedicationDispense.read patient/MedicationAdministration.read patient/AllergyIntolerance.read patient/Procedure.read patient/Immunization.read patient/DocumentReference.read online_access
-redirect_uri=https://app.demo.syncfor.science/authorized
+redirect_uri=http://tests.dev.syncfor.science:9003/authorized/
 launch=6a608665-4ab6-455a-9fbb-52d914109882

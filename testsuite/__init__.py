@@ -75,7 +75,7 @@ def authorize():
         'state': state,
         'aud': config['api']['url'],
     }
-    if config['auth']['launch']:
+    if config['auth'].get('launch', False):
         params['launch'] = config['auth']['launch']
     authorize_url = uris['authorize'] + '?' + urlencode(params)
     print(authorize_url)

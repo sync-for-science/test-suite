@@ -10,7 +10,7 @@ def get_config(default='smart'):
         vendor = request.form.get('vendor', default).lower()
         config.read('behave.ini.dist-' + vendor)
 
-        config['auth']['refresh_token'] = session['refresh_token']
+        config['auth']['refresh_token'] = session.get('refresh_token', '')
     except RuntimeError:
         config.read('behave.ini')
 
