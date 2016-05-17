@@ -11,4 +11,3 @@ username=demo
 password=demo
 client_id=app-demo
 client_secret=demo-secret-s4s
-url=https://portal.demo.syncfor.science/api/oauth/

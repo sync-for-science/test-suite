@@ -53,21 +53,6 @@ class SmartStrategy(object):
         self.access_token = token_json['access_token']
         self.refresh_token = token_json['refresh_token']
 
-    def revoke_access_token(self):
-        """ Request that the oAuth server revoke stored access token.
-
-        Doesn't unset our currently stored data.
-        """
-        post_data = {
-            'token': self.access_token,
-        }
-        response = requests.delete(self._urls['token'],
-                                   auth=self._config['auth'],
-                                   data=post_data)
-
-        assert int(response.status_code) == 200, \
-            ERROR_TOKEN_REQUEST.format(status_code=response.status_code)
-
     def refresh_access_token(self):
         """ Request a new access token.
 

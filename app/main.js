@@ -7,12 +7,11 @@ require('bootstrap/dist/js/npm');
 
 $(function () {
   $('#run-tests').on('click', function (event) {
-    var config = $('#behave-ini').val();
-    var data = {config: config};
+    var vendor = $('#vendor').val();
 
     $(event.currentTarget).prop('disabled', true);
 
-    $.post('/tests.json', data)
+    $.post('/tests.json', {vendor: vendor})
     .done(function (data) {
       $('#canvas')
         .html(features_tmpl({features: data}))

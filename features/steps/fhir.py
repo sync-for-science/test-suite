@@ -33,5 +33,9 @@ def step_impl(context):
     resource = context.response.json()
     found_references = utils.find_references(resource)
 
+    import logging
+    import json
+    logging.info(json.dumps(resource))
+
     for reference in found_references:
         check_reference(reference)

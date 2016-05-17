@@ -16,12 +16,6 @@ def step_impl(context):
     context.authorization = None
 
 
-@when('I revoke my access token')
-def step_impl(context):
-    context.smart.revoke_access_token()
-    context.authorization = context.smart.authorization()
-
-
 @when('I refresh my access token')
 def step_impl(context):
     context.smart.refresh_access_token()

@@ -15,10 +15,6 @@ class Strategy(object):
         """ Request a refresh token. """
         raise NotImplementedError
 
-    def revoke_access_token(self):
-        """ Request that the oAuth server revoke stored access token. """
-        raise NotImplementedError
-
     def refresh_access_token(self):
         """ Request a new access token. """
         raise NotImplementedError
@@ -70,8 +66,10 @@ def refresh_token_factory(context):
 
     return RefreshTokenStrategy(client_id=context.auth['client_id'],
                                 client_secret=context.auth['client_secret'],
+                                redirect_uri=context.auth['redirect_uri'],
                                 urls=urls,
-                                refresh_token=context.auth['refresh_token'])
+                                refresh_token=context.auth['refresh_token'],
+                                basic=context.auth.get('basic', False))
 
 
 def factory(context):
