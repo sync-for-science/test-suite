@@ -2,9 +2,8 @@
 import requests
 
 
-ERROR_AUTH_REQUEST = """
-Authenticated POST to {url} returned {status_code}.
-{text}
+ERROR_TOKEN_REQUEST = """
+Token request failed with status code "{status_code}".
 """
 
 
@@ -19,15 +18,14 @@ class SmartStrategy(object):
     # but maybe that's just forcing things.
     # This is usally a sign that a class is doing too much, but all of these
     # seem pretty integral.
-    def __init__(self, client_id, username, password, token_url, revoke_url, auth=None):  # noqa pylint: disable=too-many-arguments
+    def __init__(self, client_id, username, password, urls, auth=None):  # noqa pylint: disable=too-many-arguments
         self._config = {
             'client_id': client_id,
             'username': username,
             'password': password,
-            'token_url': token_url,
-            'revoke_url': revoke_url,
             'auth': auth,
         }
+        self._urls = urls
 
     def request_offline_access(self):
         """ Fetch a refresh token.
@@ -44,35 +42,16 @@ class SmartStrategy(object):
             'scope': 'smart/portal offline_access',
             'client_id': self._config['client_id'],
         }
-        response = requests.post(self._config['token_url'],
+        response = requests.post(self._urls['token'],
                                  auth=self._config['auth'],
                                  data=post_data)
 
         assert int(response.status_code) == 200, \
-            ERROR_AUTH_REQUEST.format(url=self._config['token_url'],
-                                      status_code=response.status_code,
-                                      text=response.text)
+            ERROR_TOKEN_REQUEST.format(status_code=response.status_code)
         token_json = response.json()
 
         self.access_token = token_json['access_token']
         self.refresh_token = token_json['refresh_token']
-
-    def revoke_access_token(self):
-        """ Request that the oAuth server revoke stored access token.
-
-        Doesn't unset our currently stored data.
-        """
-        post_data = {
-            'token': self.access_token,
-        }
-        response = requests.post(self._config['revoke_url'],
-                                 auth=self._config['auth'],
-                                 data=post_data)
-
-        assert int(response.status_code) == 200, \
-            ERROR_AUTH_REQUEST.format(url=self._config['revoke_url'],
-                                      status_code=response.status_code,
-                                      text=response.text)
 
     def refresh_access_token(self):
         """ Request a new access token.
@@ -87,14 +66,12 @@ class SmartStrategy(object):
             'refresh_token': self.refresh_token,
             'client_id': self._config['client_id'],
         }
-        response = requests.post(self._config['token_url'],
+        response = requests.post(self._urls['token'],
                                  auth=self._config['auth'],
                                  data=post_data)
 
         assert int(response.status_code) == 200, \
-            ERROR_AUTH_REQUEST.format(url=self._config['token_url'],
-                                      status_code=response.status_code,
-                                      text=response.text)
+            ERROR_TOKEN_REQUEST.format(status_code=response.status_code)
         token_json = response.json()
 
         self.access_token = token_json['access_token']

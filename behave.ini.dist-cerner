@@ -3,8 +3,13 @@ logging_level=DEBUG
 logging_format=%(message)s
 
 [api]
-url=https://fhir-open.sandboxcernerpowerchart.com/dstu2/d075cf8b-3261-481d-97e5-ba6c48d3b41f/
-patient=1696023
+url=https://fhir.sandboxcernerpowerchart.com/dstu2/d075cf8b-3261-481d-97e5-ba6c48d3b41f/
+patient=1316024
 
 [auth]
-strategy=none
+strategy=refresh_token
+client_id=f662d614-8b45-48c2-92f8-c84a20edccc3
+client_secret=
+scope=launch patient/Patient.read patient/Observation.read patient/Condition.read patient/MedicationOrder.read patient/MedicationStatement.read patient/MedicationDispense.read patient/MedicationAdministration.read patient/AllergyIntolerance.read patient/Procedure.read patient/Immunization.read patient/DocumentReference.read online_access
+redirect_uri=http://tests.dev.syncfor.science:9003/authorized/
+launch=6a608665-4ab6-455a-9fbb-52d914109882

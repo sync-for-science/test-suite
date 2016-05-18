@@ -10,10 +10,6 @@ class NoneStrategy(object):
         """ Fetch a refresh token. """
         pass
 
-    def revoke_access_token(self):
-        """ Request that the oAuth server revoke stored access token. """
-        pass
-
     def refresh_access_token(self):
         """ Request a new access token. """
         pass
