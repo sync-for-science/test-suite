@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+
+{% macro vendor_option(vendor) -%}
+    <option {% if session.vendor == vendor %}selected{% endif %}>{{ vendor }}</option>
+{%- endmacro %}
+
 {% block body %}
     <div class="row">
         <div class="col-md-4">
@@ -7,10 +12,10 @@
                 <div class="form-group">
                     <label for="vendor">Vendor</label>
                     <select class="form-control" name="vendor" id="vendor">
-                        <option>SMART</option>
-                        <option>Allscripts</option>
-                        <option>Cerner</option>
-                        <option>Epic</option>
+                        {{ vendor_option('SMART') }}
+                        {{ vendor_option('Allscripts') }}
+                        {{ vendor_option('Cerner') }}
+                        {{ vendor_option('Epic') }}
                     </select>
                 </div>
                 <div class="btn-group" role="group">

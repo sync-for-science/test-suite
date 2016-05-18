@@ -6,6 +6,10 @@ class NoneStrategy(object):
     access_token = None
     refresh_token = None
 
+    def exchange_authorization_grant(self, grant):
+        """ Exchange an authorization grant for an access token. """
+        pass
+
     def request_offline_access(self):
         """ Fetch a refresh token. """
         pass

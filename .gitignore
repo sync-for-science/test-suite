@@ -1,4 +1,6 @@
 ENV
 *.pyc
-behave.ini
 node_modules
+build
+.cache
+*.egg-info
