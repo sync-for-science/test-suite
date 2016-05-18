@@ -37,3 +37,12 @@ Feature: requesting FHIR objects
 10 steps passed, 0 failed, 0 skipped, 0 undefined
 Took 0m0.085s
 ```
+
+## Testing the test suite
+
+To test the... test suite, use py.test
+
+```
+pip install -e . # Install "testsuite" so that the tests can find it
+py.test
+```
