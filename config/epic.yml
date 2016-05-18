@@ -1,0 +1,11 @@
+---
+api:
+  url: https://open-ic.epic.com/FHIR/api/FHIR/DSTU2/
+  patient: Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
+
+auth:
+  strategy: smart
+  client_id: 6C12DFF424E74475A742B08972C4EA27
+  client_secret:
+  redirect_uri: http://tests.dev.syncfor.science:9003/authorized/
+  scope: launch patient/*.read

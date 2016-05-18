@@ -1,5 +1,9 @@
 # pylint: disable=missing-docstring,function-redefined
+import logging
+import json
+
 from behave import then
+
 from features.steps import utils
 
 
@@ -33,8 +37,6 @@ def step_impl(context):
     resource = context.response.json()
     found_references = utils.find_references(resource)
 
-    import logging
-    import json
     logging.info(json.dumps(resource))
 
     for reference in found_references:

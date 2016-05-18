@@ -27,6 +27,16 @@ class SmartStrategy(object):
         }
         self._urls = urls
 
+    def exchange_authorization_grant(self, grant):
+        """ Exchange an authorization grant for an access token.
+
+        Modifies
+        --------
+            * access_token
+            * refresh_token
+        """
+        raise NotImplementedError()
+
     def request_offline_access(self):
         """ Fetch a refresh token.
 

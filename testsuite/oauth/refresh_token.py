@@ -24,8 +24,8 @@ class RefreshTokenStrategy(object):
         }
         self._urls = urls
 
-    def upgrade_authorization_code(self, authorization_code):
-        """ Upgrade an authorization code into an access token.
+    def exchange_authorization_grant(self, grant):
+        """ Exchange an authorization grant for an access token.
 
         Modifies
         --------
@@ -34,7 +34,7 @@ class RefreshTokenStrategy(object):
         """
         post_data = {
             'grant_type': 'authorization_code',
-            'code': authorization_code,
+            'code': grant,
             'client_id': self._config['client_id'],
             'redirect_uri': self._config['redirect_uri'],
         }
@@ -49,6 +49,10 @@ class RefreshTokenStrategy(object):
         response = requests.post(self._urls['token'],
                                  auth=auth,
                                  data=post_data)
+
+        import logging
+        logging.info(response.request.headers)
+        logging.info(response.request.body)
 
         assert int(response.status_code) == 200, \
             ERROR_TOKEN_REQUEST.format(status_code=response.status_code,

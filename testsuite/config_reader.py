@@ -1,17 +1,21 @@
 # pylint: disable=missing-docstring
-import configparser
 from flask import request, session
+import yaml
 
 
 def get_config(default='smart'):
-    config = configparser.ConfigParser()
 
     try:
         vendor = request.form.get('vendor', default).lower()
-        config.read('behave.ini.dist-' + vendor)
+    except RuntimeError:
+        vendor = 'smart'
 
+    with open('config/' + vendor + '.yml') as handle:
+        config = yaml.load(handle)
+
+    try:
         config['auth']['refresh_token'] = session.get('refresh_token', '')
     except RuntimeError:
-        config.read('behave.ini')
+        pass
 
     return config
