@@ -10,6 +10,7 @@ MU_CCDS_MAPPINGS = {
     'Smoking status': 'Observation?category=social-history&patient={patientId}',
     'Problems': 'Condition?patient={patientId}',
     'Lab results': 'Observation?category=laboratory&patient={patientId}',
+    'Allergies and intolerances': 'AllergyIntolerance?patient={patientId}',
     'Vital signs': 'Observation?category=vital-signs&patient={patientId}',
     'Procedures': 'Procedure?patient={patientId}',
     'Immunizations': 'Immunization?patient={patientId}',
