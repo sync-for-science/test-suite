@@ -29,6 +29,14 @@ Feature: requesting FHIR objects
         And the type field will be searchset
         And all references will resolve
 
+    Scenario: Allergies exist
+        Given I am logged in
+        When I request Allergies and intolerances
+        Then the response code should be 200
+        And the resourceType field will be Bundle
+        And the type field will be searchset
+        And all references will resolve
+
     Scenario: Lab results exist
         Given I am logged in
         When I request Lab results

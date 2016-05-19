@@ -1,0 +1,7 @@
+---
+api:
+  url: http://52.22.98.192:8080/FHIRServer/fhir/
+  patient: 9128
+
+auth:
+  strategy: none
