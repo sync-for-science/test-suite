@@ -1,11 +1,10 @@
 ---
 api:
-  url: https://open-ic.epic.com/FHIR/api/FHIR/DSTU2/
+  url: https://open-ic.epic.com/Argonaut/api/FHIR/Argonaut/
   patient: Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
 
 auth:
-  strategy: smart
-  client_id: 6C12DFF424E74475A742B08972C4EA27
+  strategy: refresh_token
+  client_id: dd24090e-bc30-4a18-8355-fa3664bff207
   client_secret:
-  redirect_uri: http://tests.dev.syncfor.science:9003/authorized/
-  scope: launch patient/*.read
+  scope: launch/patient patient/*.read

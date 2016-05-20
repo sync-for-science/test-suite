@@ -50,10 +50,6 @@ class RefreshTokenStrategy(object):
                                  auth=auth,
                                  data=post_data)
 
-        import logging
-        logging.info(response.request.headers)
-        logging.info(response.request.body)
-
         assert int(response.status_code) == 200, \
             ERROR_TOKEN_REQUEST.format(status_code=response.status_code,
                                        text=response.text)
@@ -85,6 +81,7 @@ class RefreshTokenStrategy(object):
             'grant_type': 'refresh_token',
             'refresh_token': self.refresh_token,
             'scope': 'launch/patient patient/*.read',
+            'redirect_uri': self._config['redirect_uri'],
         }
         if self._config['client_secret']:
             post_data['client_id'] = self._config['client_id']

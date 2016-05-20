@@ -8,6 +8,5 @@ auth:
   password: demo
   client_id: test-suite
   client_secret: demo-secret-s4s
-  redirect_uri: http://tests.dev.syncfor.science:9003/authorized/
   scope: launch patient/*.read offline_access
   basic: yes

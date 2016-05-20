@@ -8,5 +8,4 @@ auth:
   client_id: 0676eea5-c4c7-4f13-90f1-62405ed2134d
   client_secret: 3ntGQa8jEtcedrPX/lk6u083fLCoH96I+p6P2ygjtOqgkZB93eeG25JaEcKi7+HOgnddSQLgyJpve6sZgCYaQw==
   scope: launch/patient patient/*.read offline_access
-  redirect_uri: http://tests.dev.syncfor.science:9003/authorized/
   basic: yes
