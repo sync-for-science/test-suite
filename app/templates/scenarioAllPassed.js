@@ -2,7 +2,7 @@ var _ = require('underscore');
 
 module.exports = function (options) {
   var passed = _.every(this.steps, function (step) {
-    return step.result.status === 'passed';
+    return step.result && step.result.status === 'passed';
   });
 
   if (passed) {
