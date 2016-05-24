@@ -43,6 +43,7 @@ def step_impl(context, field_name):
     uris = fhir.get_oauth_uris(context.config['api']['url'])
     response = requests.get(uris['authorize'],
                             params=fields,
+                            allow_redirects=False,
                             timeout=5)
 
     context.response = response
@@ -60,8 +61,15 @@ def step_impl(context):
         'scope': 'launch/patient patient/Patient.read',
     }
 
+    auth = requests.auth.HTTPBasicAuth(context.config['auth']['client_id'],
+                                       context.config['auth']['client_secret'])
+
     uris = fhir.get_oauth_uris(context.config['api']['url'])
-    response = requests.post(uris['token'], data=fields)
+    response = requests.post(uris['token'],
+                             data=fields,
+                             allow_redirects=False,
+                             auth=auth,
+                             timeout=5)
 
     context.response = response
 
@@ -78,9 +86,19 @@ def step_impl(context, field_name):
         'scope': 'launch/patient patient/Patient.read',
     }
 
-    del fields[field_name]
+    auth = requests.auth.HTTPBasicAuth(context.config['auth']['client_id'],
+                                       context.config['auth']['client_secret'])
+
+    if field_name == 'client_id':
+        auth = None
+    else:
+        del fields[field_name]
 
     uris = fhir.get_oauth_uris(context.config['api']['url'])
-    response = requests.post(uris['token'], data=fields)
+    response = requests.post(uris['token'],
+                             data=fields,
+                             allow_redirects=False,
+                             auth=auth,
+                             timeout=5)
 
     context.response = response

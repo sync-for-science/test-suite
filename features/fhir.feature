@@ -19,11 +19,45 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
+        And there should be at least 1 entry
         And all references will resolve
 
     Scenario: Problems exist
         Given I am logged in
         When I request Problems
+        Then the response code should be 200
+        And the resourceType field will be Bundle
+        And the type field will be searchset
+        And there should be at least 1 entry
+        And all references will resolve
+
+    Scenario: Medication Orders exist
+        Given I am logged in
+        When I request Medication orders
+        Then the response code should be 200
+        And the resourceType field will be Bundle
+        And the type field will be searchset
+        And all references will resolve
+
+    Scenario: Medication Statements exist
+        Given I am logged in
+        When I request Medication statements
+        Then the response code should be 200
+        And the resourceType field will be Bundle
+        And the type field will be searchset
+        And all references will resolve
+
+    Scenario: Medication Dispensations exist
+        Given I am logged in
+        When I request Medication dispensations
+        Then the response code should be 200
+        And the resourceType field will be Bundle
+        And the type field will be searchset
+        And all references will resolve
+
+    Scenario: Medication Administrations exist
+        Given I am logged in
+        When I request Medication administrations
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
@@ -43,6 +77,7 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
+        And there should be at least 1 entry
         And all references will resolve
 
     Scenario: Vital signs exist
@@ -51,6 +86,7 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
+        And there should be at least 1 entry
         And all references will resolve
 
     Scenario: Procedures exist
@@ -59,6 +95,7 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
+        And there should be at least 1 entry
         And all references will resolve
 
     Scenario: Immunizations exist
@@ -67,6 +104,7 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
+        And there should be at least 1 entry
         And all references will resolve
 
     Scenario: Patient documents exist
@@ -75,4 +113,5 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
+        And there should be at least 1 entry
         And all references will resolve

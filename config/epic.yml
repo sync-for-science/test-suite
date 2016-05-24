@@ -5,6 +5,7 @@ api:
 
 auth:
   strategy: refresh_token
-  client_id: dd24090e-bc30-4a18-8355-fa3664bff207
-  client_secret:
+  client_id: ad3fe986-cbad-4fcc-a487-3e9ee1ef3a4d
+  client_secret: argonaut
   scope: launch/patient patient/*.read offline_access
+  basic: yes
