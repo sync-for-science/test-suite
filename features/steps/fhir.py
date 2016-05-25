@@ -7,7 +7,8 @@ from behave import then
 from features.steps import utils
 
 
-ERROR_FIELD_MISSING = "Resource field '{field_name}' is missing"
+ERROR_ENTRY_COUNT = "Found {count} entries."
+ERROR_FIELD_MISSING = "Resource field '{field_name}' is missing."
 ERROR_FIELD_UNEXPECTED_VALUE = """
 Resource field '{field_name}' does not match expected '{expected}', got '{actual}'.
 """
@@ -41,3 +42,12 @@ def step_impl(context):
 
     for reference in found_references:
         check_reference(reference)
+
+
+@then('there should be at least 1 entry')
+def step_impl(context):
+    resource = context.response.json()
+    entries = resource.get('entry', [])
+
+    assert len(entries) >= 1, \
+        ERROR_ENTRY_COUNT.format(count=len(entries))

@@ -10,7 +10,7 @@ def get_config(default='smart'):
     try:
         vendor = request.form.get('vendor', default).lower()
     except RuntimeError:
-        vendor = 'smart'
+        vendor = os.getenv('VENDOR', 'smart')
 
     with open('config/' + vendor + '.yml') as handle:
         config = yaml.load(handle)
@@ -24,6 +24,6 @@ def get_config(default='smart'):
     if host is not None:
         config['auth']['redirect_uri'] = 'https://' + host + '/authorized/'
     else:
-        config['auth']['redirect_uri'] = 'http://' + os.getenv('VIRTUAL_HOST') + '/authorized/'
+        config['auth']['redirect_uri'] = 'http://' + os.getenv('VIRTUAL_HOST', 'localhost:9003') + '/authorized/'
 
     return config
