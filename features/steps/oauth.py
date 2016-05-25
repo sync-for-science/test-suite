@@ -3,12 +3,24 @@ from behave import given, when
 from testsuite.oauth import factory
 
 
+def update_session(refresh_token):
+    from flask import session
+
+    try:
+        session['refresh_token'] = refresh_token
+    except RuntimeError:
+        pass
+
+
 @given('I am logged in')
 def step_impl(context):
     context.smart = factory(context)
 
     context.smart.request_offline_access()
     context.authorization = context.smart.authorization()
+
+    update_session(context.smart.refresh_token)
+    context.config['auth']['refresh_token'] = context.smart.refresh_token
 
 
 @given('I am not logged in')
@@ -20,6 +32,9 @@ def step_impl(context):
 def step_impl(context):
     context.smart.refresh_access_token()
     context.authorization = context.smart.authorization()
+
+    update_session(context.smart.refresh_token)
+    context.config['auth']['refresh_token'] = context.smart.refresh_token
 
 
 @when('I ask for authorization without the {field_name} field')
