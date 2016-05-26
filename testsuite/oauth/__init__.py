@@ -67,7 +67,7 @@ def refresh_token_factory(config):
                                 redirect_uri=config['auth']['redirect_uri'],
                                 urls=urls,
                                 refresh_token=config['auth']['refresh_token'],
-                                basic=config['auth'].get('basic', False))
+                                confidential_client=config['auth'].get('confidential_client', False))
 
 
 def factory(context):

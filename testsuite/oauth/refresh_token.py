@@ -14,13 +14,13 @@ class RefreshTokenStrategy(object):
     access_token = None
     refresh_token = None
 
-    def __init__(self, client_id, client_secret, refresh_token, redirect_uri, urls, basic):
+    def __init__(self, client_id, client_secret, refresh_token, redirect_uri, urls, confidential_client):
         self._config = {
             'client_id': client_id,
             'client_secret': client_secret,
             'redirect_uri': redirect_uri,
             'refresh_token': refresh_token,
-            'basic': basic,
+            'confidential_client': confidential_client,
         }
         self._urls = urls
 
@@ -40,7 +40,7 @@ class RefreshTokenStrategy(object):
         }
 
         auth = None
-        if self._config['basic']:
+        if self._config['confidential_client']:
             auth = requests.auth.HTTPBasicAuth(
                 self._config['client_id'],
                 self._config['client_secret']

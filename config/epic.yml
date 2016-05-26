@@ -8,4 +8,4 @@ auth:
   client_id: ad3fe986-cbad-4fcc-a487-3e9ee1ef3a4d
   client_secret: argonaut
   scope: launch/patient patient/*.read offline_access
-  basic: yes
+  confidential_client: True
