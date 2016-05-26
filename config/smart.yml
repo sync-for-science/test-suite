@@ -9,4 +9,4 @@ auth:
   client_id: test-suite
   client_secret: demo-secret-s4s
   scope: launch patient/*.read offline_access
-  basic: yes
+  confidential_client: True
