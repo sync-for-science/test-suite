@@ -1,10 +1,11 @@
 # pylint: disable=missing-docstring,function-redefined
 from behave import then
 
+from features.steps import utils
+
 
 ERROR_STATUS_CODE = """
 Response code was {status_code}.
-{text}
 """
 ERROR_MISSING_FIELD = """
 Field "{field}" not found in {response_fields}.
@@ -16,8 +17,9 @@ def step_impl(context, response_code):
     response_code = int(response_code)
 
     assert context.response.status_code == response_code, \
-        ERROR_STATUS_CODE.format(status_code=context.response.status_code,
-                                 text=context.response.text)
+        utils.bad_response_assert(context.response,
+                                  ERROR_STATUS_CODE,
+                                  status_code=context.response.status_code)
 
 
 @then('the response code should not be {response_code}')
@@ -25,8 +27,9 @@ def step_impl(context, response_code):
     response_code = int(response_code)
 
     assert context.response.status_code != response_code, \
-        ERROR_STATUS_CODE.format(status_code=context.response.status_code,
-                                 text='')
+        utils.bad_response_assert(context.response,
+                                  ERROR_STATUS_CODE,
+                                  status_code=context.response.status_code)
 
 
 @then('the JSON response will contain {field}')
@@ -34,5 +37,7 @@ def step_impl(context, field):
     data = context.response.json()
 
     assert field in data, \
-        ERROR_MISSING_FIELD.format(field=field,
-                                   response_fields=list(data.keys()))
+        utils.bad_response_assert(context.response,
+                                  ERROR_MISSING_FIELD,
+                                  field=field,
+                                  response_fields=list(data.keys()))

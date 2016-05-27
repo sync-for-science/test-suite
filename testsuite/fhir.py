@@ -3,7 +3,6 @@ import requests
 
 
 OAUTH_URIS_DEFINITION = 'http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris'
-OAUTH_URIS_COM_DEFINITION = 'http://fhir-registry.smarthealthit.com/StructureDefinition/oauth-uris'
 
 
 def get_oauth_uris(base_url):
@@ -23,11 +22,16 @@ def get_oauth_uris(base_url):
         'Accept': 'application/json+fhir',
     }
     response = requests.get(url, headers=headers)
-    conformance = response.json()
+
+    try:
+        conformance = response.json()
+    except ValueError as error:
+        error.response = response
+        raise
 
     rest = [rest for rest in conformance['rest']][0]
     extensions = [ext for ext in rest['security']['extension']
-                  if ext.get('url') in [OAUTH_URIS_DEFINITION, OAUTH_URIS_COM_DEFINITION]]
+                  if ext.get('url') == OAUTH_URIS_DEFINITION]
     extension = extensions[0]
 
     return {ext['url']: ext['valueUri'] for ext in extension['extension']}

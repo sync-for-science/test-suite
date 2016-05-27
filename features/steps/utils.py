@@ -5,14 +5,16 @@ features.steps.utils
 This module contains useful functions that don't really fit anywhere in
 particular.
 """
+import jinja2
 import requests
 
 
-ERROR_AUTH_REQUEST = """
-Authenticated POST to {endpoint} returned {status_code}.
+def bad_response_assert(response, message, **kwargs):
+    with open('features/steps/response.jinja2') as handle:
+        template = jinja2.Template(handle.read())
 
-{text}
-"""
+    return template.render(response=response,
+                           message=message.format(**kwargs))
 
 
 def get_resource(context, resource):
@@ -43,6 +45,7 @@ def get_resource(context, resource):
     headers = {
         'Authorization': context.authorization,
         'Accept': 'application/json',
+        'Accept-Encoding': 'deflate,sdch',
     }
 
     response = requests.get(url, headers=headers)

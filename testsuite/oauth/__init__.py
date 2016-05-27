@@ -7,6 +7,7 @@ from testsuite import fhir
 from .smart import SmartStrategy
 from .none import NoneStrategy
 from .refresh_token import RefreshTokenStrategy
+from .client_credentials import ClientCredentialsStrategy
 
 
 class Strategy(object):
@@ -70,6 +71,24 @@ def refresh_token_factory(config):
                                 confidential_client=config['auth'].get('confidential_client', False))
 
 
+def client_credentials_factory(config):
+    """ Build a ClientCredentialsStrategy object from a config.
+
+    Parameters
+    ----------
+    config : dict
+
+    Returns
+    -------
+    testsuite.oauth.ClientCredentialsStrategy
+    """
+    return ClientCredentialsStrategy(
+        client_id=config['auth']['client_id'],
+        client_secret=config['auth']['client_secret'],
+        token_url=config['auth']['token_url'],
+    )
+
+
 def factory(context):
     """ Build an oAuth Strategy from a behave context.
 
@@ -90,5 +109,7 @@ def factory(context):
         return NoneStrategy()
     if strategy == 'refresh_token':
         return refresh_token_factory(config)
+    if strategy == 'client_credentials':
+        return client_credentials_factory(config)
 
     raise NotImplementedError(strategy)

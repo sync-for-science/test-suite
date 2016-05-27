@@ -1,0 +1,11 @@
+---
+api:
+  url: https://api.athenahealth.com/preview1/195900/1/fhir/dstu2/
+  patient: 1050
+
+auth:
+  strategy: client_credentials
+  client_id: 957rwjcctmu339me9ps9tzwq
+  # client_secret intentionally included
+  client_secret: C9ZzFBDWW5U7J3s
+  token_url: https://api.athenahealth.com/oauthpreview/token
