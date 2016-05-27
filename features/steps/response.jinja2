@@ -1,0 +1,22 @@
+{{ message | trim }}
+
+Request
+-------
+{{ response.request.method }} {{ response.request.url -}}
+
+{% for key, value in response.request.headers.items() %}
+{{ key }}: {{ value -}}
+{% endfor %}
+
+{%- if response.request.body %}
+{{ response.request.body -}}
+{% endif %}
+
+Response
+--------
+{% for key, value in response.headers.items() %}
+{{ key }}: {{ value -}}
+{% endfor %}
+
+{{ response.text }}
+

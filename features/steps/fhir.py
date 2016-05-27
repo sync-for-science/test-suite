@@ -1,7 +1,4 @@
 # pylint: disable=missing-docstring,function-redefined
-import logging
-import json
-
 from behave import then
 
 from features.steps import utils
@@ -20,11 +17,15 @@ def step_impl(context, field_name, value):
     resource = context.response.json()
 
     assert resource[field_name] is not None, \
-        ERROR_FIELD_MISSING.format(field_name=field_name)
+        utils.bad_response_assert(context.response,
+                                  ERROR_FIELD_MISSING,
+                                  field_name=field_name)
     assert resource[field_name] == value, \
-        ERROR_FIELD_UNEXPECTED_VALUE.format(field_name=field_name,
-                                            expected=value,
-                                            actual=resource[field_name])
+        utils.bad_response_assert(context.response,
+                                  ERROR_FIELD_UNEXPECTED_VALUE,
+                                  field_name=field_name,
+                                  expected=value,
+                                  actual=resource[field_name])
 
 
 @then('all references will resolve')
@@ -33,12 +34,12 @@ def step_impl(context):
         response = utils.get_resource(context, reference)
 
         assert int(response.status_code) == 200, \
-            ERROR_UNRESOLVED_REFERENCE.format(reference=reference)
+            utils.bad_response_assert(context.response,
+                                      ERROR_UNRESOLVED_REFERENCE,
+                                      reference=reference)
 
     resource = context.response.json()
     found_references = utils.find_references(resource)
-
-    logging.info(json.dumps(resource))
 
     for reference in found_references:
         check_reference(reference)
@@ -50,4 +51,6 @@ def step_impl(context):
     entries = resource.get('entry', [])
 
     assert len(entries) >= 1, \
-        ERROR_ENTRY_COUNT.format(count=len(entries))
+        utils.bad_response_assert(context.response,
+                                  ERROR_ENTRY_COUNT,
+                                  count=len(entries))

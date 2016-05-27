@@ -1,6 +1,15 @@
 # pylint: disable=missing-docstring,function-redefined
+import uuid
+
 from behave import given, when
+import requests
+
+from features.steps import utils
 from testsuite.oauth import factory
+from testsuite import fhir
+
+
+ERROR_BAD_CONFORMANCE = 'Could not parse conformance statement.'
 
 
 def update_session(refresh_token):
@@ -39,12 +48,8 @@ def step_impl(context):
 
 @when('I ask for authorization without the {field_name} field')
 def step_impl(context, field_name):
-    """ TODO: remove inline imports, reduce duplication. """
-    import requests
-    from testsuite import fhir
-    import uuid
-    from pprint import pprint
-
+    """ TODO: reduce duplication.
+    """
     fields = {
         'response_type': 'code',
         'client_id': context.config['auth']['client_id'],
@@ -55,7 +60,12 @@ def step_impl(context, field_name):
 
     del fields[field_name]
 
-    uris = fhir.get_oauth_uris(context.config['api']['url'])
+    try:
+        uris = fhir.get_oauth_uris(context.config['api']['url'])
+    except ValueError as error:
+        assert False, utils.bad_response_assert(error.response,
+                                                ERROR_BAD_CONFORMANCE)
+
     response = requests.get(uris['authorize'],
                             params=fields,
                             allow_redirects=False,
@@ -66,10 +76,8 @@ def step_impl(context, field_name):
 
 @when('I ask for a new access token')
 def step_impl(context):
-    """ TODO: remove inline imports, reduce duplication. """
-    import requests
-    from testsuite import fhir
-
+    """ TODO: reduce duplication.
+    """
     fields = {
         'grant_type': 'refresh_token',
         'refresh_token': context.smart.refresh_token,
@@ -79,7 +87,12 @@ def step_impl(context):
     auth = requests.auth.HTTPBasicAuth(context.config['auth']['client_id'],
                                        context.config['auth']['client_secret'])
 
-    uris = fhir.get_oauth_uris(context.config['api']['url'])
+    try:
+        uris = fhir.get_oauth_uris(context.config['api']['url'])
+    except ValueError as error:
+        assert False, utils.bad_response_assert(error.response,
+                                                ERROR_BAD_CONFORMANCE)
+
     response = requests.post(uris['token'],
                              data=fields,
                              allow_redirects=False,
@@ -91,10 +104,8 @@ def step_impl(context):
 
 @when('I ask for a new access token without the {field_name} field')
 def step_impl(context, field_name):
-    """ TODO: remove inline imports, reduce duplication. """
-    import requests
-    from testsuite import fhir
-
+    """ TODO: reduce duplication.
+    """
     fields = {
         'grant_type': 'refresh_token',
         'refresh_token': context.smart.refresh_token,
@@ -109,7 +120,12 @@ def step_impl(context, field_name):
     else:
         del fields[field_name]
 
-    uris = fhir.get_oauth_uris(context.config['api']['url'])
+    try:
+        uris = fhir.get_oauth_uris(context.config['api']['url'])
+    except ValueError as error:
+        assert False, utils.bad_response_assert(error.response,
+                                                ERROR_BAD_CONFORMANCE)
+
     response = requests.post(uris['token'],
                              data=fields,
                              allow_redirects=False,
