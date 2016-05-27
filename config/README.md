@@ -22,3 +22,5 @@ auth:
 ## A note on `client_secret`
 
 It is generally considered best practice to not include `client_secret` and other confidential information in public git repos. In this case however, we felt that the benefits of being able to clone this project and immediately run the test suite outweighed security concerns.
+
+These clients are registered only to access testing environments in which no protected health information is present.
