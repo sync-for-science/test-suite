@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
-{% macro vendor_option(vendor) -%}
-    <option {% if session.vendor == vendor %}selected{% endif %}>{{ vendor }}</option>
+{% macro vendor_option(vendor, authorize=True) -%}
+<option
+    {% if session.vendor == vendor %} selected{% endif %}
+    {% if authorize %} data-authorize="true"{% endif %}
+    >{{ vendor }}</option>
 {%- endmacro %}
 
 {% block body %}
@@ -16,8 +19,8 @@
                         {{ vendor_option('Allscripts') }}
                         {{ vendor_option('Cerner') }}
                         {{ vendor_option('Epic') }}
-                        {{ vendor_option('eClinicalWorks') }}
-                        {{ vendor_option('athenahealth') }}
+                        {{ vendor_option('eClinicalWorks', False) }}
+                        {{ vendor_option('athenahealth', False) }}
                     </select>
                 </div>
                 <div class="btn-group" role="group">
