@@ -6,6 +6,17 @@ require('./styles.less');
 require('bootstrap/dist/js/npm');
 
 $(function () {
+  $('#vendor').on('change', function (event) {
+    var $el = $(event.currentTarget);
+    var $option = $el.find(':selected');
+
+    if ($option.data('authorize')) {
+      $('#authorize').prop('disabled', false);
+    } else {
+      $('#authorize').prop('disabled', true);
+    }
+  }).trigger('change');
+
   $('#run-tests').on('click', function (event) {
     var vendor = $('#vendor').val();
 
