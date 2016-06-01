@@ -12,6 +12,7 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Patient
         And all references will resolve
+        And all resources will have a id field
 
     Scenario: Smoking status exists
         Given I am logged in
@@ -20,6 +21,8 @@ Feature: requesting FHIR objects
         And the resourceType field will be Bundle
         And the type field will be searchset
         And there should be at least 1 entry
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
 
     Scenario: Problems exist
@@ -29,6 +32,8 @@ Feature: requesting FHIR objects
         And the resourceType field will be Bundle
         And the type field will be searchset
         And there should be at least 1 entry
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
 
     Scenario: Medication Orders exist
@@ -37,6 +42,8 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
 
     Scenario: Medication Statements exist
@@ -45,6 +52,8 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
 
     Scenario: Medication Dispensations exist
@@ -53,6 +62,8 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
 
     Scenario: Medication Administrations exist
@@ -61,6 +72,8 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
 
     Scenario: Allergies exist
@@ -69,6 +82,8 @@ Feature: requesting FHIR objects
         Then the response code should be 200
         And the resourceType field will be Bundle
         And the type field will be searchset
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
 
     Scenario: Lab results exist
@@ -78,6 +93,8 @@ Feature: requesting FHIR objects
         And the resourceType field will be Bundle
         And the type field will be searchset
         And there should be at least 1 entry
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
 
     Scenario: Vital signs exist
@@ -87,6 +104,8 @@ Feature: requesting FHIR objects
         And the resourceType field will be Bundle
         And the type field will be searchset
         And there should be at least 1 entry
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
 
     Scenario: Procedures exist
@@ -96,6 +115,8 @@ Feature: requesting FHIR objects
         And the resourceType field will be Bundle
         And the type field will be searchset
         And there should be at least 1 entry
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
 
     Scenario: Immunizations exist
@@ -105,6 +126,8 @@ Feature: requesting FHIR objects
         And the resourceType field will be Bundle
         And the type field will be searchset
         And there should be at least 1 entry
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
 
     Scenario: Patient documents exist
@@ -114,4 +137,6 @@ Feature: requesting FHIR objects
         And the resourceType field will be Bundle
         And the type field will be searchset
         And there should be at least 1 entry
+        And all resources will have a id field
+        And the total field will exist
         And all references will resolve
