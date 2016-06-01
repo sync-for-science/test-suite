@@ -16,7 +16,7 @@ ERROR_UNRESOLVED_REFERENCE = "Reference '{reference}' failed to resolve."
 def step_impl(context, field_name, value):
     resource = context.response.json()
 
-    assert resource[field_name] is not None, \
+    assert resource.get(field_name) is not None, \
         utils.bad_response_assert(context.response,
                                   ERROR_FIELD_MISSING,
                                   field_name=field_name)
@@ -26,6 +26,16 @@ def step_impl(context, field_name, value):
                                   field_name=field_name,
                                   expected=value,
                                   actual=resource[field_name])
+
+
+@then('the {field_name} field will exist')
+def step_impl(context, field_name):
+    resource = context.response.json()
+
+    assert resource.get(field_name) is not None, \
+        utils.bad_response_assert(context.response,
+                                  ERROR_FIELD_MISSING,
+                                  field_name=field_name)
 
 
 @then('all references will resolve')
@@ -54,3 +64,18 @@ def step_impl(context):
         utils.bad_response_assert(context.response,
                                   ERROR_ENTRY_COUNT,
                                   count=len(entries))
+
+@then('all resources will have a {field_name} field')
+def step_impl(context, field_name):
+    resource = context.response.json()
+
+    if resource['resourceType'] == 'Bundle':
+        entries = [entry['resource'] for entry in resource.get('entry', [])]
+    else:
+        entries = [resource]
+
+    for entry in entries:
+        assert entry.get(field_name) is not None, \
+            utils.bad_response_assert(context.response,
+                                      ERROR_FIELD_MISSING,
+                                      field_name=field_name)
