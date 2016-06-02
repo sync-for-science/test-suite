@@ -58,6 +58,8 @@ class RefreshTokenStrategy(object):
         self.access_token = token_json.get('access_token', None)
         self.refresh_token = token_json.get('refresh_token', None)
 
+        return token_json
+
     def request_offline_access(self):
         """ Fetch a refresh token.
 

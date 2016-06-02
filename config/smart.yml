@@ -1,14 +1,11 @@
 ---
 api:
   url: http://smart.dev.syncfor.science:9000/api/fhir/
-  patient: smart-1288992
 
 auth:
-  username: demo
-  # password intentionally included
-  password: demo
-  client_id: test-suite
+  strategy: refresh_token
+  client_id: test-client
   # client_secret intentionally included
-  client_secret: demo-secret-s4s
-  scope: launch patient/*.read offline_access
+  client_secret: 6bf7d933-d755-4ea2-b2c5-9f6b89ab08d9
+  scope: launch/patient patient/*.read offline_access
   confidential_client: True

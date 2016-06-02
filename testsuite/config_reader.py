@@ -16,7 +16,9 @@ def get_config(default='smart'):
         config = yaml.load(handle)
 
     try:
-        config['auth']['refresh_token'] = session.get('refresh_token', '')
+        authorization = session.get('authorizations', {}).get(vendor, {})
+        config['auth']['refresh_token'] = authorization.get('refresh_token')
+        config['api']['patient'] = authorization.get('patient', config['api']['patient'])
     except RuntimeError:
         pass
 
@@ -24,6 +26,7 @@ def get_config(default='smart'):
     if host is not None:
         config['auth']['redirect_uri'] = 'https://' + host + '/authorized/'
     else:
-        config['auth']['redirect_uri'] = 'http://' + os.getenv('VIRTUAL_HOST', 'localhost:9003') + '/authorized/'
+        host = os.getenv('VIRTUAL_HOST', 'localhost:9003')
+        config['auth']['redirect_uri'] = 'http://' + host + '/authorized/'
 
     return config

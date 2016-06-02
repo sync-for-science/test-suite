@@ -39,11 +39,12 @@ def tests():
 @app.route('/authorized/')
 def authorized():
     config = config_reader.get_config(session['vendor'])
-    uris = fhir.get_oauth_uris(config['api']['url'])
     strategy = oauth.refresh_token_factory(config)
-    strategy.exchange_authorization_grant(request.args.get('code'))
+    authorization = strategy.exchange_authorization_grant(request.args.get('code'))
 
-    session['refresh_token'] = strategy.refresh_token
+    if 'authorizations' not in session:
+        session['authorizations'] = {}
+    session['authorizations'][session['vendor'].lower()] = authorization
 
     return redirect('/')
 
