@@ -1,0 +1,7 @@
+---
+api:
+  url: http://paragonargonautfhirwebapp.paragondevfhir.p.azurewebsites.net/fhir/2.16.840.1.113883.3.271.4094/DSTU2/
+  patient: 481297
+
+auth:
+  strategy: none
