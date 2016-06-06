@@ -18,7 +18,7 @@ def get_config(default='smart'):
     try:
         authorization = session.get('authorizations', {}).get(vendor, {})
         config['auth']['refresh_token'] = authorization.get('refresh_token')
-        config['api']['patient'] = authorization.get('patient', config['api']['patient'])
+        config['api']['patient'] = authorization.get('patient', config['api'].get('patient'))
     except RuntimeError:
         pass
 

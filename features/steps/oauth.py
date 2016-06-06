@@ -133,3 +133,9 @@ def step_impl(context, field_name):
                              timeout=5)
 
     context.response = response
+
+
+@when('I authorize')
+def step_impl(context):
+    context.smart = factory(context)
+    context.smart.authorize()

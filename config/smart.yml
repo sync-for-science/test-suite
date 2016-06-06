@@ -6,6 +6,6 @@ auth:
   strategy: refresh_token
   client_id: test-client
   # client_secret intentionally included
-  client_secret: 6bf7d933-d755-4ea2-b2c5-9f6b89ab08d9
+  client_secret: 8e43d006-a25d-4786-8041-40473e4c097c
   scope: launch/patient patient/*.read offline_access
   confidential_client: True

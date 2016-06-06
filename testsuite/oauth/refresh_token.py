@@ -24,6 +24,16 @@ class RefreshTokenStrategy(object):
         }
         self._urls = urls
 
+    def authorize(self):
+        """ .
+        """
+        from selenium import webdriver
+        from testsuite.oauth.authorize import smart
+        browser = webdriver.PhantomJS()
+        authorizer = smart.SmartAuthorizer(browser, self._urls['authorize'])
+
+        authorizer.authorize()
+
     def exchange_authorization_grant(self, grant):
         """ Exchange an authorization grant for an access token.
 

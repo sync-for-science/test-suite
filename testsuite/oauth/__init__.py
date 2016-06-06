@@ -4,7 +4,6 @@ It provides oAuth strategies for connecting to secure FHIR APIs.
 import requests
 
 from testsuite import fhir
-from .smart import SmartStrategy
 from .none import NoneStrategy
 from .refresh_token import RefreshTokenStrategy
 from .client_credentials import ClientCredentialsStrategy
@@ -28,28 +27,6 @@ class Strategy(object):
         raise NotImplementedError
 
 
-def smart_factory(config):
-    """ Build a Smart object from a config dict.
-
-    Parameters
-    ----------
-    config : dict
-
-    Returns
-    -------
-    lib.oauth.SmartStrategy
-    """
-    urls = fhir.get_oauth_uris(config['api']['url'])
-    auth = requests.auth.HTTPBasicAuth(config['auth']['client_id'],
-                                       config['auth']['client_secret'])
-
-    return SmartStrategy(client_id=config['auth']['client_id'],
-                         username=config['auth'].get('username', None),
-                         password=config['auth'].get('password', None),
-                         urls=urls,
-                         auth=auth)
-
-
 def refresh_token_factory(config):
     """ Build a RefreshTokenStrategy object from a behave config.
 
@@ -63,12 +40,14 @@ def refresh_token_factory(config):
     """
     urls = fhir.get_oauth_uris(config['api']['url'])
 
-    return RefreshTokenStrategy(client_id=config['auth']['client_id'],
-                                client_secret=config['auth']['client_secret'],
-                                redirect_uri=config['auth']['redirect_uri'],
-                                urls=urls,
-                                refresh_token=config['auth']['refresh_token'],
-                                confidential_client=config['auth'].get('confidential_client', False))
+    return RefreshTokenStrategy(
+        client_id=config['auth'].get('client_id'),
+        client_secret=config['auth'].get('client_secret'),
+        redirect_uri=config['auth'].get('redirect_uri'),
+        urls=urls,
+        refresh_token=config['auth'].get('refresh_token'),
+        confidential_client=config['auth'].get('confidential_client', False),
+    )
 
 
 def client_credentials_factory(config):
@@ -101,10 +80,8 @@ def factory(context):
     lib.oauth.Strategy implementation
     """
     config = context.config
-    strategy = config['auth'].get('strategy', 'smart')
+    strategy = config['auth'].get('strategy')
 
-    if strategy == 'smart':
-        return smart_factory(config)
     if strategy == 'none':
         return NoneStrategy()
     if strategy == 'refresh_token':
