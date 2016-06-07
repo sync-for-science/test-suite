@@ -2,6 +2,7 @@
 import os
 
 from flask import request, session
+from selenium import webdriver
 import yaml
 
 
@@ -28,5 +29,7 @@ def get_config(default='smart'):
     else:
         host = os.getenv('VIRTUAL_HOST', 'localhost:9003')
         config['auth']['redirect_uri'] = 'http://' + host + '/authorized/'
+
+    config['browser'] = webdriver.PhantomJS()
 
     return config

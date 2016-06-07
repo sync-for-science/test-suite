@@ -2,7 +2,6 @@
 It provides oAuth strategies for connecting to secure FHIR APIs.
 """
 import requests
-from selenium import webdriver
 
 from testsuite import fhir
 from .none import NoneStrategy
@@ -42,7 +41,7 @@ def refresh_token_factory(config):
     auth_config = config['auth']
     urls = fhir.get_oauth_uris(config['api']['url'])
     authorizer = auth_config['authorizer'](
-        webdriver.PhantomJS(),
+        config['browser'],
         urls['authorize']
     )
 
