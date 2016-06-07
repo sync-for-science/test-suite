@@ -14,25 +14,20 @@ class RefreshTokenStrategy(object):
     access_token = None
     refresh_token = None
 
-    def __init__(self, client_id, client_secret, refresh_token, redirect_uri, urls, confidential_client):
-        self._config = {
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'redirect_uri': redirect_uri,
-            'refresh_token': refresh_token,
-            'confidential_client': confidential_client,
-        }
+    def __init__(self, config, urls, authorizer):
+        self._config = config
         self._urls = urls
+        self._authorizer = authorizer
 
     def authorize(self):
         """ .
         """
-        from selenium import webdriver
-        from testsuite.oauth.authorize import smart
-        browser = webdriver.PhantomJS()
-        authorizer = smart.SmartAuthorizer(browser, self._urls['authorize'])
+        token_json = self._authorizer.authorize()
 
-        authorizer.authorize()
+        self.access_token = token_json.get('access_token', None)
+        self.refresh_token = token_json.get('refresh_token', None)
+
+        return token_json
 
     def exchange_authorization_grant(self, grant):
         """ Exchange an authorization grant for an access token.
@@ -60,9 +55,7 @@ class RefreshTokenStrategy(object):
                                  auth=auth,
                                  data=post_data)
 
-        assert int(response.status_code) == 200, \
-            ERROR_TOKEN_REQUEST.format(status_code=response.status_code,
-                                       text=response.text)
+        assert int(response.status_code) == 200, response
         token_json = response.json()
 
         self.access_token = token_json.get('access_token', None)
@@ -101,9 +94,7 @@ class RefreshTokenStrategy(object):
         response = requests.post(self._urls['token'],
                                  data=post_data)
 
-        assert int(response.status_code) == 200, \
-            ERROR_TOKEN_REQUEST.format(status_code=response.status_code,
-                                       text=response.text)
+        assert int(response.status_code) == 200, response
         token_json = response.json()
 
         self.access_token = token_json.get('access_token', None)

@@ -12,6 +12,11 @@ Field "{field}" not found in {response_fields}.
 """
 
 
+@given('I have a response')
+def step_impl(context):
+    assert context.response, 'No response'
+
+
 @then('the response code should be {response_code}')
 def step_impl(context, response_code):
     response_code = int(response_code)

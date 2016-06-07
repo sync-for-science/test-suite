@@ -9,6 +9,7 @@ from testsuite.oauth import factory
 from testsuite import fhir
 
 
+ERROR_AUTHORIZATION_FAILED = 'Authorization failed.'
 ERROR_BAD_CONFORMANCE = 'Could not parse conformance statement.'
 
 
@@ -25,8 +26,12 @@ def update_session(refresh_token):
 def step_impl(context):
     context.smart = factory(context)
 
-    context.smart.request_offline_access()
-    context.authorization = context.smart.authorization()
+    try:
+        context.smart.request_offline_access()
+        context.authorization = context.smart.authorization()
+    except AssertionError as error:
+        assert False, utils.bad_response_assert(error.args[0],
+                                                ERROR_AUTHORIZATION_FAILED)
 
     update_session(context.smart.refresh_token)
     context.config['auth']['refresh_token'] = context.smart.refresh_token
@@ -135,7 +140,11 @@ def step_impl(context, field_name):
     context.response = response
 
 
-@when('I authorize')
+@given('I am authorized')
 def step_impl(context):
     context.smart = factory(context)
-    context.smart.authorize()
+    token = context.smart.authorize()
+
+    context.config['auth']['refresh_token'] = context.smart.refresh_token
+    context.config['api']['patient'] = token.get('patient',
+                                                 context.config['api'].get('patient'))

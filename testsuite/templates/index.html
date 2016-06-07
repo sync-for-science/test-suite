@@ -4,6 +4,7 @@
 <option
     {% if session.vendor == vendor %} selected{% endif %}
     {% if authorize %} data-authorize="true"{% endif %}
+    data-vendor="{{ vendor }}"
     >{{ vendor }}</option>
 {%- endmacro %}
 

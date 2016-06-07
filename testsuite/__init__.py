@@ -36,6 +36,11 @@ def tests():
     return output.getvalue(), 200, headers
 
 
+@app.route('/session')
+def cb_session():
+    return jsonify(session)
+
+
 @app.route('/authorized/')
 def authorized():
     config = config_reader.get_config(session['vendor'])

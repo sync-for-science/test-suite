@@ -1,10 +1,10 @@
-""" Authorize the SMART API.
+""" Authorize the Epic API.
 """
 import json
 
 
-class SmartAuthorizer(object):
-    """ Orchestrate the SMART authorization path.
+class EpicAuthorizer(object):
+    """ Orchestrate the Cerner authorization path.
 
     Args:
         browser (selenium.webdriver.remote.webdriver.WebDriver)
@@ -24,13 +24,17 @@ class SmartAuthorizer(object):
         """
         try:
             self.browser.get('http://tests.dev.syncfor.science:9003/')
-            self.find('#vendor option:first-child').click()
+            self.find('#vendor option[data-vendor=Epic]').click()
             self.find('#authorize').click()
+
+            self.find('#txtUsername').send_keys('ARGONAUT')
+            self.find('#txtPassword').send_keys('ARGONAUT')
+            self.find('#cmdLogin').click()
 
             self.browser.get('http://tests.dev.syncfor.science:9003/session')
             session = json.loads(self.find('body').text)
 
-            return session.get('authorizations', {}).get('smart', {})
+            return session.get('authorizations', {}).get('epic', {})
         finally:
             self.browser.quit()
 

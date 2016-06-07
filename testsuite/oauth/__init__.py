@@ -2,6 +2,7 @@
 It provides oAuth strategies for connecting to secure FHIR APIs.
 """
 import requests
+from selenium import webdriver
 
 from testsuite import fhir
 from .none import NoneStrategy
@@ -38,16 +39,14 @@ def refresh_token_factory(config):
     -------
     lib.oauth.RefreshTokenStrategy
     """
+    auth_config = config['auth']
     urls = fhir.get_oauth_uris(config['api']['url'])
-
-    return RefreshTokenStrategy(
-        client_id=config['auth'].get('client_id'),
-        client_secret=config['auth'].get('client_secret'),
-        redirect_uri=config['auth'].get('redirect_uri'),
-        urls=urls,
-        refresh_token=config['auth'].get('refresh_token'),
-        confidential_client=config['auth'].get('confidential_client', False),
+    authorizer = auth_config['authorizer'](
+        webdriver.PhantomJS(),
+        urls['authorize']
     )
+
+    return RefreshTokenStrategy(auth_config, urls, authorizer)
 
 
 def client_credentials_factory(config):
