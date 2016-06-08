@@ -22,7 +22,8 @@ class RefreshTokenStrategy(object):
     def authorize(self):
         """ .
         """
-        token_json = self._authorizer.authorize()
+        with self._authorizer:
+            token_json = self._authorizer.authorize()
 
         self.access_token = token_json.get('access_token', None)
         self.refresh_token = token_json.get('refresh_token', None)
@@ -45,7 +46,7 @@ class RefreshTokenStrategy(object):
         }
 
         auth = None
-        if self._config['confidential_client']:
+        if self._config.get('confidential_client'):
             auth = requests.auth.HTTPBasicAuth(
                 self._config['client_id'],
                 self._config['client_secret']

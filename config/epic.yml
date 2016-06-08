@@ -10,4 +10,5 @@ auth:
   client_secret: argonaut
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
-  authorizer: !!python/name:testsuite.oauth.authorize.epic.EpicAuthorizer
+
+authorizer: !!python/name:testsuite.oauth.authorize.epic.EpicAuthorizer

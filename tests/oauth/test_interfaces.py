@@ -16,9 +16,9 @@ CONFIG = {
         'redirect_uri': 'http://example.com/redirect/',
         'refresh_token': 'REFRESH TOKEN',
         'token_url': 'http://example.com/oauth/token',
-        'authorizer': none.NoneAuthorizer,
     },
-    'browser': None,
+    'authorizer': none.NoneAuthorizer,
+    'host': 'http://example.com/',
 }
 
 

@@ -1,5 +1,5 @@
 @refactor
-@patient
+@patient-demographics
 Feature: Patient demographics
 
     Scenario: Correct resourceType

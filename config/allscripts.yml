@@ -10,4 +10,5 @@ auth:
   client_secret: 3ntGQa8jEtcedrPX/lk6u083fLCoH96I+p6P2ygjtOqgkZB93eeG25JaEcKi7+HOgnddSQLgyJpve6sZgCYaQw==
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
-  authorizer: !!python/name:testsuite.oauth.authorize.allscripts.AllscriptsAuthorizer
+
+authorizer: !!python/name:testsuite.oauth.authorize.allscripts.AllscriptsAuthorizer

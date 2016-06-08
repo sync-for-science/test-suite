@@ -1,6 +1,5 @@
-@authorize
-Feature: Can automatically authorize
+Feature: Authorization
 
-    Scenario: Authorization happens
-        Given I am not logged in
-        When I authorize
+    Scenario:  Authorization and log in works
+        Given I am authorized
+        And I am logged in

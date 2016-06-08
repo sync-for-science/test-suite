@@ -1,47 +1,35 @@
 """ Authorize the Allscripts API.
 """
-import json
-
-from selenium.webdriver.common.keys import Keys
+from . import base
 
 
-class AllscriptsAuthorizer(object):
+class AllscriptsAuthorizer(base.AbstractAuthorizer):
     """ Orchestrate the Allscripts authorization path.
 
     Args:
-        browser (selenium.webdriver.remote.webdriver.WebDriver)
-        url (string): The authorization URL.
-
-    Attributes:
-        browser (selenium.webdriver.remote.webdriver.WebDriver)
-        url (string): The authorization URL.
+        host (string): The testing site host.
+        vendor (string): The vendor we're authorizing.
     """
+    def __init__(self, host, vendor='Allscripts'):
+        self.host = host
+        self.vendor = vendor
 
-    def __init__(self, browser, url):
-        self.browser = browser
-        self.url = url
+    def _browser(self):
+        """ Browser Factory skeleton method.
 
-        self.browser.set_window_size(1124, 850)
-
-    def authorize(self):
-        """ The actual authorization method.
+        Allscripts doesn't work unless a browser window size is set.
         """
-        try:
-            self.browser.get('http://tests.dev.syncfor.science:9003/')
-            self.find('#vendor option[data-vendor=Allscripts]').click()
-            self.find('#authorize').click()
+        browser = super()._browser()
+        browser.set_window_size(1124, 850)
 
-            self.find('#UserName').send_keys('s4s_5-5-16')
-            self.find('#Password').send_keys('s4s!2345')
-            self.find('[translate="Login_LogIn"]').click()
+        return browser
 
-            self.browser.get('http://tests.dev.syncfor.science:9003/session')
-            session = json.loads(self.find('body').text)
-            print(session)
+    def _vendor_step(self):
+        """ Vendor Step skeleton method.
 
-            return session.get('authorizations', {}).get('allscripts', {})
-        finally:
-            self.browser.quit()
-
-    def find(self, selector):
-        return self.browser.find_element_by_css_selector(selector)
+        Allscripts requires credentials.
+        Username and password are intentionally included.
+        """
+        self.find('#UserName').send_keys('s4s_5-5-16')
+        self.find('#Password').send_keys('s4s!2345')
+        self.find('[translate="Login_LogIn"]').click()

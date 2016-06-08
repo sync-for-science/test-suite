@@ -1,24 +1,28 @@
 """ Do nothing.
 """
+from . import base
 
 
-class NoneAuthorizer(object):
+class NoneAuthorizer(base.AbstractAuthorizer):
     """ Orchestrate the No-op authorization path.
-
-    Args:
-        browser (selenium.webdriver.remote.webdriver.WebDriver)
-        url (string): The authorization URL.
-
-    Attributes:
-        browser (selenium.webdriver.remote.webdriver.WebDriver)
-        url (string): The authorization URL.
     """
+    def __init__(self, host):
+        pass
 
-    def __init__(self, browser, url):
-        self.browser = browser
-        self.url = url
+    def _launch_step(self):
+        pass
 
-    def authorize(self):
-        """ The actual authorization method.
-        """
+    def _vendor_step(self):
+        pass
+
+    def _get_authorization(self):
+        pass
+
+    def _browser(self):
+        pass
+
+    def open(self):
+        pass
+
+    def close(self):
         pass

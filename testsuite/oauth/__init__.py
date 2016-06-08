@@ -40,10 +40,7 @@ def refresh_token_factory(config):
     """
     auth_config = config['auth']
     urls = fhir.get_oauth_uris(config['api']['url'])
-    authorizer = auth_config['authorizer'](
-        config['browser'],
-        urls['authorize']
-    )
+    authorizer = config['authorizer'](config['host'])
 
     return RefreshTokenStrategy(auth_config, urls, authorizer)
 
