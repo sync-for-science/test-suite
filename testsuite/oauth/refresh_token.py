@@ -86,7 +86,6 @@ class RefreshTokenStrategy(object):
         post_data = {
             'grant_type': 'refresh_token',
             'refresh_token': self.refresh_token,
-            'scope': 'launch/patient patient/*.read',
             'redirect_uri': self._config['redirect_uri'],
         }
         if self._config['client_secret']:

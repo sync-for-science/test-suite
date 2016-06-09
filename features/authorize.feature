@@ -1,3 +1,4 @@
+@smart
 Feature: Authorization
 
     Scenario:  Authorization and log in works
