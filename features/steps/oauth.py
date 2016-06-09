@@ -13,28 +13,18 @@ ERROR_AUTHORIZATION_FAILED = 'Authorization failed.'
 ERROR_BAD_CONFORMANCE = 'Could not parse conformance statement.'
 
 
-def update_session(refresh_token):
-    from flask import session
-
-    try:
-        session['refresh_token'] = refresh_token
-    except RuntimeError:
-        pass
-
-
 @given('I am logged in')
 def step_impl(context):
-    context.smart = factory(context)
+    context.oauth = factory(context)
 
     try:
-        context.smart.request_offline_access()
-        context.authorization = context.smart.authorization()
+        context.oauth.request_offline_access()
+        context.authorization = context.oauth.authorization()
     except AssertionError as error:
         assert False, utils.bad_response_assert(error.args[0],
                                                 ERROR_AUTHORIZATION_FAILED)
 
-    update_session(context.smart.refresh_token)
-    context.config['auth']['refresh_token'] = context.smart.refresh_token
+    context.config['auth']['refresh_token'] = context.oauth.refresh_token
 
 
 @given('I am not logged in')
@@ -44,11 +34,10 @@ def step_impl(context):
 
 @when('I refresh my access token')
 def step_impl(context):
-    context.smart.refresh_access_token()
-    context.authorization = context.smart.authorization()
+    context.oauth.refresh_access_token()
+    context.authorization = context.oauth.authorization()
 
-    update_session(context.smart.refresh_token)
-    context.config['auth']['refresh_token'] = context.smart.refresh_token
+    context.config['auth']['refresh_token'] = context.oauth.refresh_token
 
 
 @when('I ask for authorization without the {field_name} field')
@@ -85,7 +74,7 @@ def step_impl(context):
     """
     fields = {
         'grant_type': 'refresh_token',
-        'refresh_token': context.smart.refresh_token,
+        'refresh_token': context.oauth.refresh_token,
         'scope': 'launch/patient patient/Patient.read',
     }
 
@@ -113,7 +102,7 @@ def step_impl(context, field_name):
     """
     fields = {
         'grant_type': 'refresh_token',
-        'refresh_token': context.smart.refresh_token,
+        'refresh_token': context.oauth.refresh_token,
         'scope': 'launch/patient patient/Patient.read',
     }
 
@@ -142,9 +131,9 @@ def step_impl(context, field_name):
 
 @given('I am authorized')
 def step_impl(context):
-    context.smart = factory(context)
-    token = context.smart.authorize()
+    context.oauth = factory(context)
+    token = context.oauth.authorize()
 
-    context.config['auth']['refresh_token'] = context.smart.refresh_token
+    context.config['auth']['refresh_token'] = context.oauth.refresh_token
     context.config['api']['patient'] = token.get('patient',
                                                  context.config['api'].get('patient'))

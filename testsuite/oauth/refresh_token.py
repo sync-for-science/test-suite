@@ -19,14 +19,16 @@ class RefreshTokenStrategy(object):
         self._urls = urls
         self._authorizer = authorizer
 
+        self.refresh_token = config.get('refresh_token')
+
     def authorize(self):
         """ .
         """
         with self._authorizer:
             token_json = self._authorizer.authorize()
 
-        self.access_token = token_json.get('access_token', None)
-        self.refresh_token = token_json.get('refresh_token', None)
+        self.access_token = token_json.get('access_token')
+        self.refresh_token = token_json.get('refresh_token')
 
         return token_json
 
@@ -72,7 +74,6 @@ class RefreshTokenStrategy(object):
             * access_token
             * refresh_token
         """
-        self.refresh_token = self._config['refresh_token']
         self.refresh_access_token()
 
     def refresh_access_token(self):
