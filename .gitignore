@@ -5,3 +5,7 @@ build
 .cache
 *.egg-info
 ghostdriver.log
+
+# py.test coverage
+.coverage
+testsuite/static/coverage

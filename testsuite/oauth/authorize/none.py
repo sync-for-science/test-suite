@@ -6,9 +6,6 @@ from . import base
 class NoneAuthorizer(base.AbstractAuthorizer):
     """ Orchestrate the No-op authorization path.
     """
-    def __init__(self, host):
-        pass
-
     def _launch_step(self):
         pass
 
