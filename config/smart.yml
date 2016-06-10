@@ -3,7 +3,7 @@ api:
   url: http://smart.dev.syncfor.science:9000/api/fhir/
 
 auth:
-  strategy: refresh_token
+  strategy: authorization_code
   client_id: test-client
   # client_secret intentionally included
   client_secret: 8e43d006-a25d-4786-8041-40473e4c097c

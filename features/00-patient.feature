@@ -1,4 +1,3 @@
-@refactor
 @patient-demographics
 Feature: Patient demographics
 

@@ -65,6 +65,7 @@ def step_impl(context):
                                   ERROR_ENTRY_COUNT,
                                   count=len(entries))
 
+
 @then('all resources will have a {field_name} field')
 def step_impl(context, field_name):
     resource = context.response.json()

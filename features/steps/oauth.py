@@ -5,39 +5,30 @@ from behave import given, when
 import requests
 
 from features.steps import utils
-from testsuite.oauth import factory
 from testsuite import fhir
 
 
 ERROR_AUTHORIZATION_FAILED = 'Authorization failed.'
 ERROR_BAD_CONFORMANCE = 'Could not parse conformance statement.'
+ERROR_OAUTH_DISABLED = 'OAuth is not enabled on this server.'
+
+
+@given('OAuth is enabled')
+def step_impl(context):
+    assert context.config['auth']['strategy'] != 'none', \
+        ERROR_OAUTH_DISABLED
 
 
 @given('I am logged in')
 def step_impl(context):
-    context.oauth = factory(context)
-
-    try:
-        context.oauth.request_offline_access()
-        context.authorization = context.oauth.authorization()
-    except AssertionError as error:
-        assert False, utils.bad_response_assert(error.args[0],
-                                                ERROR_AUTHORIZATION_FAILED)
-
-    context.config['auth']['refresh_token'] = context.oauth.refresh_token
+    assert context.oauth is not None, ERROR_AUTHORIZATION_FAILED
+    assert context.oauth.access_token is not None, \
+        ERROR_AUTHORIZATION_FAILED
 
 
 @given('I am not logged in')
 def step_impl(context):
-    context.authorization = None
-
-
-@when('I refresh my access token')
-def step_impl(context):
-    context.oauth.refresh_access_token()
-    context.authorization = context.oauth.authorization()
-
-    context.config['auth']['refresh_token'] = context.oauth.refresh_token
+    context.oauth = None
 
 
 @when('I ask for authorization without the {field_name} field')
@@ -48,7 +39,7 @@ def step_impl(context, field_name):
         'response_type': 'code',
         'client_id': context.config['auth']['client_id'],
         'redirect_uri': context.config['auth']['redirect_uri'],
-        'scope': 'launch/patient patient/Patient.read',
+        'scope': context.config['auth']['scope'],
         'state': uuid.uuid4(),
     }
 
@@ -75,7 +66,7 @@ def step_impl(context):
     fields = {
         'grant_type': 'refresh_token',
         'refresh_token': context.oauth.refresh_token,
-        'scope': 'launch/patient patient/Patient.read',
+        'scope': context.config['auth']['scope'],
     }
 
     auth = requests.auth.HTTPBasicAuth(context.config['auth']['client_id'],
@@ -103,7 +94,7 @@ def step_impl(context, field_name):
     fields = {
         'grant_type': 'refresh_token',
         'refresh_token': context.oauth.refresh_token,
-        'scope': 'launch/patient patient/Patient.read',
+        'scope': context.config['auth']['scope'],
     }
 
     auth = requests.auth.HTTPBasicAuth(context.config['auth']['client_id'],

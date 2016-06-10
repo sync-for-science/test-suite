@@ -1,4 +1,7 @@
 # pylint: disable=missing-docstring,unused-argument
+import logging
+
+from features.steps import utils
 from testsuite.config_reader import get_config
 from testsuite.oauth import factory
 
@@ -25,13 +28,12 @@ def before_all(context):
 
     context.config = config
     context.oauth = factory(context)
-    token = context.oauth.authorize()
-    print(token)
-    exit()
-
-    context.config['auth']['refresh_token'] = context.oauth.refresh_token
-    if token.get('patient'):
-        context.config['api']['patient'] = token.get('patient')
+    try:
+        context.oauth.authorize()
+        if getattr(context.oauth, 'patient', None) is not None:
+            context.config['api']['patient'] = context.oauth.patient
+    except AssertionError as error:
+        logging.error(utils.bad_response_assert(error.args[0], ''))
 
 
 def before_feature(context, feature):
@@ -43,7 +45,7 @@ def before_feature(context, feature):
     tags = list(CCDS_TAGS.intersection(feature.tags))
 
     if len(tags) > 1:
-        raise Exception('Too many tags', tags)
+        raise Exception('Too many CCDS tags', tags)
 
     if len(tags) == 1:
         ccds_type = tags[0].capitalize().replace('-', ' ')

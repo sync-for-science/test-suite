@@ -4,7 +4,7 @@ api:
   patient: Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
 
 auth:
-  strategy: refresh_token
+  strategy: authorization_code
   client_id: ad3fe986-cbad-4fcc-a487-3e9ee1ef3a4d
   # client_secret intentionally included
   client_secret: argonaut

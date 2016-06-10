@@ -8,4 +8,5 @@ auth:
   client_id: 957rwjcctmu339me9ps9tzwq
   # client_secret intentionally included
   client_secret: C9ZzFBDWW5U7J3s
+  scope: launch/patient patient/*.read offline_access
   token_url: https://api.athenahealth.com/oauthpreview/token

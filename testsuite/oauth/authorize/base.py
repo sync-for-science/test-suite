@@ -75,9 +75,9 @@ class AbstractAuthorizer(metaclass=ABCMeta):
         """
         redirect_uri = parse.urlparse(self.browser.current_url)
         query = parse.parse_qs(redirect_uri.query)
-        self._check_state(''.join(query.get('state')))
+        self._check_state(''.join(query['state']))
 
-        return query
+        return ''.join(query['code'])
 
     def _browser(self):
         """ Browser Factory skeleton method.
