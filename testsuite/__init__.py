@@ -7,6 +7,7 @@ from behave.configuration import Configuration
 from behave.formatter.base import StreamOpener
 from behave.runner import Runner
 from flask import Flask, render_template, request, jsonify, session, redirect
+from werkzeug import exceptions
 import requests
 
 from testsuite import config_reader, fhir, oauth
@@ -43,6 +44,9 @@ def cb_session():
 
 @app.route('/authorized/')
 def authorized():
+    if session.get('vendor') is None:
+        exceptions.abort(500)
+
     config = config_reader.get_config(session['vendor'])
     strategy = oauth.refresh_token_factory(config)
     authorization = strategy.exchange_authorization_grant(request.args.get('code'))

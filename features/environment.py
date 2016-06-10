@@ -26,6 +26,8 @@ def before_all(context):
     context.config = config
     context.oauth = factory(context)
     token = context.oauth.authorize()
+    print(token)
+    exit()
 
     context.config['auth']['refresh_token'] = context.oauth.refresh_token
     if token.get('patient'):

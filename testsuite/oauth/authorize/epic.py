@@ -7,12 +7,12 @@ class EpicAuthorizer(base.AbstractAuthorizer):
     """ Orchestrate the Epic authorization path.
 
     Args:
-        host (string): The testing site host.
-        vendor (string): The vendor we're authorizing.
+        config (dict): The oauth config for this vendor.
+        authorize_url (string): The vendor's authorize endpoint.
     """
-    def __init__(self, host, vendor='Epic'):
-        self.host = host
-        self.vendor = vendor
+    def __init__(self, config, authorize_url):
+        self.config = config
+        self.authorize_url = authorize_url
 
     def _vendor_step(self):
         """ Vendor Step skeleton method.

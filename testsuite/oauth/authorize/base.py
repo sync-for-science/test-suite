@@ -1,7 +1,8 @@
 """ Authorize the SMART API.
 """
 from abc import ABCMeta
-import json
+from urllib import parse
+import uuid
 
 from selenium import webdriver
 
@@ -10,9 +11,8 @@ class AbstractAuthorizer(metaclass=ABCMeta):
     """ Orchestrate the authorization path.
 
     Attributes:
-        host (string): The testing site host.
-        browser (webdriver.remote.webdriver.Webdriver): The selenium webdriver.
-        vendor (string): The vendor we're authorizing.
+        config (dict): The oauth config for this vendor.
+        authorize_url (string): The vendor's authorize endpoint.
 
     Example:
         Implements the context manager methods.
@@ -30,15 +30,17 @@ class AbstractAuthorizer(metaclass=ABCMeta):
             finally:
                 authorizer.close()
     """
-    host = None
     browser = None
-    vendor = None
+    config = None
+    authorize_url = None
+
+    _state = None
 
     def authorize(self):
         """ The actual authorization method.
         """
         if self.browser is None:
-            raise 'Webdriver must be connected first.'
+            raise Exception('Webdriver must be connected first.')
 
         self._launch_step()
         self._vendor_step()
@@ -51,12 +53,11 @@ class AbstractAuthorizer(metaclass=ABCMeta):
         Override this if a vendor needs to begin the authorize process in a
         non-standard way.
         """
-        self.browser.get(self.launch_url)
-
-        selector = '#vendor option[data-vendor={vendor}]'
-        self.find(selector.format(vendor=self.vendor)).click()
-
-        self.find('#authorize').click()
+        launch_url = '?'.join([
+            self.authorize_url,
+            parse.urlencode(self.launch_params)
+        ])
+        self.browser.get(launch_url)
 
     def _vendor_step(self):
         """ Vendor Step skeleton method.
@@ -72,10 +73,11 @@ class AbstractAuthorizer(metaclass=ABCMeta):
         Override this if a vendor's authorization will not be stored in the
         standard session location.
         """
-        self.browser.get(self.session_url)
-        session = json.loads(self.find('body').text)
+        redirect_uri = parse.urlparse(self.browser.current_url)
+        query = parse.parse_qs(redirect_uri.query)
+        self._check_state(''.join(query.get('state')))
 
-        return session.get('authorizations', {}).get(self.vendor_key, {})
+        return query
 
     def _browser(self):
         """ Browser Factory skeleton method.
@@ -86,23 +88,36 @@ class AbstractAuthorizer(metaclass=ABCMeta):
         """
         return webdriver.PhantomJS()
 
-    @property
-    def launch_url(self):
-        """ Properly formatted launch URL.
+    def _generate_state(self):
+        """ Generates a state token.
         """
-        return self.host.rstrip('/') + '/'
+        self._state = str(uuid.uuid4())
+        return self._state
+
+    def _check_state(self, state):
+        """ Checks and destroys a state token.
+        """
+        try:
+            if self._state != state:
+                raise Exception('Invalid state.', self._state, state)
+        finally:
+            self._state = None
 
     @property
-    def session_url(self):
-        """ Properly formatted session URL.
+    def launch_params(self):
+        """ The params to send to the authorize url.
         """
-        return self.host.rstrip('/') + '/session'
+        state = self._generate_state()
+        params = {
+            'response_type': 'code',
+            'client_id': self.config['client_id'],
+            'redirect_uri': self.config['redirect_uri'],
+            'scope': self.config['scope'],
+            'state': state,
+            'aud': self.config['aud'],
+        }
 
-    @property
-    def vendor_key(self):
-        """ Derive the vendor key from the vendor.
-        """
-        return self.vendor.lower()
+        return params
 
     def open(self):
         """ Connect to the selenium webdriver.

@@ -39,8 +39,10 @@ def refresh_token_factory(config):
     lib.oauth.RefreshTokenStrategy
     """
     auth_config = config['auth']
+    auth_config['aud'] = config['api']['url']
     urls = fhir.get_oauth_uris(config['api']['url'])
-    authorizer = config['authorizer'](config['host'])
+    authorizer = config['authorizer'](config=auth_config,
+                                      authorize_url=urls['authorize'])
 
     return RefreshTokenStrategy(auth_config, urls, authorizer)
 
