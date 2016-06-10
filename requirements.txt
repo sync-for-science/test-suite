@@ -1,7 +1,9 @@
 ## The following requirements were added by pip --freeze:
+EasyProcess==0.2.2
 Flask==0.10.1
 Jinja2==2.8
 MarkupSafe==0.23
+PyVirtualDisplay==0.2
 PyYAML==3.11
 Werkzeug==0.11.9
 astroid==1.4.5
@@ -21,5 +23,7 @@ py==1.4.31
 pylint==1.5.5
 pytest==2.9.1
 requests==2.9.1
+selenium==2.53.2
 six==1.10.0
+uWSGI==2.0.13.1
 wrapt==1.10.8

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% macro vendor_option(vendor, authorize=True) -%}
+{% macro vendor_option(vendor) -%}
 <option
     {% if session.vendor == vendor %} selected{% endif %}
-    {% if authorize %} data-authorize="true"{% endif %}
+    data-vendor="{{ vendor }}"
     >{{ vendor }}</option>
 {%- endmacro %}
 
@@ -19,13 +19,12 @@
                         {{ vendor_option('Allscripts') }}
                         {{ vendor_option('Cerner') }}
                         {{ vendor_option('Epic') }}
-                        {{ vendor_option('eClinicalWorks', False) }}
-                        {{ vendor_option('athenahealth', False) }}
-                        {{ vendor_option('McKesson', False) }}
+                        {{ vendor_option('eClinicalWorks') }}
+                        {{ vendor_option('athenahealth') }}
+                        {{ vendor_option('McKesson') }}
                     </select>
                 </div>
                 <div class="btn-group" role="group">
-                    <button id="authorize" type="submit" class="btn btn-default">Authorize</button>
                     <button id="run-tests" type="button" class="btn btn-default">Run tests</button>
                 </div>
             </form>

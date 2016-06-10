@@ -1,72 +1,71 @@
-""" The Client Credentials oAuth strategy. """
+""" Client Credentials
+
+The client credentials (or other forms of client authentication) can
+be used as an authorization grant when the authorization scope is
+limited to the protected resources under the control of the client,
+or to protected resources previously arranged with the authorization
+server.
+
+@see: https://tools.ietf.org/html/rfc6749#section-1.3.4
+"""
 import requests
 
-
-ERROR_TOKEN_REQUEST = """
-Token request failed with status code "{status_code}".
-{text}
-"""
+from . import authorization_grant
 
 
-class ClientCredentialsStrategy(object):
-    """ Implements the lib.oauth.Strategy interface. """
+class ClientCredentialsStrategy(authorization_grant.AuthorizationGrant):
+    """ Client credentials Strategy.
+
+    Args:
+        client_id (string): The client id.
+        client_secret (string): The client secret.
+        token_url (string): The token endpoint.
+
+    Attributes:
+        access_token (string): The access token.
+        refresh_token (string): The refresh token.
+    """
 
     access_token = None
     refresh_token = None
 
     def __init__(self, client_id, client_secret, token_url):
-        self._config = {
-            'client_id': client_id,
-            'client_secret': client_secret,
-        }
-        self._urls = {
-            'token': token_url,
-        }
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.token_url = token_url
 
-    def exchange_authorization_grant(self, grant):
-        """ Exchange an authorization grant for an access token.
-        """
-        raise NotImplementedError
+    def authorize(self):
+        """ Authorize.
 
-    def request_offline_access(self):
-        """ Fetch a refresh token.
+        Follows the steps defined in the OAuth spec to generate an access
+        token.
 
-        Modifies
-        ---------
-            * access_token
-            * refresh_token
+        @see: https://tools.ietf.org/html/rfc6749#section-4.4
         """
         post_data = {
             'grant_type': 'client_credentials',
         }
+
+        response = self._token_request(post_data)
+
+        self.access_token = response['access_token']
+
+        # optional response parameters
+        if response.get('refresh_token'):
+            self.refresh_token = response['refresh_token']
+
+    def _token_request(self, post_data):
+        """ Make a token request.
+        """
         auth = requests.auth.HTTPBasicAuth(
-            self._config['client_id'],
-            self._config['client_secret']
+            self.client_id,
+            self.client_secret,
         )
 
-        response = requests.post(self._urls['token'],
+        response = requests.post(self.token_url,
                                  auth=auth,
                                  data=post_data)
 
-        assert int(response.status_code) == 200, \
-            ERROR_TOKEN_REQUEST.format(status_code=response.status_code,
-                                       text=response.text)
-        token_json = response.json()
+        assert int(response.status_code) == 200, response
 
-        self.access_token = token_json.get('access_token', None)
-        self.refresh_token = token_json.get('refresh_token', None)
-
-
-    def refresh_access_token(self):
-        """ Request a new access token.
-
-        Modifies
-        ---------
-            * access_token
-            * refresh_token
-        """
-        self.request_offline_access()
-
-    def authorization(self):
-        """ Get an Authorization header value. """
-        return 'Bearer {access_token}'.format(access_token=self.access_token)
+        return response.json()

@@ -1,23 +1,15 @@
-""" None strategy for accessing unprotected servers. """
+""" No-op authorization.
+"""
+from . import authorization_grant
 
 
-class NoneStrategy(object):
-    """ Implements the lib.oauth.Strategy interface. """
-    access_token = None
-    refresh_token = None
+class NoneStrategy(authorization_grant.AuthorizationGrant):
+    """ NoneStrategy.
 
-    def exchange_authorization_grant(self, grant):
-        """ Exchange an authorization grant for an access token. """
-        pass
+    Does nothing.
+    """
+    access_token = ''
 
-    def request_offline_access(self):
-        """ Fetch a refresh token. """
-        pass
-
-    def refresh_access_token(self):
-        """ Request a new access token. """
-        pass
-
-    def authorization(self):
-        """ Get an Authorization header value. """
-        return None
+    def authorize(self):
+        """ Authorize.
+        """

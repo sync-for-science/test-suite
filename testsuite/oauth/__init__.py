@@ -4,71 +4,26 @@ It provides oAuth strategies for connecting to secure FHIR APIs.
 import requests
 
 from testsuite import fhir
-from .smart import SmartStrategy
-from .none import NoneStrategy
-from .refresh_token import RefreshTokenStrategy
-from .client_credentials import ClientCredentialsStrategy
+from . import authorization_code, client_credentials, none
 
 
-class Strategy(object):
-    """ oAuth Strategy interface. """
-    access_token = None
-    refresh_token = None
+def authorization_code_factory(config):
+    """ Build a AuthorizationCodeStrategy.
 
-    def request_offline_access(self):
-        """ Request a refresh token. """
-        raise NotImplementedError
-
-    def refresh_access_token(self):
-        """ Request a new access token. """
-        raise NotImplementedError
-
-    def authorization(self):
-        """ Get an Authorization header value. """
-        raise NotImplementedError
-
-
-def smart_factory(config):
-    """ Build a Smart object from a config dict.
-
-    Parameters
-    ----------
-    config : dict
-
-    Returns
-    -------
-    lib.oauth.SmartStrategy
+    Returns:
+        authorization_code.AuthorizationCodeStrategy
     """
+    auth_config = config['auth']
+    auth_config['aud'] = config['api']['url']
     urls = fhir.get_oauth_uris(config['api']['url'])
-    auth = requests.auth.HTTPBasicAuth(config['auth']['client_id'],
-                                       config['auth']['client_secret'])
+    authorizer = config['authorizer'](config=auth_config,
+                                      authorize_url=urls['authorize'])
 
-    return SmartStrategy(client_id=config['auth']['client_id'],
-                         username=config['auth'].get('username', None),
-                         password=config['auth'].get('password', None),
-                         urls=urls,
-                         auth=auth)
-
-
-def refresh_token_factory(config):
-    """ Build a RefreshTokenStrategy object from a behave config.
-
-    Parameters
-    ----------
-    config : dict
-
-    Returns
-    -------
-    lib.oauth.RefreshTokenStrategy
-    """
-    urls = fhir.get_oauth_uris(config['api']['url'])
-
-    return RefreshTokenStrategy(client_id=config['auth']['client_id'],
-                                client_secret=config['auth']['client_secret'],
-                                redirect_uri=config['auth']['redirect_uri'],
-                                urls=urls,
-                                refresh_token=config['auth']['refresh_token'],
-                                confidential_client=config['auth'].get('confidential_client', False))
+    return authorization_code.AuthorizationCodeStrategy(
+        auth_config,
+        urls,
+        authorizer
+    )
 
 
 def client_credentials_factory(config):
@@ -82,7 +37,7 @@ def client_credentials_factory(config):
     -------
     testsuite.oauth.ClientCredentialsStrategy
     """
-    return ClientCredentialsStrategy(
+    return client_credentials.ClientCredentialsStrategy(
         client_id=config['auth']['client_id'],
         client_secret=config['auth']['client_secret'],
         token_url=config['auth']['token_url'],
@@ -101,14 +56,12 @@ def factory(context):
     lib.oauth.Strategy implementation
     """
     config = context.config
-    strategy = config['auth'].get('strategy', 'smart')
+    strategy = config['auth'].get('strategy')
 
-    if strategy == 'smart':
-        return smart_factory(config)
     if strategy == 'none':
-        return NoneStrategy()
-    if strategy == 'refresh_token':
-        return refresh_token_factory(config)
+        return none.NoneStrategy()
+    if strategy == 'authorization_code':
+        return authorization_code_factory(config)
     if strategy == 'client_credentials':
         return client_credentials_factory(config)
 

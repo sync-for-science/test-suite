@@ -7,6 +7,7 @@ from behave.configuration import Configuration
 from behave.formatter.base import StreamOpener
 from behave.runner import Runner
 from flask import Flask, render_template, request, jsonify, session, redirect
+from werkzeug import exceptions
 import requests
 
 from testsuite import config_reader, fhir, oauth
@@ -38,39 +39,7 @@ def tests():
 
 @app.route('/authorized/')
 def authorized():
-    config = config_reader.get_config(session['vendor'])
-    strategy = oauth.refresh_token_factory(config)
-    authorization = strategy.exchange_authorization_grant(request.args.get('code'))
-
-    if 'authorizations' not in session:
-        session['authorizations'] = {}
-    session['authorizations'][session['vendor'].lower()] = authorization
-
-    return redirect('/')
-
-
-@app.route('/authorize/', methods=['POST'])
-def authorize():
-    config = config_reader.get_config()
-    uris = fhir.get_oauth_uris(config['api']['url'])
-    state = uuid.uuid4()
-
-    params = {
-        'response_type': 'code',
-        'client_id': config['auth']['client_id'],
-        'redirect_uri': config['auth']['redirect_uri'],
-        'scope': config['auth']['scope'],
-        'state': state,
-        'aud': config['api']['url'],
-    }
-    if config['auth'].get('launch', False):
-        params['launch'] = config['auth']['launch']
-    authorize_url = uris['authorize'] + '?' + urlencode(params)
-
-    session['vendor'] = request.form['vendor']
-    session['state'] = state
-
-    return redirect(authorize_url)
+    exceptions.abort(500)
 
 
 @app.route('/launch/', methods=['POST', 'GET'])

@@ -43,7 +43,7 @@ def get_resource(context, resource):
         url = "{url}{resource}".format(url=context.config['api']['url'],
                                        resource=resource)
     headers = {
-        'Authorization': context.authorization,
+        'Authorization': 'Bearer {0}'.format(context.oauth.access_token),
         'Accept': 'application/json',
         'Accept-Encoding': 'deflate,sdch',
     }
