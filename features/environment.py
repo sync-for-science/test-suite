@@ -1,5 +1,6 @@
 # pylint: disable=missing-docstring,unused-argument
 from testsuite.config_reader import get_config
+from testsuite.oauth import factory
 
 
 CCDS_TAGS = {
@@ -18,10 +19,17 @@ CCDS_TAGS = {
     'patient-documents',
 }
 
+
 def before_all(context):
     config = get_config()
 
     context.config = config
+    context.oauth = factory(context)
+    token = context.oauth.authorize()
+
+    context.config['auth']['refresh_token'] = context.oauth.refresh_token
+    if token.get('patient'):
+        context.config['api']['patient'] = token.get('patient')
 
 
 def before_feature(context, feature):
@@ -38,8 +46,7 @@ def before_feature(context, feature):
     if len(tags) == 1:
         ccds_type = tags[0].capitalize().replace('-', ' ')
         steps = [
-            'Given I am authorized',
-            'And I am logged in',
+            'Given I am logged in',
             'When I request {ccds_type}'.format(ccds_type=ccds_type),
         ]
         try:

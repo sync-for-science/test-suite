@@ -127,13 +127,3 @@ def step_impl(context, field_name):
                              timeout=5)
 
     context.response = response
-
-
-@given('I am authorized')
-def step_impl(context):
-    context.oauth = factory(context)
-    token = context.oauth.authorize()
-
-    context.config['auth']['refresh_token'] = context.oauth.refresh_token
-    context.config['api']['patient'] = token.get('patient',
-                                                 context.config['api'].get('patient'))
