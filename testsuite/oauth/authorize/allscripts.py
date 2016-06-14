@@ -4,6 +4,7 @@ import time
 
 from pyvirtualdisplay import Display
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 from . import base
 
@@ -29,7 +30,10 @@ class AllscriptsAuthorizer(base.AbstractAuthorizer):
         self.display = Display(visible=0, size=(800, 600))
         self.display.start()
 
-        return webdriver.Chrome()
+        options = Options()
+        options.add_argument("--no-sandbox")
+
+        return webdriver.Chrome(chrome_options=options)
 
     def _vendor_step(self):
         """ Vendor Step skeleton method.
