@@ -8,7 +8,10 @@ require('./styles.less');
 require('bootstrap/dist/js/npm');
 
 $(function () {
-  var socket = socketio.connect('http://' + document.domain + ':' + location.port);
+  var socket = socketio.connect(
+    'http://' + document.domain + ':' + location.port,
+    {timeout: 1000}
+  );
   socket.on('connect', function () {
     console.log('connected');
   });
