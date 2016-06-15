@@ -8,6 +8,10 @@ This suite was developed for python 3. To install dependencies run `pip install 
 
 To configure your own project, copy `behave.ini.dist` to `behave.ini`, and change the relevant configuration values.
 
+### Building js app (for development)
+
+Install npm, then `npm install` and `npm run-script build`
+
 ## Running the test suite
 
 To run the suite, run `behave`.

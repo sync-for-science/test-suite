@@ -8,10 +8,14 @@ class ChunkedJsonFormatter(PrettyJSONFormatter):
     """
     def __init__(self, a, b):
         super(ChunkedJsonFormatter, self).__init__(a, b)
-        self.snapshot = []
+        self.snapshot = {
+            'plan': None,
+            'status': []
+        }
 
     def update_status_data(self):
         super(ChunkedJsonFormatter, self).update_status_data()
-
-        self.snapshot.append(self.current_feature_data)
+        if not self.snapshot['plan']:
+            self.snapshot['plan'] = self.config.plan
+        self.snapshot['status'].append(self.current_feature_data)
         self.config.on_snapshot(self.snapshot)

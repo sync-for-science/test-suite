@@ -18,10 +18,11 @@ $(function () {
     console.log('message', message);
   });
   socket.on('snapshot', function (snapshot) {
-    snapshot.reverse();
+    console.log("Total features", snapshot.plan.length);
+    snapshot.status.reverse();
 
     $('#canvas')
-      .html(features_tmpl({features: snapshot}))
+      .html(features_tmpl({features: snapshot.status}))
       .find('[data-toggle="tooltip"]').tooltip();
   });
   socket.on('tests_complete', function () {
