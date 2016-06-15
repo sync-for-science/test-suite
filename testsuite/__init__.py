@@ -17,7 +17,7 @@ from testsuite import config_reader, fhir, oauth
 ASYNC_MODE = 'threading'
 
 app = Flask(__name__)  # pylint: disable=invalid-name
-socketio = flask_socketio.SocketIO(app, async_mode=ASYNC_MODE)  # pylint: disable=invalid-name
+socketio = flask_socketio.SocketIO(app, async_mode=ASYNC_MODE, ping_interval=60)  # pylint: disable=invalid-name
 
 
 @app.route('/')

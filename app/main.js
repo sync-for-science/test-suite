@@ -25,6 +25,12 @@ $(function () {
   socket.on('tests_complete', function () {
     $('#run-tests').prop('disabled', false);
   });
+  socket.on('disconnect', function () {
+    $('#run-tests').prop('disabled', false);
+    $('#canvas').html(error_tmpl({
+      'responseText': '<h1>Disconnected from server.</h1>'
+    }));
+  });
 
   $('#run-tests').on('click', function (event) {
     var vendor = $('#vendor').val();
