@@ -24,9 +24,20 @@ CCDS_TAGS = {
 
 
 def before_all(context):
-    config = get_config(context.config.vendor)
 
-    context.config = config
+    plan = []
+    for feature in context._runner.features:
+        scenariolist = []
+        plan.append({'name': str(feature), 'scenarios': scenariolist})
+        for scenario in feature.scenarios:
+            steplist = []
+            scenariolist.append({'name': str(scenario), 'steps': steplist})
+            for step in scenario.steps:
+                steplist.append({'name': str(step)})
+
+    context.config.plan = plan
+    context.config = get_config(context.config.vendor)
+
     context.oauth = factory(context)
     try:
         context.oauth.authorize()
