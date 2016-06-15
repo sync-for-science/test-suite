@@ -16,10 +16,10 @@ class NoneAuthorizer(base.AbstractAuthorizer):
         pass
 
     def _browser(self):
-        pass
+        return True
 
     def open(self):
-        pass
+        self.browser = self._browser()
 
     def close(self):
-        pass
+        self.browser = None

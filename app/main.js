@@ -16,7 +16,6 @@ $(function () {
     console.log('message', message);
   });
   socket.on('snapshot', function (snapshot) {
-    console.log(snapshot);
     snapshot.reverse();
 
     $('#canvas')
@@ -26,8 +25,6 @@ $(function () {
   socket.on('tests_complete', function () {
     $('#run-tests').prop('disabled', false);
   });
-
-  window.socket = socket;
 
   $('#run-tests').on('click', function (event) {
     var vendor = $('#vendor').val();

@@ -17,12 +17,8 @@ def enable_httpretty(request):
 
 @pytest.fixture
 def success_oauth_uris(request):
-    """ Defines a conformance statement with token and authorize uris. """
-
-    def fin():
-        httpretty.disable()
-    request.addfinalizer(fin)
-
+    """ Defines a conformance statement with token and authorize uris.
+    """
     response = {
         'rest': [{
             'security': {
@@ -43,7 +39,6 @@ def success_oauth_uris(request):
         }],
     }
 
-    httpretty.enable()
     httpretty.register_uri(httpretty.GET,
                            'http://example.com/fhir/metadata',
                            body=json.dumps(response),

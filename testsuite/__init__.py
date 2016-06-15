@@ -14,9 +14,6 @@ import requests
 from testsuite import config_reader, fhir, oauth
 
 
-# from gevent import monkey
-# monkey.patch_all()
-
 ASYNC_MODE = 'threading'
 
 app = Flask(__name__)  # pylint: disable=invalid-name
