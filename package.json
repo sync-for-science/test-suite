@@ -25,6 +25,7 @@
     "jquery": "^2.2.3",
     "less": "^2.6.1",
     "less-loader": "^2.2.3",
+    "socket.io": "^1.4.6",
     "style-loader": "^0.13.1",
     "underscore": "^1.8.3",
     "url-loader": "^0.5.7"

@@ -24,7 +24,7 @@ CCDS_TAGS = {
 
 
 def before_all(context):
-    config = get_config()
+    config = get_config(context.config.vendor)
 
     context.config = config
     context.oauth = factory(context)

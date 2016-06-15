@@ -46,3 +46,10 @@ To test the... test suite, use py.test
 pip install -e . # Install "testsuite" so that the tests can find it
 py.test
 ```
+
+To see see test coverage, generate a coverage report and navigate to
+/static/coverage/index.html.
+
+```
+py.test --cov=testsuite --cov-report html
+```

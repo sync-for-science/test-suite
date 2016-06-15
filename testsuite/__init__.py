@@ -8,33 +8,53 @@ from behave.formatter.base import StreamOpener
 from behave.runner import Runner
 from flask import Flask, render_template, request, jsonify, session, redirect
 from werkzeug import exceptions
+import flask_socketio
 import requests
 
 from testsuite import config_reader, fhir, oauth
 
 
+# from gevent import monkey
+# monkey.patch_all()
+
+ASYNC_MODE = 'threading'
+
 app = Flask(__name__)  # pylint: disable=invalid-name
+socketio = flask_socketio.SocketIO(app, async_mode=ASYNC_MODE)  # pylint: disable=invalid-name
 
 
-@app.route("/")
+@app.route('/')
 def index():
     return render_template('index.html')
 
 
-@app.route('/tests.json', methods=['POST'])
-def tests():
-    output = io.StringIO()
-    output_stream = StreamOpener(stream=output)
-    config = Configuration(outputs=[output_stream], format=['json.pretty'])
-    runner = Runner(config)
+@socketio.on('connect')
+def got_connect():
+    flask_socketio.send('connected')
 
-    runner.run()
 
-    headers = {
-        'Content-type': 'application/json',
-    }
+@socketio.on('message')
+def cb_handle_message(message):
+    flask_socketio.send('message received!')
 
-    return output.getvalue(), 200, headers
+
+@socketio.on('begin_tests')
+def tests(data):
+    try:
+        output = io.StringIO()
+        output_stream = StreamOpener(stream=output)
+        config = Configuration(
+            outputs=[output_stream],
+            format=['json.chunked'],
+            on_snapshot=lambda s: flask_socketio.emit('snapshot', s),
+            vendor=data.get('vendor'),
+            command_args=[]
+        )
+        runner = Runner(config)
+
+        runner.run()
+    finally:
+        flask_socketio.emit('tests_complete')
 
 
 @app.route('/authorized/')

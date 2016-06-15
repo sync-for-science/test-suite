@@ -77,6 +77,9 @@ class AbstractAuthorizer(metaclass=ABCMeta):
         query = parse.parse_qs(redirect_uri.query)
         self._check_state(''.join(query['state']))
 
+        if 'error' in query:
+            raise Exception(query['error'], query.get('error_description'))
+
         return ''.join(query['code'])
 
     def _browser(self):

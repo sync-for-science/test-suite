@@ -1,3 +1,4 @@
+<h1>Progresss: {{#each-reverse features}}{{progress status}}{{/each-reverse}}</h1>
 {{#each features}}
     <h2>Feature: {{ name }} {{result status}}</h2>
     {{#testWasSkipped}}
