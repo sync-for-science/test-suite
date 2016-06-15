@@ -9,8 +9,7 @@ require('bootstrap/dist/js/npm');
 
 $(function () {
   var socket = socketio.connect(
-    'http://' + document.domain + ':' + location.port,
-    {timeout: 1000}
+    'http://' + document.domain + ':' + location.port
   );
   socket.on('connect', function () {
     console.log('connected');
