@@ -29,13 +29,8 @@ def authorization_code_factory(config):
 def client_credentials_factory(config):
     """ Build a ClientCredentialsStrategy object from a config.
 
-    Parameters
-    ----------
-    config : dict
-
-    Returns
-    -------
-    testsuite.oauth.ClientCredentialsStrategy
+    Returns:
+        client_credentials.ClientCredentialsStrategy
     """
     return client_credentials.ClientCredentialsStrategy(
         client_id=config['auth']['client_id'],
@@ -44,18 +39,15 @@ def client_credentials_factory(config):
     )
 
 
-def factory(context):
-    """ Build an oAuth Strategy from a behave context.
+def factory(config):
+    """ Build an oAuth Strategy.
 
-    Parameters
-    ----------
-    context : behave.runner.Context
+    Args:
+        config (dict): A vendor's config.
 
-    Returns
-    -------
-    lib.oauth.Strategy implementation
+    Returns:
+        authorization_grant.AuthorizationGrant
     """
-    config = context.config
     strategy = config['auth'].get('strategy')
 
     if strategy == 'none':

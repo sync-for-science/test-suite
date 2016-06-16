@@ -1,5 +1,6 @@
 # pylint: disable=missing-docstring,unused-argument
 import logging
+import os
 
 from features.steps import utils
 from testsuite.config_reader import get_config
@@ -24,16 +25,35 @@ CCDS_TAGS = {
 
 
 def before_all(context):
-    config = get_config()
+    """ Runs once before all tests.
 
-    context.config = config
-    context.oauth = factory(context)
+    Set up some global state necessary to the tests and test runner.
+
+    * Get the vendor config and attach it to the context.
+    * Authorize against the vendor FHIR server and store the authorization.
+    * Get the test plan so that we can show a progress meter.
+    """
+    # Get the vendor config and attach it to the context.
+    vendor = getattr(context.config, 'vendor', os.getenv('VENDOR'))
+    vendor_config = get_config(vendor.lower())
+    context.vendor_config = vendor_config
+
+    # Authorize against the vendor FHIR server.
+    context.oauth = factory(vendor_config)
     try:
         context.oauth.authorize()
         if getattr(context.oauth, 'patient', None) is not None:
-            context.config['api']['patient'] = context.oauth.patient
+            vendor_config['api']['patient'] = context.oauth.patient
     except AssertionError as error:
         logging.error(utils.bad_response_assert(error.args[0], ''))
+
+    # Get the test plan so that we can show a progress meter.
+    context.config.plan = []
+    # There is no other way to get a feature list from the context.
+    # Since this is for display purposes only, this should be safe.
+    features = context._runner.features  # pylint: disable=protected-access
+    for feature in features:
+        context.config.plan.append({'name': feature.name})
 
 
 def before_feature(context, feature):

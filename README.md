@@ -8,6 +8,10 @@ This suite was developed for python 3. To install dependencies run `pip install 
 
 To configure your own project, copy `behave.ini.dist` to `behave.ini`, and change the relevant configuration values.
 
+### Building the js app (for development)
+
+Install npm, then `npm install` and `npm run-script build`
+
 ## Running the test suite
 
 To run the suite, run `behave`.
@@ -45,4 +49,11 @@ To test the... test suite, use py.test
 ```
 pip install -e . # Install "testsuite" so that the tests can find it
 py.test
+```
+
+To see see test coverage, generate a coverage report and navigate to
+/static/coverage/index.html.
+
+```
+py.test --cov=testsuite --cov-report html
 ```

@@ -1,25 +1,12 @@
 # pylint: disable=missing-docstring
 import os
 
-from flask import request, session
 import yaml
 
 
-def get_config(default='smart'):
-
-    try:
-        vendor = request.form.get('vendor', default).lower()
-    except RuntimeError:
-        vendor = os.getenv('VENDOR', 'smart')
-
+def get_config(vendor):
     with open('config/' + vendor + '.yml') as handle:
         config = yaml.load(handle)
-
-    try:
-        authorization = session.get('authorizations', {}).get(vendor, {})
-        config['api']['patient'] = authorization.get('patient', config['api'].get('patient'))
-    except RuntimeError:
-        pass
 
     host = os.getenv('LETSENCRYPT_HOST')
     if host is not None:

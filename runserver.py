@@ -1,3 +1,3 @@
-from testsuite import app
+from testsuite import app, socketio
 
-app.run(host='0.0.0.0', debug=True)
+socketio.run(app, host='0.0.0.0', port=5000)

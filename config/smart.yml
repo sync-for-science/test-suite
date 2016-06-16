@@ -1,12 +1,12 @@
 ---
 api:
-  url: http://smart.dev.syncfor.science:9000/api/fhir/
+  url: http://proxy.dev.syncfor.science:9000/api/fhir/
 
 auth:
   strategy: authorization_code
-  client_id: test-client
+  client_id: test-suite
   # client_secret intentionally included
-  client_secret: 8e43d006-a25d-4786-8041-40473e4c097c
+  client_secret: demo-secret-s4s
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
 
