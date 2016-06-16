@@ -15,7 +15,7 @@ ERROR_OAUTH_DISABLED = 'OAuth is not enabled on this server.'
 
 @given('OAuth is enabled')
 def step_impl(context):
-    assert context.config['auth']['strategy'] != 'none', \
+    assert context.vendor_config['auth']['strategy'] != 'none', \
         ERROR_OAUTH_DISABLED
 
 
@@ -37,16 +37,16 @@ def step_impl(context, field_name):
     """
     fields = {
         'response_type': 'code',
-        'client_id': context.config['auth']['client_id'],
-        'redirect_uri': context.config['auth']['redirect_uri'],
-        'scope': context.config['auth']['scope'],
+        'client_id': context.vendor_config['auth']['client_id'],
+        'redirect_uri': context.vendor_config['auth']['redirect_uri'],
+        'scope': context.vendor_config['auth']['scope'],
         'state': uuid.uuid4(),
     }
 
     del fields[field_name]
 
     try:
-        uris = fhir.get_oauth_uris(context.config['api']['url'])
+        uris = fhir.get_oauth_uris(context.vendor_config['api']['url'])
     except ValueError as error:
         assert False, utils.bad_response_assert(error.response,
                                                 ERROR_BAD_CONFORMANCE)
@@ -66,14 +66,14 @@ def step_impl(context):
     fields = {
         'grant_type': 'refresh_token',
         'refresh_token': context.oauth.refresh_token,
-        'scope': context.config['auth']['scope'],
+        'scope': context.vendor_config['auth']['scope'],
     }
 
-    auth = requests.auth.HTTPBasicAuth(context.config['auth']['client_id'],
-                                       context.config['auth']['client_secret'])
+    auth = requests.auth.HTTPBasicAuth(context.vendor_config['auth']['client_id'],
+                                       context.vendor_config['auth']['client_secret'])
 
     try:
-        uris = fhir.get_oauth_uris(context.config['api']['url'])
+        uris = fhir.get_oauth_uris(context.vendor_config['api']['url'])
     except ValueError as error:
         assert False, utils.bad_response_assert(error.response,
                                                 ERROR_BAD_CONFORMANCE)
@@ -94,11 +94,11 @@ def step_impl(context, field_name):
     fields = {
         'grant_type': 'refresh_token',
         'refresh_token': context.oauth.refresh_token,
-        'scope': context.config['auth']['scope'],
+        'scope': context.vendor_config['auth']['scope'],
     }
 
-    auth = requests.auth.HTTPBasicAuth(context.config['auth']['client_id'],
-                                       context.config['auth']['client_secret'])
+    auth = requests.auth.HTTPBasicAuth(context.vendor_config['auth']['client_id'],
+                                       context.vendor_config['auth']['client_secret'])
 
     if field_name == 'client_id':
         auth = None
@@ -106,7 +106,7 @@ def step_impl(context, field_name):
         del fields[field_name]
 
     try:
-        uris = fhir.get_oauth_uris(context.config['api']['url'])
+        uris = fhir.get_oauth_uris(context.vendor_config['api']['url'])
     except ValueError as error:
         assert False, utils.bad_response_assert(error.response,
                                                 ERROR_BAD_CONFORMANCE)

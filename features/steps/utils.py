@@ -40,7 +40,7 @@ def get_resource(context, resource):
     if resource.startswith(('http://', 'https://')):
         url = resource
     else:
-        url = "{url}{resource}".format(url=context.config['api']['url'],
+        url = "{url}{resource}".format(url=context.vendor_config['api']['url'],
                                        resource=resource)
     headers = {
         'Authorization': 'Bearer {0}'.format(context.oauth.access_token),

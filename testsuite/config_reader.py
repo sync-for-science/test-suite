@@ -5,8 +5,6 @@ import yaml
 
 
 def get_config(vendor):
-    vendor = os.getenv('VENDOR', vendor).lower()
-
     with open('config/' + vendor + '.yml') as handle:
         config = yaml.load(handle)
 

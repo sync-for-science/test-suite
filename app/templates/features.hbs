@@ -1,5 +1,8 @@
-<h1>Progresss: {{#each-reverse features}}{{progress status}}{{/each-reverse}}</h1>
-{{#each features}}
+<h1>
+    Progresss ({{ features.length }}/{{ length }}):
+    <small>{{#each features}}{{progress status}}{{/each}}</small>
+</h1>
+{{#each-reverse features}}
     <h2>Feature: {{ name }} {{result status}}</h2>
     {{#testWasSkipped}}
         <p>Skipped</p>
@@ -29,4 +32,4 @@
             </div>
         {{/each}}
     {{/testWasSkipped}}
-{{/each}}
+{{/each-reverse}}

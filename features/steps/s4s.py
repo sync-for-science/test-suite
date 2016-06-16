@@ -30,7 +30,7 @@ register_type(MU_CCDS=parse_mu_ccds_mapping)
 
 @when('I request {mu_ccds_query:MU_CCDS}')
 def step_impl(context, mu_ccds_query):
-    query = mu_ccds_query.format(patientId=context.config['api'].get('patient'))
+    query = mu_ccds_query.format(patientId=context.vendor_config['api'].get('patient'))
     response = utils.get_resource(context, query)
 
     context.response = response
@@ -38,7 +38,7 @@ def step_impl(context, mu_ccds_query):
 
 @given('I have a {mu_ccds_query:MU_CCDS} response')
 def step_impl(context, mu_ccds_query):
-    query = mu_ccds_query.format(patientId=context.config['api'].get('patient'))
+    query = mu_ccds_query.format(patientId=context.vendor_config['api'].get('patient'))
 
     assert context.response is not None, \
         'Missing response.'

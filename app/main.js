@@ -17,11 +17,14 @@ $(function () {
   socket.on('message', function (message) {
     console.log('message', message);
   });
-  socket.on('snapshot', function (snapshot) {
-    snapshot.reverse();
+  socket.on('snapshot', function (event) {
+    var tmpl_data = {
+      features: event.snapshot,
+      length: event.plan.length
+    }
 
     $('#canvas')
-      .html(features_tmpl({features: snapshot}))
+      .html(features_tmpl(tmpl_data))
       .find('[data-toggle="tooltip"]').tooltip();
   });
   socket.on('tests_complete', function () {

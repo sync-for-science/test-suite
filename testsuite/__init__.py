@@ -15,9 +15,14 @@ from testsuite import config_reader, fhir, oauth
 
 
 ASYNC_MODE = 'threading'
+PING_INTERVAL = 45
 
-app = Flask(__name__)  # pylint: disable=invalid-name
-socketio = flask_socketio.SocketIO(app, async_mode=ASYNC_MODE, ping_interval=30)  # pylint: disable=invalid-name
+app = Flask(__name__)
+socketio = flask_socketio.SocketIO(
+    app,
+    async_mode=ASYNC_MODE,
+    ping_interval=PING_INTERVAL,
+)
 
 
 @app.route('/')
@@ -37,13 +42,19 @@ def cb_handle_message(message):
 
 @socketio.on('begin_tests')
 def tests(data):
+    def on_snapshot(snapshot, plan):
+        flask_socketio.emit('snapshot', {
+            'snapshot': snapshot,
+            'plan': plan,
+        })
+
     try:
         output = io.StringIO()
         output_stream = StreamOpener(stream=output)
         config = Configuration(
             outputs=[output_stream],
             format=['json.chunked'],
-            on_snapshot=lambda s: flask_socketio.emit('snapshot', s),
+            on_snapshot=on_snapshot,
             vendor=data.get('vendor'),
             command_args=[]
         )
