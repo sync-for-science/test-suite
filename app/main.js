@@ -8,9 +8,7 @@ require('./styles.less');
 require('bootstrap/dist/js/npm');
 
 $(function () {
-  var socket = socketio.connect(
-    'http://' + document.domain + ':' + location.port
-  );
+  var socket = socketio.connect(document.location.origin);
   socket.on('connect', function () {
     console.log('connected');
   });
@@ -32,8 +30,8 @@ $(function () {
   });
   socket.on('disconnect', function () {
     $('#run-tests').prop('disabled', false);
-    $('#canvas').html(error_tmpl({
-      'responseText': '<h1>Disconnected from server.</h1>'
+    $('#status').html(error_tmpl({
+      'responseText': 'Disconnected from server.'
     }));
   });
 
