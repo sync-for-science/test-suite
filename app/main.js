@@ -30,8 +30,8 @@ $(function () {
   });
   socket.on('disconnect', function () {
     $('#run-tests').prop('disabled', false);
-    $('#canvas').html(error_tmpl({
-      'responseText': '<h1>Disconnected from server.</h1>'
+    $('#status').html(error_tmpl({
+      'responseText': 'Disconnected from server.'
     }));
   });
 
