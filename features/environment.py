@@ -58,7 +58,11 @@ def before_all(context):
         context.config.plan.append({'name': feature.name})
 
     # Download the conformance statement
-    context.conformance = fhir.get_conformance_statement(vendor_config['api']['url'])
+    try:
+        context.conformance = fhir.get_conformance_statement(vendor_config['api']['url'])
+    except ValueError as error:
+        context.conformance = None
+        logging.error(utils.bad_response_assert(error.response, ''))
 
 
 def before_feature(context, feature):

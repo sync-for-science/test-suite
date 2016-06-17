@@ -24,7 +24,7 @@ Feature: Implements all the S4S requirements
 
     Scenario: Server implements Allergies and intolerances
         Given I have a valid conformance statement
-        And this server suppports Allergies and intolerances
+        And this server supports Allergies and intolerances
 
     Scenario: Server implements Lab results
         Given I have a valid conformance statement

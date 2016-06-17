@@ -45,6 +45,10 @@ def step_impl(context):
 
 @given('this server supports {mu_ccds_query:MU_CCDS}')
 def step_impl(context, mu_ccds_query):
+    # If there is no conformance statement, assume this resource is supported
+    if context.conformance is None:
+        return
+
     # The resourceType is the first block before a "/" or a "?"
     resource_type = re.split(r'[/?]', mu_ccds_query)[0]
 
@@ -65,6 +69,10 @@ def step_impl(context, mu_ccds_query):
 
 @given('this server supports at least one of')
 def step_impl(context):
+    # If there is no conformance statement, assume this resource is supported
+    if context.conformance is None:
+        return
+
     # The resourceType is the first block before a "/" or a "?"
     resource_types = [re.split(r'[/?]', MU_CCDS_MAPPINGS[resource['type']])[0]
                       for resource in context.table]
