@@ -3,6 +3,7 @@ import logging
 import os
 
 from features.steps import utils
+from testsuite import fhir
 from testsuite.config_reader import get_config
 from testsuite.oauth import factory
 
@@ -32,6 +33,7 @@ def before_all(context):
     * Get the vendor config and attach it to the context.
     * Authorize against the vendor FHIR server and store the authorization.
     * Get the test plan so that we can show a progress meter.
+    * Load the conformance statement so we know which resources are supported.
     """
     # Get the vendor config and attach it to the context.
     vendor = getattr(context.config, 'vendor', os.getenv('VENDOR'))
@@ -55,6 +57,9 @@ def before_all(context):
     for feature in features:
         context.config.plan.append({'name': feature.name})
 
+    # Download the conformance statement
+    context.conformance = fhir.get_conformance_statement(vendor_config['api']['url'])
+
 
 def before_feature(context, feature):
     """ Configure Feature scope.
@@ -71,7 +76,8 @@ def before_feature(context, feature):
         ccds_type = tags[0].capitalize().replace('-', ' ')
         steps = [
             'Given I am logged in',
-            'When I request {ccds_type}'.format(ccds_type=ccds_type),
+            'And this server supports {0}'.format(ccds_type),
+            'When I request {0}'.format(ccds_type),
         ]
         try:
             context.execute_steps('\n'.join(steps))
