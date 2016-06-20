@@ -15,7 +15,7 @@ from testsuite import config_reader, fhir, oauth
 
 
 ASYNC_MODE = 'threading'
-PING_INTERVAL = 45
+PING_INTERVAL = 59
 
 app = Flask(__name__)
 socketio = flask_socketio.SocketIO(
@@ -42,6 +42,9 @@ def cb_handle_message(message):
 
 @socketio.on('begin_tests')
 def tests(data):
+    import logging
+    logging.debug('Begin tests...')
+
     def on_snapshot(snapshot, plan):
         flask_socketio.emit('snapshot', {
             'snapshot': snapshot,
