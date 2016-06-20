@@ -94,7 +94,7 @@ def check_reference(reference, orig, context):
     if reference.startswith('#'):
         matches = [contained for contained in orig.get('contained', [])
                    if contained['id'] == reference[1:]]
-        assert len(matches) > 0, \
+        assert len(matches) == 1, \
             utils.bad_response_assert(context.response,
                                       ERROR_UNRESOLVED_REFERENCE,
                                       reference=reference)
