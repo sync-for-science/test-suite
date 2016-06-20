@@ -40,19 +40,17 @@ def step_impl(context, field_name):
 
 @then('all references will resolve')
 def step_impl(context):
-    def check_reference(reference):
-        response = utils.get_resource(context, reference)
-
-        assert int(response.status_code) == 200, \
-            utils.bad_response_assert(context.response,
-                                      ERROR_UNRESOLVED_REFERENCE,
-                                      reference=reference)
-
     resource = context.response.json()
-    found_references = utils.find_references(resource)
 
-    for reference in found_references:
-        check_reference(reference)
+    if resource['resourceType'] == 'Bundle':
+        entries = [entry['resource'] for entry in resource.get('entry', [])]
+    else:
+        entries = [resource]
+
+    for entry in entries:
+        found = utils.find_references(entry)
+        for reference in found:
+            check_reference(reference, entry, context)
 
 
 @then('there should be at least 1 entry')
@@ -80,3 +78,30 @@ def step_impl(context, field_name):
             utils.bad_response_assert(context.response,
                                       ERROR_FIELD_MISSING,
                                       field_name=field_name)
+
+
+def check_reference(reference, orig, context):
+    """ Follow references and make sure they exist.
+
+    Args:
+        reference (str): A reference in the format:
+           * Resource/id
+           * http://example.com/base/Resource/id
+           * #id
+        orig (dict): The original resource, used when checking contained references.
+        context: The behave context
+    """
+    if reference.startswith('#'):
+        matches = [contained for contained in orig.get('contained', [])
+                   if contained['id'] == reference[1:]]
+        assert len(matches) == 1, \
+            utils.bad_response_assert(context.response,
+                                      ERROR_UNRESOLVED_REFERENCE,
+                                      reference=reference)
+    else:
+        response = utils.get_resource(context, reference)
+
+        assert int(response.status_code) == 200, \
+            utils.bad_response_assert(context.response,
+                                      ERROR_UNRESOLVED_REFERENCE,
+                                      reference=reference)
