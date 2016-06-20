@@ -10,7 +10,9 @@ To configure your own project, copy `behave.ini.dist` to `behave.ini`, and chang
 
 ### Building the js app (for development)
 
-Install npm, then `npm install` and `npm run-script build`
+Install npm, then `npm install` and `npm run-script build`. If you're editing
+JS, you can run `npm run-script watch` to automatically re-build when files
+change.
 
 ## Running the test suite
 

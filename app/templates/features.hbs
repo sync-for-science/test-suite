@@ -1,19 +1,10 @@
-<h1>
-    Progresss ({{ features.length }}/{{ length }}):
-    <small>{{#each features}}{{progress status}}{{/each}}</small>
-</h1>
-{{#each-reverse features}}
+{{#each features}}
     <h2>Feature: {{ name }} {{result status}}</h2>
     {{#testWasSkipped}}
         <p>Skipped</p>
     {{else}}
-        <pre>
-        {{~#each elements~}}
-            {{~> scenario this~}}
-        {{~/each~}}
-        </pre>
         {{#each elements}}
-            <div class="{{#scenarioAllPassed}}collapse{{else}}collapse in{{/scenarioAllPassed}}" id="{{dashify location}}">
+            <div id="{{dashify location}}">
                 <h3>Scenario: {{ name }}</h3>
                 <div class="steps">
                 {{#each steps}}
@@ -32,4 +23,4 @@
             </div>
         {{/each}}
     {{/testWasSkipped}}
-{{/each-reverse}}
+{{/each}}

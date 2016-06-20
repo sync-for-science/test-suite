@@ -55,7 +55,15 @@ def before_all(context):
     # Since this is for display purposes only, this should be safe.
     features = context._runner.features  # pylint: disable=protected-access
     for feature in features:
-        context.config.plan.append({'name': feature.name})
+        scenariolist = []
+        context.config.plan.append({
+            'name': feature.name,
+            'location': str(feature.location),
+            'scenarios': scenariolist})
+        for scenario in feature.scenarios:
+            scenariolist.append({
+                'name': scenario.name,
+                'location': str(scenario.location)})
 
     # Download the conformance statement
     try:
