@@ -40,6 +40,8 @@ $(function () {
       .html(features_tmpl(tmpl_data))
       .find('[data-toggle="tooltip"]').tooltip();
 
+    $(".tooltip").remove();
+
     $('#summary').html(summary_tmpl({summary: summaryResult.summary}))
       .find('[data-toggle="tooltip"]').tooltip({container: 'body'});
   });
