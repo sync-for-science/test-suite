@@ -1,5 +1,4 @@
 # pylint: disable=missing-docstring
-import logging
 import io
 
 from behave.configuration import Configuration
@@ -18,12 +17,10 @@ socketio = flask_socketio.SocketIO(message_queue='redis://')
 def run_tests(room, vendor):
 
     def on_snapshot(snapshot, plan):
-        # TODO: find a better way to serialize this data
-        import json
-        event = json.loads(json.dumps({
+        event = {
             'snapshot': snapshot,
             'plan': plan,
-        }))
+        }
         socketio.emit('snapshot', event, room=room)
 
     try:

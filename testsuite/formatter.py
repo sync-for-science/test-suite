@@ -17,5 +17,10 @@ class ChunkedJsonFormatter(PrettyJSONFormatter):
         if self.plan is None:
             self.plan = self.config.plan
 
-        self.snapshot.append(self.current_feature_data)
+        # Make sure that tags are strings, behave.model.Tag can break
+        # serialization downstream.
+        current_feature = self.current_feature_data
+        current_feature['tags'] = [str(tag) for tag in current_feature['tags']]
+
+        self.snapshot.append(current_feature)
         self.config.on_snapshot(self.snapshot, self.plan)
