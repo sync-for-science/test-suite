@@ -3,46 +3,48 @@ var $ = require('jquery');
 
 var errorNavigation;
 
-function resetErrorNavigation(){
+function reset(){
+  document.removeEventListener("keydown", onKey, false);
   errorNavigation = {
     index: 0,
     errors: []
   }
+  init();
 };
-resetErrorNavigation();
 
-function registerErrors(elist){
+function register(elist){
   errorNavigation.errors = elist;
 }
 
-function scrollToError(){
+function scroll(){
     $("#"+dashify(errorNavigation.errors[errorNavigation.index].location))[0]
     .scrollIntoView();
 }
 
-function moveError(by){
+function moveBy(by){
   var i = errorNavigation.index;
   var len = errorNavigation.errors.length;
   var next = (((i + by) % len) + len) % len; // ensure positive, bounded
 
   errorNavigation.index = next;
-  scrollToError();
+  scroll();
 }
 
-document.addEventListener("keydown", function(e){
-  if (e.keyCode === 78) {
-    moveError(1);
-  }
-  if (e.keyCode === 80) {
-    moveError(-1);
+function onKey(e) {
+    if (e.keyCode === 78) {
+      moveBy(1);
+    }
+    if (e.keyCode === 80) {
+      moveBy(-1);
+    }
   }
 
-
-}, false);
+function init(){
+  document.addEventListener("keydown", onKey, false);
+}
 
 
 module.exports = {
-  move: moveError,
-  reset: resetErrorNavigation,
-  register: registerErrors
+  reset: reset,
+  register: register
 }
