@@ -41,7 +41,7 @@ $(function () {
       .find('[data-toggle="tooltip"]').tooltip();
 
     $('#summary').html(summary_tmpl({summary: summaryResult.summary}))
-      .find('[data-toggle="tooltip"]').tooltip();
+      .find('[data-toggle="tooltip"]').tooltip({container: 'body'});
   });
 
   socket.on('tests_complete', function () {
