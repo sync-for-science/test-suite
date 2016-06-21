@@ -49,3 +49,56 @@
         color: @brand-danger;
     }
 }
+
+.scenario-summary {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 2px;
+    padding: 2px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-right: 0px;
+    height: 12px;
+    line-height: 12px;
+    color: white;
+    width: 12px;
+    font-size: 12px;
+    text-align: center;
+
+}
+a.scenario-summary:hover {
+        color: white;
+    }
+
+#summary .passed {
+    background: green;
+    &:before {
+        content: 'P'
+    }
+}
+
+#summary .failed {
+    background: red;
+    &:before {
+        content: 'F'
+    }
+}
+
+#summary .skipped {
+    &:before {
+        content: 'S'
+    }
+    background: grey;
+}
+
+#summary .pending {
+    background: white;
+    border: 1px solid black;
+}
+
+.feature-summary {
+    font-size: 14px;
+    margin-top: 0px;
+    margin-bottom: -2px;
+}
