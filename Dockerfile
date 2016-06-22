@@ -17,7 +17,7 @@ RUN unzip /opt/chromedriver_linux64.zip -d /opt/ && \
     ln -s /opt/chromedriver /usr/bin/chromedriver
 
 # Install phantomjs
-RUN wget --quiet https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
+RUN wget --quiet https://github.com/Medium/phantomjs/releases/download/v2.1.1/phantomjs-2.1.1-linux-x86_64.tar.bz2
 RUN tar xvfj /opt/phantomjs-2.1.1-linux-x86_64.tar.bz2 && \
     ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/bin/phantomjs
 
