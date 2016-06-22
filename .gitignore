@@ -6,7 +6,6 @@ build
 *.egg-info
 ghostdriver.log
 dump.rdb
-venv
 
 # py.test coverage
 .coverage
