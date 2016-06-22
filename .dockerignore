@@ -1,0 +1,13 @@
+ENV
+.git
+*.pyc
+node_modules
+build
+.cache
+*.egg-info
+ghostdriver.log
+dump.rdb
+
+# py.test coverage
+.coverage
+testsuite/static/coverage
