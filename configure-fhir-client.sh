@@ -8,4 +8,7 @@ git mv fhir-parser/ fhirclient/
 cd fhirclient/fhir-parser
 git show  e4206871b7abf2c1f988f1f6b4f1d760498b512d:fhirspec.py  > fhirspec.py
 git show  e4206871b7abf2c1f988f1f6b4f1d760498b512d:Python/settings.py > settings.py
+pip install -r requirements.txt
 python3 generate.py
+cd ../..
+pip install -r requirements.txt

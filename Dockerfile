@@ -1,4 +1,4 @@
-FROM python:3-onbuild
+FROM python:3
 MAINTAINER Josh Mandel
 
 # Install required packages
@@ -21,6 +21,13 @@ RUN wget --quiet https://github.com/Medium/phantomjs/releases/download/v2.1.1/ph
 RUN tar xvfj /opt/phantomjs-2.1.1-linux-x86_64.tar.bz2 && \
     ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/bin/phantomjs
 
+
+RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
+
+COPY requirements.txt /usr/src/app/
+RUN  pip install --no-cache-dir -r requirements.txt
+COPY . /usr/src/app
+RUN /bin/bash configure-fhir-client.sh
 
 CMD supervisord -c supervisord.conf
