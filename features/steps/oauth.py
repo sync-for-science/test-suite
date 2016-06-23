@@ -4,7 +4,6 @@ import uuid
 from behave import given, when
 import requests
 
-from features.steps import utils
 from testsuite import fhir
 
 
@@ -17,6 +16,11 @@ ERROR_OAUTH_DISABLED = 'OAuth is not enabled on this server.'
 def step_impl(context):
     assert context.vendor_config['auth']['strategy'] != 'none', \
         ERROR_OAUTH_DISABLED
+
+    if context.conformance is None:
+        assert False, ERROR_BAD_CONFORMANCE
+
+    fhir.get_oauth_uris(context.conformance)
 
 
 @given('I am logged in')
@@ -45,11 +49,7 @@ def step_impl(context, field_name):
 
     del fields[field_name]
 
-    try:
-        uris = fhir.get_oauth_uris(context.vendor_config['api']['url'])
-    except ValueError as error:
-        assert False, utils.bad_response_assert(error.response,
-                                                ERROR_BAD_CONFORMANCE)
+    uris = fhir.get_oauth_uris(context.conformance)
 
     response = requests.get(uris['authorize'],
                             params=fields,
@@ -72,11 +72,7 @@ def step_impl(context):
     auth = requests.auth.HTTPBasicAuth(context.vendor_config['auth']['client_id'],
                                        context.vendor_config['auth']['client_secret'])
 
-    try:
-        uris = fhir.get_oauth_uris(context.vendor_config['api']['url'])
-    except ValueError as error:
-        assert False, utils.bad_response_assert(error.response,
-                                                ERROR_BAD_CONFORMANCE)
+    uris = fhir.get_oauth_uris(context.conformance)
 
     response = requests.post(uris['token'],
                              data=fields,
@@ -105,11 +101,7 @@ def step_impl(context, field_name):
     else:
         del fields[field_name]
 
-    try:
-        uris = fhir.get_oauth_uris(context.vendor_config['api']['url'])
-    except ValueError as error:
-        assert False, utils.bad_response_assert(error.response,
-                                                ERROR_BAD_CONFORMANCE)
+    uris = fhir.get_oauth_uris(context.conformance)
 
     response = requests.post(uris['token'],
                              data=fields,

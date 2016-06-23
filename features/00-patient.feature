@@ -7,7 +7,7 @@ Feature: Patient demographics
 
     Scenario: Resources are valid FHIR content
         Given I have a Patient demographics response
-        Then the Patient parses as valid FHIR DSTU2 content
+        Then the resource parses as valid FHIR DSTU2 content
 
      Scenario: Patients have ids
         Given I have a Patient demographics response

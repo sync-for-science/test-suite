@@ -7,6 +7,9 @@ build
 ghostdriver.log
 dump.rdb
 
+# Built validator directory
+validator
+
 # py.test coverage
 .coverage
 testsuite/static/coverage

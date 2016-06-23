@@ -1,15 +1,12 @@
 # pylint: disable=missing-docstring,function-redefined
 import re
 
-from behave import given, when, register_type
+from behave import given, then, when, register_type
 import parse
 
 from features.steps import utils
-
-import json
 from validator.fhirclient.models.fhirabstractbase import FHIRValidationError
 from validator.fhirclient.models.fhirelementfactory import FHIRElementFactory
-
 
 
 ERROR_MISSING_CONFORMANCE_STATEMENT = '''
@@ -117,12 +114,13 @@ def step_impl(context, mu_ccds_query):
     assert query in context.response.request.url, \
         'Missing {query}'.format(query=query)
 
-@then('the {resourceName} parses as valid FHIR DSTU2 content')
-def step_impl(context, resourceName):
+
+@then('the resource parses as valid FHIR DSTU2 content')
+def step_impl(context):
     resource = context.response.json()
     assert "resourceType" in resource, \
            "Resource has no resourceType: {res}".format(res=resource)
     try:
         FHIRElementFactory.instantiate(resource['resourceType'], resource)
-    except FHIRValidationError as e:
-        assert False, "FHIR resource invalid because {err} in {res}".format(err=e, res=resource)
+    except FHIRValidationError as err:
+        assert False, "FHIR resource invalid because {err} in {res}".format(err=err, res=resource)
