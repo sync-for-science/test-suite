@@ -28,6 +28,9 @@ WORKDIR /usr/src/app
 COPY requirements.txt /usr/src/app/
 RUN  pip install --no-cache-dir -r requirements.txt
 COPY . /usr/src/app
-RUN /bin/bash configure-fhir-client.sh
+
+RUN git clone https://github.com/smart-on-fhir/client-py validator && \
+    cd validator && \
+    git reset --hard fd67e6a8717edfc63fb7293405a1c45a4cfac8c2
 
 CMD supervisord -c supervisord.conf
