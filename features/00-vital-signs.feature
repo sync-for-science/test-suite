@@ -6,7 +6,11 @@ Feature: Vital signs
         Then the resourceType field will be Bundle
         Then the type field will be searchset
 
-    Scenario: Results exist
+    Scenario: Resources are valid FHIR content
+        Given I have a Vital signs response
+        Then the Bundle parses as valid FHIR DSTU2 content
+
+     Scenario: Results exist
         Given I have a Vital signs response
         Then there should be at least 1 entry
 

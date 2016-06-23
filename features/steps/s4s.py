@@ -111,3 +111,21 @@ def step_impl(context, mu_ccds_query):
 
     assert query in context.response.request.url, \
         'Missing {query}'.format(query=query)
+
+import json
+import validator.fhirclient.models.bundle as Bundle
+import validator.fhirclient.models.patient as Patient
+from validator.fhirclient.models.fhirabstractbase import FHIRValidationError
+
+classMap = {
+    'Bundle': Bundle.Bundle,
+    'Patient': Patient.Patient
+}
+
+@then('the {resourceName} parses as valid FHIR DSTU2 content')
+def step_impl(context, resourceName):
+    resource = context.response.json()
+    try:
+        classMap[resourceName](resource)
+    except FHIRValidationError as e:
+        assert False, "FHIR resource invalid because {err} in {res}".format(err=e, res=resource)
