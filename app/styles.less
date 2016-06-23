@@ -57,8 +57,12 @@
 }
 
 #summary {
-    h4 a {
-        color: @text-color;
+    h4 {
+        margin-bottom: 0px;
+
+        a {
+            color: @text-color;
+        }
     }
 
     .scenario-summary {
@@ -69,7 +73,7 @@
         }
 
         &.passed:before {
-            content: 'P';
+            content: '.';
             color: @brand-success;
         }
 

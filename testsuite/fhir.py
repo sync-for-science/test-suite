@@ -27,22 +27,20 @@ def get_conformance_statement(base_url):
         raise
 
 
-def get_oauth_uris(base_url):
+def get_oauth_uris(conformance):
     """ Use a conformance statement to determine a set of oauth uris.
 
     See:
         http://fhir-docs.smarthealthit.org/argonaut-dev/specification/#5
 
     Args:
-        base_url (str): URL in the form `http(s)://server{/path}`
+        conformance (dict): A conformance statement.
 
     Returns:
         dict:
             authorize (str): The OAuth "authorize" endpoint.
             token (str): The OAuth "token" endpoint.
     """
-    conformance = get_conformance_statement(base_url)
-
     rest = [rest for rest in conformance['rest']][0]
     extensions = [ext for ext in rest['security']['extension']
                   if ext.get('url') == OAUTH_URIS_DEFINITION]

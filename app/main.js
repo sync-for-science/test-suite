@@ -57,6 +57,9 @@ $(function () {
       'responseText': 'Disconnected from server.'
     }));
   });
+  socket.on('reconnect', function () {
+    $('#status .alert').alert('close');
+  });
 
   $('#run-tests').on('click', function (event) {
     var vendor = $('#vendor').val();

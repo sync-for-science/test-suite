@@ -15,7 +15,8 @@ def authorization_code_factory(config):
     """
     auth_config = config['auth']
     auth_config['aud'] = config['api']['url']
-    urls = fhir.get_oauth_uris(config['api']['url'])
+    conformance = fhir.get_conformance_statement(config['api']['url'])
+    urls = fhir.get_oauth_uris(conformance)
     authorizer = config['authorizer'](config=auth_config,
                                       authorize_url=urls['authorize'])
 
