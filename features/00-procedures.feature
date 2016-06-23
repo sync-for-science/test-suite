@@ -8,7 +8,7 @@ Feature: Procedures
 
     Scenario: Resources are valid FHIR content
         Given I have a Procedures response
-        Then the Bundle parses as valid FHIR DSTU2 content
+        Then the resource parses as valid FHIR DSTU2 content
 
      Scenario: Results exist
         Given I have a Procedures response

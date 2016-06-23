@@ -48,59 +48,42 @@
     .failed {
         color: @brand-danger;
     }
-}
 
-.scenario-summary {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    margin: 2px;
-    padding: 2px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    margin-right: 0px;
-    height: 12px;
-    line-height: 12px;
-    color: white;
-    width: 12px;
-    font-size: 12px;
-    text-align: center;
-
-}
-a.scenario-summary:hover {
-        color: white;
-    }
-
-#summary .passed {
-    background: green;
-    &:before {
-        content: 'P'
+    table {
+        color: @gray-light;
+        font-size: @font-size-small;
+        margin: 0 @padding-base-horizontal;
     }
 }
 
-#summary .failed {
-    background: red;
-    &:before {
-        content: 'F'
+#summary {
+    h4 a {
+        color: @text-color;
     }
-}
 
-#summary .skipped {
-    &:before {
-        content: 'S'
+    .scenario-summary {
+
+        &:before {
+            content: ' ';
+            padding: 0 1px;
+        }
+
+        &.passed:before {
+            content: 'P';
+            color: @brand-success;
+        }
+
+        &.failed:before {
+            content: 'F';
+            color: @brand-danger;
+            font-weight: @headings-font-weight;
+        }
+
+        &.skipped:before {
+            content: 'S';
+            color: @gray-light;
+        }
     }
-    background: grey;
-}
-
-#summary .pending {
-    background: white;
-    border: 1px solid black;
-}
-
-.feature-summary {
-    font-size: 14px;
-    margin-top: 0px;
-    margin-bottom: -2px;
 }
 
 @media (min-width: 767px) {
@@ -114,4 +97,3 @@ a.scenario-summary:hover {
     margin-left: 350px;
   }
 }
-

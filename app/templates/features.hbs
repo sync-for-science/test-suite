@@ -1,5 +1,5 @@
 {{#each features}}
-    <h2>Feature: {{ name }} {{result status}}</h2>
+    <h2 id="{{dashify location}}">Feature: {{ name }} {{result status}}</h2>
     {{#testWasSkipped}}
         <p>Skipped</p>
     {{else}}
@@ -9,6 +9,22 @@
                 <div class="steps">
                 {{#each steps}}
                     <span class="{{ result.status }}">{{ keyword }} {{ name }} {{result result.status}}</span>
+                    {{#if table}}
+                        <table class="table table-condensed table-bordered">
+                            <tr class="text-capitalize">
+                                {{#each table.headings}}
+                                    <th>{{~ this ~}}</th>
+                                {{/each}}
+                            </tr>
+                            {{#each table.rows}}
+                                <tr>
+                                    {{#each this}}
+                                        <td>{{~ this ~}}</td>
+                                    {{/each}}
+                                </tr>
+                            {{/each}}
+                        </table>
+                    {{/if}}
                     {{#if result.error_message}}
                         <blockquote><small>
                         {{~#each (lines result.error_message) ~}}

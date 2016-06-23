@@ -8,7 +8,7 @@ Feature: Lab results
 
     Scenario: Resources are valid FHIR content
         Given I have a Lab results response
-        Then the Bundle parses as valid FHIR DSTU2 content
+        Then the resource parses as valid FHIR DSTU2 content
 
     Scenario: Results exist
         Given I have a Lab results response

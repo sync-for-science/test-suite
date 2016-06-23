@@ -32,18 +32,20 @@ $(function () {
       features: event.snapshot,
       length: event.plan.length
     }
-
     var summaryResult = summarize(event);
+
     errorNavigation.register(summaryResult.errors);
+
+    // Remove any lingering tooltips when redrawing the page
+    $('.tooltip').tooltip('destroy');
 
     $('#canvas')
       .html(features_tmpl(tmpl_data))
       .find('[data-toggle="tooltip"]').tooltip();
 
-    $(".tooltip").remove();
-
-    $('#summary').html(summary_tmpl({summary: summaryResult.summary}))
-      .find('[data-toggle="tooltip"]').tooltip({container: 'body'});
+    $('#summary')
+      .html(summary_tmpl({summary: summaryResult.summary}))
+      .find('[data-toggle="tooltip"]').tooltip();
   });
 
   socket.on('tests_complete', function () {

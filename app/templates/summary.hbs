@@ -1,8 +1,12 @@
 {{#each summary}}
-    <h2 class="feature-summary">{{name}}</h2>
-        {{~#each scenarios~}}
-        <a data-toggle="tooltip" title="{{name}}" class="scenario-summary {{status}}" href="#{{dashify location}}"></a>
-        {{~/each~}}
+    <h4><a href="#{{dashify location}}">{{name}}</a></h4>
+    {{~#each scenarios~}}
+    <a data-toggle="tooltip"
+        data-container="body"
+        title="{{name}}"
+        class="scenario-summary {{status}}"
+        href="#{{dashify location}}"></a>
+    {{~/each~}}
 {{/each}}
 <div class="alert alert-info alert-dismissible" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

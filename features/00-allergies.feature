@@ -8,7 +8,7 @@ Feature: Allergies and intolerances
 
     Scenario: Resources are valid FHIR content
         Given I have a Allergies and intolerances response
-        Then the Bundle parses as valid FHIR DSTU2 content
+        Then the resource parses as valid FHIR DSTU2 content
 
     Scenario: Resources have ids
         Given I have a Allergies and intolerances response
