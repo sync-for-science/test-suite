@@ -4,7 +4,6 @@ import uuid
 from behave import given, when
 import requests
 
-from features.steps import utils
 from testsuite import fhir
 
 
