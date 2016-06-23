@@ -1,3 +1,5 @@
+""" Celery configuration.
+"""
 # Broker settings
 BROKER_URL = 'redis://localhost:6379/'
 
