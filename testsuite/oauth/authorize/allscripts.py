@@ -44,7 +44,7 @@ class AllscriptsAuthorizer(base.AbstractAuthorizer):
         default_login_button = self.find('[translate="DEFAULT_LOGIN_BUTTON"]')
         if default_login_button.is_displayed():
             default_login_button.click()
-        self.find('#UserName').send_keys('s4s_5-5-16')
+        self.find('#UserName').send_keys('s4s_6-22-16')
         self.find('#Password').send_keys('s4s!2345')
         self.find('[translate="Login_LogIn"]').click()
 

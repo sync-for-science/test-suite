@@ -1,13 +1,13 @@
 ---
 api:
   url: https://uat-fhir.followmyhealth.com/api/
-  patient: 8501fd7d-4f46-4eca-a5c0-a5fd0112fe85
+  patient: c5f9d7f2-9927-4904-aab2-a62d0157b807
 
 auth:
   strategy: authorization_code
-  client_id: 0676eea5-c4c7-4f13-90f1-62405ed2134d
+  client_id: 0c9cc532-9ac5-48cf-998e-3b9da5394b55
   # client_secret intentionally included
-  client_secret: 3ntGQa8jEtcedrPX/lk6u083fLCoH96I+p6P2ygjtOqgkZB93eeG25JaEcKi7+HOgnddSQLgyJpve6sZgCYaQw==
+  client_secret: D9rE+xExGY7ZhW6aJJFloDjIoaBZVwguHXSIlUzcX/MEVBGU8S+eUCk44YHWYDTQuL4Gt9P/wlfPsHSM+dVoKA==
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
 

@@ -1,0 +1,10 @@
+{
+  "redirect_uris": [
+    "https://tests.demo.syncfor.science/authorized/",
+    "https://tests.demo-test.syncfor.science/authorized/",
+    "http://tests.dev.syncfor.science:9003/authorized/"
+  ],
+  "client_name": "s4s-test-suite",
+  "sync_for_science": true,
+  "contacts": ["info@syncfor.science"]
+}
