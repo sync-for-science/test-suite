@@ -17,7 +17,7 @@ Framework for testing S4S API implementations
     docker run --rm -it \
       -e VIRTUAL_HOST=tests.dev.syncfor.science:9003 \
       -p 5000:5000 \
-      -v /host/path/to/test-suite \
+      -v /host/path/to/test-suite:/usr/src/app \
       tests \
       /bin/bash
       
