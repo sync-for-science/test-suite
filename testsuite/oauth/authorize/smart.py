@@ -11,5 +11,4 @@ class SmartAuthorizer(base.AbstractAuthorizer):
         authorize_url (string): The vendor's authorize endpoint.
     """
     def __init__(self, config, authorize_url):
-        self.config = config
-        self.authorize_url = authorize_url
+        super().__init__(config, authorize_url)
