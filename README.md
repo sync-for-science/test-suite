@@ -2,6 +2,27 @@
 
 Framework for testing S4S API implementations
 
+## Build and run in docker
+
+    git clone https://github.com/sync-for-science/test-suite
+    cd test-suite
+    docker build -t tests .
+    docker run --rm -it \
+      -e VIRTUAL_HOST=tests.dev.syncfor.science:9003 \
+      -p 5000:5000 \
+      tests
+      
+### Develop in docker
+
+    docker run --rm -it \
+      -e VIRTUAL_HOST=tests.dev.syncfor.science:9003 \
+      -p 5000:5000 \
+      -v /host/path/to/test-suite \
+      tests \
+      /bin/bash
+      
+... and from inside docker, run "behave" to execute tests.
+
 ## Installation
 
 This suite was developed for python 3. To install dependencies run `pip install -r requirements.txt`.
@@ -19,7 +40,7 @@ change.
 To run the suite, run `behave` with `VENDOR` like `smart` or another value from https://github.com/sync-for-science/test-suite/tree/master/config.
 
 ```
-$ VENDOR=smart VIRTUAL_HOST=tests.dev.syncfor.science:9003 behave
+$ VENDOR=smart t behave
 Feature: requesting FHIR objects
 
   Scenario: Secret data is secret
