@@ -40,7 +40,7 @@ change.
 To run the suite, run `behave` with `VENDOR` like `smart` or another value from https://github.com/sync-for-science/test-suite/tree/master/config.
 
 ```
-$ VENDOR=smart t behave
+$ VENDOR=smart VIRTUAL_HOST=tests.dev.syncfor.science:9003 behave
 Feature: requesting FHIR objects
 
   Scenario: Secret data is secret
