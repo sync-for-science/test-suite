@@ -56,36 +56,67 @@
     }
 }
 
-#summary {
-    h4 {
-        margin-bottom: 0px;
+.scenario-summary {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 2px;
+    padding: 2px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-right: 0px;
+    height: 1.5em;
+    width: 1.5em;
+    font-size: 12px;
+    text-align: center;
+}
 
+#summary {
+
+    h4 {
+        margin-top: 5px;
+        margin-bottom: -2px;
         a {
             color: @text-color;
         }
     }
 
-    .scenario-summary {
+    a.scenario-summary:hover {
+        color: white;
+    }
 
-        &:before {
-            content: ' ';
-            padding: 0 1px;
+    a.scenario-summary {
+
+        border-radius: 10px;
+        border: 1px solid @gray-light;
+
+        &.passed {
+            border: 1px solid @brand-success;
+            color: @brand-success;
         }
 
         &.passed:before {
-            content: '.';
-            color: @brand-success;
+            font-weight: bold;
+            content: 'P';
+        }
+
+        &.failed {
+            border: 1px solid @brand-danger;
+            background: @brand-danger;
+            font-weight: bold;
+            color: white;
         }
 
         &.failed:before {
             content: 'F';
-            color: @brand-danger;
-            font-weight: @headings-font-weight;
+        }
+
+        &.skipped {
+            color: @gray-light;
         }
 
         &.skipped:before {
             content: 'S';
-            color: @gray-light;
         }
     }
 }
