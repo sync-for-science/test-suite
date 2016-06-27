@@ -31,6 +31,14 @@ Feature: Follows the SMART standalone launch sequence
         When I ask for authorization without the state field
         Then the response code should not be 200
 
+    Scenario: EHR evaluates authorization request - very long "state"
+        Given OAuth is enabled
+        And I am not logged in
+        When I ask for authorization with the following override
+            | key | value |
+            | state | something really long that you're probably not expecting, not a novel or anything, but you know, long. |
+        Then the authorization response redirect should validate
+
     Scenario: App uses a refresh token to obtain a new access token
         Given OAuth is enabled
         And I am logged in
