@@ -10,5 +10,3 @@ auth:
   client_secret: demo-secret-s4s
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
-
-authorizer: !!python/name:testsuite.oauth.authorize.base.Authorizer

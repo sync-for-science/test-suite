@@ -19,6 +19,3 @@ auth:
     - type: "s4s!2345"
     - find: "[translate='Login_LogIn']"
     - click
-
-
-authorizer: !!python/name:testsuite.oauth.authorize.base.Authorizer

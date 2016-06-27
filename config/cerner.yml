@@ -18,5 +18,3 @@ auth:
   scope: launch patient/Patient.read patient/Observation.read patient/Condition.read patient/MedicationOrder.read patient/MedicationStatement.read patient/MedicationDispense.read patient/MedicationAdministration.read patient/AllergyIntolerance.read patient/Procedure.read patient/Immunization.read patient/DocumentReference.read online_access
   extra_launch_params:
     launch: 8de5dad5-4e22-4b06-bde5-60f6a5781fd0
-
-authorizer: !!python/name:testsuite.oauth.authorize.base.Authorizer

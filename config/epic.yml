@@ -18,5 +18,3 @@ auth:
     - type: "ARGONAUT"
     - find: "#cmdLogin"
     - click
-
-authorizer: !!python/name:testsuite.oauth.authorize.base.Authorizer
