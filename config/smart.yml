@@ -4,10 +4,9 @@ api:
 
 auth:
   strategy: authorization_code
+  steps: []
   client_id: test-suite
   # client_secret intentionally included
   client_secret: demo-secret-s4s
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
-
-authorizer: !!python/name:testsuite.oauth.authorize.smart.SmartAuthorizer

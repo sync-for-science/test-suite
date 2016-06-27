@@ -1,13 +1,14 @@
 """ Authorize the SMART API.
 """
-from abc import ABCMeta
+import time
 from urllib import parse
 import uuid
 
+from pyvirtualdisplay import Display
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
-
-class AbstractAuthorizer(metaclass=ABCMeta):
+class Authorizer:
     """ Orchestrate the authorization path.
 
     Attributes:
@@ -17,13 +18,13 @@ class AbstractAuthorizer(metaclass=ABCMeta):
     Example:
         Implements the context manager methods.
 
-            authorizer = SmartAuthorizer()
+            authorizer = Authorizer()
             with authorizer as browser:
-                token = authorizer.authorize()
+                token = browser.authorize()
 
         Is equivalent to:
 
-            authorizer = SmartAuthorizer()
+            authorizer = Authorizer()
             try:
                 authorizer.open()
                 token = authorizer.authorize()
@@ -33,8 +34,13 @@ class AbstractAuthorizer(metaclass=ABCMeta):
     browser = None
     config = None
     authorize_url = None
-
+    display = None
     _state = None
+
+    def __init__(self, config, authorize_url):
+        self.config = config
+        self.authorize_url = authorize_url
+
 
     def authorize(self):
         """ The actual authorization method.
@@ -66,6 +72,23 @@ class AbstractAuthorizer(metaclass=ABCMeta):
         authorize. Usually this would include logging in and clicking an
         "authorize" button.
         """
+        elt = None
+        for step in self.config.get('steps', []):
+            if 'find' in step:
+                elt = self.find(step['find'])
+            elif 'type' in step:
+                elt.send_keys(step['type'])
+            elif 'click' in step:
+                if not elt.is_displayed():
+                    continue
+                elt.click()
+
+        time_spent = 0
+        to_wait = 0.5
+        while self.config['redirect_uri'] not in self.browser.current_url:
+            time.sleep(to_wait)
+            time_spent += to_wait
+            assert time_spent < 15, "Timed out on authorize!"
 
     def _get_authorization(self):
         """ Get Authorization skeleton method.
@@ -84,12 +107,15 @@ class AbstractAuthorizer(metaclass=ABCMeta):
 
     def _browser(self):
         """ Browser Factory skeleton method.
-
-        Override this if a vendor cannot be authorized with the standard
-        PhantomJS webdriver, or if the webriver is being provided by an
-        external service instead of created here.
+        Initialize a Chrome webdriver
         """
-        return webdriver.PhantomJS()
+        self.display = Display(visible=0, size=(800, 600))
+        self.display.start()
+
+        options = Options()
+        options.add_argument("--no-sandbox")
+
+        return webdriver.Chrome(chrome_options=options)
 
     def _generate_state(self):
         """ Generates a state token.
@@ -119,6 +145,8 @@ class AbstractAuthorizer(metaclass=ABCMeta):
             'state': state,
             'aud': self.config['aud'],
         }
+        for k in self.config.get('extra_launch_params', {}):
+            params[k] = self.config['extra_launch_params'][k]
 
         return params
 
@@ -128,9 +156,10 @@ class AbstractAuthorizer(metaclass=ABCMeta):
         self.browser = self._browser()
 
     def close(self):
-        """ Close the selenium webdriver.
+        """ Close the virtual browser.
         """
         self.browser.quit()
+        self.display.stop()
 
     def __enter__(self):
         self.open()

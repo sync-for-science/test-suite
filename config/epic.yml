@@ -11,4 +11,10 @@ auth:
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
 
-authorizer: !!python/name:testsuite.oauth.authorize.epic.EpicAuthorizer
+  steps:
+    - find: "#txtUsername"
+    - type: "ARGONAUT"
+    - find: "#txtPassword"
+    - type: "ARGONAUT"
+    - find: "#cmdLogin"
+    - click

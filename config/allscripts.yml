@@ -10,5 +10,12 @@ auth:
   client_secret: D9rE+xExGY7ZhW6aJJFloDjIoaBZVwguHXSIlUzcX/MEVBGU8S+eUCk44YHWYDTQuL4Gt9P/wlfPsHSM+dVoKA==
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
-
-authorizer: !!python/name:testsuite.oauth.authorize.allscripts.AllscriptsAuthorizer
+  steps:
+    - find: "[translate='DEFAULT_LOGIN_BUTTON']"
+    - click
+    - find: "#UserName"
+    - type: "s4s_6-22-16"
+    - find: "#Password"
+    - type: "s4s!2345"
+    - find: "[translate='Login_LogIn']"
+    - click

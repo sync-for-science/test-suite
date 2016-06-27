@@ -18,7 +18,7 @@ class AuthorizationCodeStrategy(authorization_grant.AuthorizationGrant):
         urls (dict):
             authorize (string): The authorize endpoint.
             token (string): The token endpoint.
-        authorizer (.authorize.base.AbstractAuthorizer): Handles the
+        authorizer (.authorize.base.Authorizer): Handles the
             authorization server.
 
     Attributes:
