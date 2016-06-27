@@ -1,16 +1,14 @@
 """ Authorize the SMART API.
 """
 import time
-from abc import ABCMeta
 from urllib import parse
-from pyvirtualdisplay import Display
 import uuid
 
+from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-
-class AbstractAuthorizer(metaclass=ABCMeta):
+class Authorizer:
     """ Orchestrate the authorization path.
 
     Attributes:
@@ -20,13 +18,13 @@ class AbstractAuthorizer(metaclass=ABCMeta):
     Example:
         Implements the context manager methods.
 
-            authorizer = SmartAuthorizer()
+            authorizer = Authorizer()
             with authorizer as browser:
-                token = authorizer.authorize()
+                token = browser.authorize()
 
         Is equivalent to:
 
-            authorizer = SmartAuthorizer()
+            authorizer = Authorizer()
             try:
                 authorizer.open()
                 token = authorizer.authorize()
@@ -158,7 +156,7 @@ class AbstractAuthorizer(metaclass=ABCMeta):
         self.browser = self._browser()
 
     def close(self):
-        """ Close the virtual display.
+        """ Close the virtual browser.
         """
         self.browser.quit()
         self.display.stop()
@@ -174,5 +172,3 @@ class AbstractAuthorizer(metaclass=ABCMeta):
         """ Shorthand for jQuery style element selecting.
         """
         return self.browser.find_element_by_css_selector(selector)
-
-class Authorizer(AbstractAuthorizer): pass

@@ -5,7 +5,7 @@ import requests
 
 from testsuite import fhir
 from . import authorization_code, client_credentials, none
-
+from .authorize.base import Authorizer
 
 def authorization_code_factory(config):
     """ Build a AuthorizationCodeStrategy.
@@ -17,8 +17,10 @@ def authorization_code_factory(config):
     auth_config['aud'] = config['api']['url']
     conformance = fhir.get_conformance_statement(config['api']['url'])
     urls = fhir.get_oauth_uris(conformance)
-    authorizer = config['authorizer'](config=auth_config,
-                                      authorize_url=urls['authorize'])
+    authorizer_class = Authorizer if 'authorizer' not in config \
+                                  else config['authorizer']
+    authorizer = authorizer_class(config=auth_config,
+            authorize_url=urls['authorize'])
 
     return authorization_code.AuthorizationCodeStrategy(
         auth_config,
