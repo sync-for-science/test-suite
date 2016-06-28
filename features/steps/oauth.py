@@ -40,7 +40,20 @@ def step_impl(context):
 
 @given('I am not logged in')
 def step_impl(context):
-    context.oauth = None
+    context.oauth.access_token = None
+
+
+@when('I log in')
+def step_impl(context):
+    try:
+        context.oauth.authorize()
+    except authorize.AuthorizationException as err:
+        error = ERROR_SELENIUM_SCREENSHOT.format(
+            err.args[0],
+            err.args[1],
+            context.vendor_config['host'],
+        )
+        assert False, error
 
 
 @when('I ask for authorization without the {field_name} field')
@@ -92,6 +105,90 @@ def step_impl(context):
     context.authorization_received = response
 
 
+@when('I ask for authorization')
+def step_impl(context):
+    context.code = context.oauth.request_authorization()
+
+
+@when('I exchange my grant code')
+def step_impl(context):
+    fields = {
+        'grant_type': 'authorization_code',
+        'code': context.code,
+        'client_id': context.vendor_config['auth']['client_id'],
+        'redirect_uri': context.vendor_config['auth']['redirect_uri'],
+    }
+
+    uris = fhir.get_oauth_uris(context.conformance)
+
+    auth = None
+    if context.vendor_config['auth'].get('confidential_client'):
+        auth = requests.auth.HTTPBasicAuth(
+            context.vendor_config['auth']['client_id'],
+            context.vendor_config['auth']['client_secret'],
+        )
+
+    response = requests.post(uris['token'],
+                             auth=auth,
+                             data=fields)
+
+    context.response = response
+
+
+@when('I exchange my grant code without the {field_name} field')
+def step_impl(context, field_name):
+    fields = {
+        'grant_type': 'authorization_code',
+        'code': context.code,
+        'client_id': context.vendor_config['auth']['client_id'],
+        'redirect_uri': context.vendor_config['auth']['redirect_uri'],
+    }
+
+    del fields[field_name]
+
+    uris = fhir.get_oauth_uris(context.conformance)
+
+    auth = None
+    if context.vendor_config['auth'].get('confidential_client'):
+        auth = requests.auth.HTTPBasicAuth(
+            context.vendor_config['auth']['client_id'],
+            context.vendor_config['auth']['client_secret'],
+        )
+
+    response = requests.post(uris['token'],
+                             auth=auth,
+                             data=fields)
+
+    context.response = response
+
+
+@when('I exchange my grant code with the following override')
+def step_impl(context):
+    fields = {
+        'grant_type': 'authorization_code',
+        'code': context.code,
+        'client_id': context.vendor_config['auth']['client_id'],
+        'redirect_uri': context.vendor_config['auth']['redirect_uri'],
+    }
+
+    fields.update(dict(context.table))
+
+    uris = fhir.get_oauth_uris(context.conformance)
+
+    auth = None
+    if context.vendor_config['auth'].get('confidential_client'):
+        auth = requests.auth.HTTPBasicAuth(
+            context.vendor_config['auth']['client_id'],
+            context.vendor_config['auth']['client_secret'],
+        )
+
+    response = requests.post(uris['token'],
+                             auth=auth,
+                             data=fields)
+
+    context.response = response
+
+
 @then('the authorization response redirect should validate')
 def step_impl(context):
     try:
@@ -114,10 +211,14 @@ def step_impl(context):
         'scope': context.vendor_config['auth']['scope'],
     }
 
-    auth = requests.auth.HTTPBasicAuth(context.vendor_config['auth']['client_id'],
-                                       context.vendor_config['auth']['client_secret'])
-
     uris = fhir.get_oauth_uris(context.conformance)
+
+    auth = None
+    if context.vendor_config['auth'].get('confidential_client'):
+        auth = requests.auth.HTTPBasicAuth(
+            context.vendor_config['auth']['client_id'],
+            context.vendor_config['auth']['client_secret'],
+        )
 
     response = requests.post(uris['token'],
                              data=fields,
@@ -138,8 +239,12 @@ def step_impl(context, field_name):
         'scope': context.vendor_config['auth']['scope'],
     }
 
-    auth = requests.auth.HTTPBasicAuth(context.vendor_config['auth']['client_id'],
-                                       context.vendor_config['auth']['client_secret'])
+    auth = None
+    if context.vendor_config['auth'].get('confidential_client'):
+        auth = requests.auth.HTTPBasicAuth(
+            context.vendor_config['auth']['client_id'],
+            context.vendor_config['auth']['client_secret'],
+        )
 
     if field_name == 'client_id':
         auth = None
