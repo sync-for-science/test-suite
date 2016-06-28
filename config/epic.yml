@@ -12,9 +12,9 @@ auth:
   confidential_client: True
 
   steps:
-    - find: "#txtUsername"
-    - type: "ARGONAUT"
-    - find: "#txtPassword"
-    - type: "ARGONAUT"
-    - find: "#cmdLogin"
-    - click
+    - element: "#txtUsername"
+      send_keys: "ARGONAUT"
+    - element: "#txtPassword"
+      send_keys: "ARGONAUT"
+    - element: "#cmdLogin"
+      click: True

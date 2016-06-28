@@ -17,7 +17,20 @@ auth:
   scope: launch/patient patient/*.read offline_access
   confidential_client:  # Should the test suite use basic auth while requesting tokens.
   token_url:  # Use when the token URL cannot be derived from a conformance statement
+  steps: []
 ```
+
+## Authorization steps
+
+We use selenium to follow the authorization process for each vendor. In order to make it easier to add new vendors and to manage their various authorization screens, the selenium code has been abstracted into a slim configuration language.
+
+```
+- element: '#username'  # a css selector
+  send_keys: 'user.name123'
+  optional: True
+```
+
+Each step should be a dictionary with an `element` key and an action (`send_keys` or `click`). Unless `optional` is set, an exception will be raised if the css selector defined in `element` can be found.
 
 ## A note on `client_secret`
 

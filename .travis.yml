@@ -16,3 +16,5 @@ script:
   - py.test
   - pylint testsuite --disable=R,C
   - pylint features --disable=R,C
+  - pep8 testsuite
+  - pep8 features

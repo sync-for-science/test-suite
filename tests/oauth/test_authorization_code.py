@@ -4,8 +4,7 @@ import json
 import httpretty
 import pytest
 
-from testsuite.oauth import authorization_code
-from testsuite.oauth.authorize import none
+from testsuite.oauth import authorize, authorization_code
 
 
 RESPONSES = [
@@ -88,7 +87,7 @@ def make_strategy():
         'token': 'http://example.com/oauth/token',
         'authorize': 'http://example.com/oauth/authorize',
     }
-    authorizer = none.NoneAuthorizer()
+    authorizer = NoneAuthorizer()
 
     return authorization_code.AuthorizationCodeStrategy(
         config,
@@ -105,3 +104,22 @@ def httpretty_token_request(response):
                            body=json.dumps(response),
                            status=200,
                            content_type='application/json')
+
+
+class NoneAuthorizer(authorize.Authorizer):
+    """ No-op implementation of Authorizer.
+    """
+    def __init__(self):
+        super().__init__(None, None)
+
+    def authorize(self):
+        return None
+
+    def _browser(self):
+        return True
+
+    def open(self):
+        self.browser = self._browser()
+
+    def close(self):
+        self.browser = None

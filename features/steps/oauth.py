@@ -1,15 +1,23 @@
 # pylint: disable=missing-docstring,function-redefined
 import uuid
 
-from behave import given, when
+from behave import given, then, when
 import requests
 
+from features.steps import utils
+from testsuite.oauth import authorize
 from testsuite import fhir
 
 
 ERROR_AUTHORIZATION_FAILED = 'Authorization failed.'
 ERROR_BAD_CONFORMANCE = 'Could not parse conformance statement.'
 ERROR_OAUTH_DISABLED = 'OAuth is not enabled on this server.'
+ERROR_SELENIUM_SCREENSHOT = '''
+An authorization error occurred: {0}
+
+For more information, see:
+    {2}{1}
+'''
 
 
 @given('OAuth is enabled')
@@ -57,6 +65,43 @@ def step_impl(context, field_name):
                             timeout=5)
 
     context.response = response
+
+
+@when('I ask for authorization with the following override')
+def step_impl(context):
+    urls = fhir.get_oauth_uris(context.conformance)
+    authorizer = authorize.Authorizer(config=context.vendor_config['auth'],
+                                      authorize_url=urls['authorize'])
+    with authorizer:
+        parameters = authorizer.launch_params
+        parameters.update(dict(context.table))
+
+        try:
+            authorizer.ask_for_authorization(parameters)
+            response = authorizer.provide_user_input()
+        except authorize.AuthorizationException as err:
+            error = ERROR_SELENIUM_SCREENSHOT.format(
+                err.args[0],
+                err.args[1],
+                context.vendor_config['host'],
+            )
+            assert False, error
+
+    context.authorizer = authorizer
+    context.authorization_sent = parameters
+    context.authorization_received = response
+
+
+@then('the authorization response redirect should validate')
+def step_impl(context):
+    try:
+        response = context.authorization_received
+        context.authorizer._validate_state(response)  # pylint: disable=protected-access
+        context.authorizer._validate_code(response)  # pylint: disable=protected-access
+    except AssertionError as err:
+        assert False, utils.bad_redirect_assert(err,
+                                                context.authorization_sent,
+                                                response)
 
 
 @when('I ask for a new access token')

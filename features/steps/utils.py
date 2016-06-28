@@ -1,3 +1,4 @@
+# pylint: disable=missing-docstring
 """
 features.steps.utils
 ~~~~~~~~~~~~~~~~~~~~
@@ -15,6 +16,15 @@ def bad_response_assert(response, message, **kwargs):
 
     return template.render(response=response,
                            message=message.format(**kwargs))
+
+
+def bad_redirect_assert(message, sent, received):
+    with open('features/steps/redirect.jinja2') as handle:
+        template = jinja2.Template(handle.read())
+
+    return template.render(message=message,
+                           sent=sent,
+                           received=received)
 
 
 def get_resource(context, resource):

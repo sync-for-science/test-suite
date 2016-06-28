@@ -11,11 +11,12 @@ auth:
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
   steps:
-    - find: "[translate='DEFAULT_LOGIN_BUTTON']"
-    - click
-    - find: "#UserName"
-    - type: "s4s_6-22-16"
-    - find: "#Password"
-    - type: "s4s!2345"
-    - find: "[translate='Login_LogIn']"
-    - click
+    - element: "[translate='DEFAULT_LOGIN_BUTTON']"
+      click: True
+      optional: True
+    - element: "#UserName"
+      send_keys: "s4s_6-22-16"
+    - element: "#Password"
+      send_keys: "s4s!2345"
+    - element: "[translate='Login_LogIn']"
+      click: True
