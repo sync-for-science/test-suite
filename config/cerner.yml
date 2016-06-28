@@ -15,6 +15,6 @@ auth:
 
   client_id: fedc3945-10a7-41bd-9aae-93e00ab9f9c4
   client_secret:
-  scope: launch patient/Patient.read patient/Observation.read patient/Condition.read patient/MedicationOrder.read patient/MedicationStatement.read patient/MedicationDispense.read patient/MedicationAdministration.read patient/AllergyIntolerance.read patient/Procedure.read patient/Immunization.read patient/DocumentReference.read online_access
+  scope: launch patient/Patient.read patient/Encounter.read patient/Observation.read patient/Condition.read patient/MedicationOrder.read patient/MedicationStatement.read patient/MedicationDispense.read patient/MedicationAdministration.read patient/AllergyIntolerance.read patient/Procedure.read patient/Immunization.read patient/DocumentReference.read online_access
   extra_launch_params:
     launch: 8de5dad5-4e22-4b06-bde5-60f6a5781fd0
