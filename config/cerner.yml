@@ -11,7 +11,7 @@ auth:
     - element: "#j_password"
       send_keys: "sprinttest"
     - element: "#loginButton"
-      click:
+      click: True
 
   client_id: fedc3945-10a7-41bd-9aae-93e00ab9f9c4
   client_secret:

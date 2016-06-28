@@ -10,6 +10,10 @@ Feature: Medication dispensations
         Given I have a Medication dispensations response
         Then the resource parses as valid FHIR DSTU2 content
 
+    Scenario: Results exist
+        Given I have a Medication dispensations response
+        Then there should be at least 1 entry
+
      Scenario: Resources have ids
         Given I have a Medication dispensations response
         Then all resources will have a id field

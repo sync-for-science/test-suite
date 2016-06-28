@@ -5,7 +5,7 @@ import os
 from features.steps import utils
 from testsuite import fhir
 from testsuite.config_reader import get_config
-from testsuite.oauth import factory
+from testsuite.oauth import authorize, factory
 
 
 CCDS_TAGS = {
@@ -48,6 +48,8 @@ def before_all(context):
             vendor_config['api']['patient'] = context.oauth.patient
     except AssertionError as error:
         logging.error(utils.bad_response_assert(error.args[0], ''))
+    except authorize.AuthorizationException as error:
+        logging.error(str(error))
 
     # Get the test plan so that we can show a progress meter.
     context.config.plan = []

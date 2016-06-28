@@ -17,4 +17,4 @@ auth:
     - element: "#txtPassword"
       send_keys: "ARGONAUT"
     - element: "#cmdLogin"
-      click:
+      click: True

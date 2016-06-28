@@ -12,11 +12,11 @@ auth:
   confidential_client: True
   steps:
     - element: "[translate='DEFAULT_LOGIN_BUTTON']"
-      click:
+      click: True
       optional: True
     - element: "#UserName"
       send_keys: "s4s_6-22-16"
     - element: "#Password"
       send_keys: "s4s!2345"
     - element: "[translate='Login_LogIn']"
-      click:
+      click: True
