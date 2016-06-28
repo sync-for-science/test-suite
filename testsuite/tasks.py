@@ -36,5 +36,7 @@ def run_tests(room, vendor):
         runner = Runner(config)
 
         runner.run()
+    except Exception as err:  # pylint: disable=broad-except
+        socketio.emit('global_error', str(err))
     finally:
         socketio.emit('tests_complete', room=room)

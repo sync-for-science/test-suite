@@ -48,6 +48,15 @@ $(function () {
       .find('[data-toggle="tooltip"]').tooltip();
   });
 
+  socket.on('global_error', function (error) {
+    // If this happened before any tests were shown, get rid of the loading animation
+    $('#canvas .loading').remove();
+    // Alert the user to the global error
+    $('#canvas').prepend(error_tmpl({
+      'responseText': error.replace(/\n/g, '<br>\n')
+    }));
+  });
+
   socket.on('tests_complete', function () {
     $('#run-tests').prop('disabled', false);
   });

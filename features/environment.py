@@ -2,7 +2,7 @@
 import logging
 import os
 
-from features.steps import utils
+from features.steps import oauth, utils
 from testsuite import fhir
 from testsuite.config_reader import get_config
 from testsuite.oauth import authorize, factory
@@ -48,8 +48,13 @@ def before_all(context):
             vendor_config['api']['patient'] = context.oauth.patient
     except AssertionError as error:
         logging.error(utils.bad_response_assert(error.args[0], ''))
-    except authorize.AuthorizationException as error:
-        logging.error(str(error))
+    except authorize.AuthorizationException as err:
+        error = oauth.ERROR_SELENIUM_SCREENSHOT.format(
+            err.args[0],
+            err.args[1],
+            context.vendor_config['host'],
+        )
+        raise Exception(error)
 
     # Get the test plan so that we can show a progress meter.
     context.config.plan = []
