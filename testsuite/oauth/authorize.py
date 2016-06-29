@@ -5,7 +5,7 @@ import uuid
 
 from pyvirtualdisplay import Display
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -86,8 +86,11 @@ class Authorizer(object):
             self._execute_step(step)
 
         # Some vendors implement an AJAX based login procedure.
-        wait = WebDriverWait(self.browser, AUTHORIZE_TIMEOUT)
-        wait.until(CurrentUrlContains(self.config['redirect_uri']))
+        try:
+            wait = WebDriverWait(self.browser, AUTHORIZE_TIMEOUT)
+            wait.until(CurrentUrlContains(self.config['redirect_uri']))
+        except TimeoutException:
+            raise AuthorizationException('Authorization timed out.', self.browser)
 
         redirect_uri = parse.urlparse(self.browser.current_url)
         query = parse.parse_qs(redirect_uri.query)

@@ -56,26 +56,11 @@
     }
 }
 
-.scenario-summary {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    margin: 2px;
-    padding: 2px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    margin-right: 0px;
-    height: 1.5em;
-    width: 1.5em;
-    font-size: 12px;
-    text-align: center;
-}
-
 #summary {
 
     h4 {
         margin-top: 5px;
-        margin-bottom: -2px;
+        margin-bottom: 0;
         a {
             color: @text-color;
         }
@@ -87,6 +72,13 @@
 
     a.scenario-summary {
 
+        display: inline-block;
+        margin: 2px 0 2px 2px;
+        padding: 0 2px;
+        height: 1.5em;
+        width: 1.5em;
+        font-size: 12px;
+        text-align: center;
         border-radius: 10px;
         border: 1px solid @gray-light;
 
@@ -118,6 +110,10 @@
         &.skipped:before {
             content: 'S';
         }
+    }
+
+    .alert {
+        margin-top: @padding-base-vertical;
     }
 }
 
