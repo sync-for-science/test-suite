@@ -29,9 +29,4 @@ COPY requirements.txt /usr/src/app/
 RUN  pip install --no-cache-dir -r requirements.txt
 COPY . /usr/src/app
 
-RUN git clone https://github.com/smart-on-fhir/client-py validator && \
-    cd validator && \
-    git reset --hard fd67e6a8717edfc63fb7293405a1c45a4cfac8c2 && \
-    touch __init__.py
-
 CMD supervisord -c supervisord.conf
