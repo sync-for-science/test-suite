@@ -5,8 +5,8 @@ from behave import given, then, when, register_type
 import parse
 
 from features.steps import utils
-from validator.fhirclient.models.fhirabstractbase import FHIRValidationError
-from validator.fhirclient.models.fhirelementfactory import FHIRElementFactory
+from fhirclient.models.fhirabstractbase import FHIRValidationError
+from fhirclient.models.fhirelementfactory import FHIRElementFactory
 
 
 ERROR_MISSING_CONFORMANCE_STATEMENT = '''

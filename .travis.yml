@@ -5,11 +5,6 @@ python: "3.4"
 install:
   - "pip install -r requirements.txt"
   - "pip install -e ."
-  - "git clone https://github.com/smart-on-fhir/client-py validator && \
-     cd validator && \
-     git reset --hard fd67e6a8717edfc63fb7293405a1c45a4cfac8c2 && \
-     touch __init__.py && \
-     cd .."
 
 # command to run tests
 script:
