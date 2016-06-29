@@ -18,10 +18,6 @@ Feature: Problems
         Given I have a Problems response
         Then all resources will have a id field
 
-    Scenario: Required search fields exist
-        Given I have a Problems response
-        Then the total field will exist
-
     Scenario: All references will resolve
         Given I have a Problems response
         Then all references will resolve
