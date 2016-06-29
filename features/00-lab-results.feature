@@ -18,10 +18,6 @@ Feature: Lab results
         Given I have a Lab results response
         Then all resources will have a id field
 
-    Scenario: Required search fields exist
-        Given I have a Lab results response
-        Then the total field will exist
-
     Scenario: All references will resolve
         Given I have a Lab results response
         Then all references will resolve
