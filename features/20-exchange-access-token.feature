@@ -22,14 +22,14 @@ Feature: App exchanges authorization code for access token
         Given OAuth is enabled
         And I am not logged in
         When I ask for authorization
-        And I exchange my authorization code without the grant_type field
+        And I exchange my authorization code without the code field
         Then the response code should not be 200
 
     Scenario: Missing "redirect_uri"
         Given OAuth is enabled
         And I am not logged in
         When I ask for authorization
-        And I exchange my authorization code without the grant_type field
+        And I exchange my authorization code without the redirect_uri field
         Then the response code should not be 200
 
     Scenario: Wrong "grant_type"
