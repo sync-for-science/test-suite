@@ -169,6 +169,8 @@ class Authorizer(object):
             elem.send_keys(step['send_keys'])
         elif 'click' in step:
             elem.click()
+        elif 'execute_script' in step:
+            self.browser.execute_script(step['execute_script'])
         else:
             raise NoStepCommandException(step, self.browser)
 
