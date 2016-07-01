@@ -58,7 +58,11 @@ def get_resource(context, resource):
         'Accept-Encoding': 'deflate,sdch',
     }
 
+    if url in context.cache:
+        return context.cache[url]
+
     response = requests.get(url, headers=headers)
+    context.cache[url] = response
 
     return response
 

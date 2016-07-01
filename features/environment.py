@@ -1,6 +1,10 @@
 # pylint: disable=missing-docstring,unused-argument
 import logging
 import os
+import pickle
+import uuid
+
+import redis
 
 from features.steps import oauth, utils
 from testsuite import fhir
@@ -8,6 +12,7 @@ from testsuite.config_reader import get_config
 from testsuite.oauth import authorize, factory
 
 
+CACHE_TTL = 60 * 60  # 1 hour
 CCDS_TAGS = {
     'patient-demographics',
     'smoking-status',
@@ -79,6 +84,9 @@ def before_all(context):
         context.conformance = None
         logging.error(utils.bad_response_assert(error.response, ''))
 
+    # Define a global cache
+    context.cache = Cache(redis.StrictRedis())
+
 
 def before_feature(context, feature):
     """ Configure Feature scope.
@@ -102,3 +110,26 @@ def before_feature(context, feature):
             context.execute_steps('\n'.join(steps))
         except AssertionError as error:
             feature.skip(error.args[0])
+
+
+class Cache(object):
+    """ A minimal caching layer.
+    """
+    def __init__(self, redis_client):
+        self.redis_client = redis_client
+        # A unique prefix ensures that each test run does not share a cache.
+        self.prefix = 'cache-{0}-'.format(uuid.uuid4())
+
+    def __getitem__(self, key):
+        key = self.prefix + key
+        return pickle.loads(self.redis_client.get(key))
+
+    def __setitem__(self, key, value):
+        key = self.prefix + key
+        self.redis_client.setex(key,
+                                CACHE_TTL,
+                                pickle.dumps(value))
+
+    def __contains__(self, key):
+        key = self.prefix + key
+        return self.redis_client.exists(key)
