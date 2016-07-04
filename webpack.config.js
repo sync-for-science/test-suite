@@ -14,11 +14,6 @@ module.exports = {
     filename: '[name].js',
     publicPath: '/static/build/',
   },
-  plugins: [
-    new webpack.ProvidePlugin({
-      jQuery: 'jquery',
-    }),
-  ],
   module: {
     loaders: [
       {

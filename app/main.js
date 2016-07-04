@@ -1,4 +1,5 @@
-var $ = require('jquery');
+require('expose?$!expose?jQuery!jquery');
+
 var _ = require('underscore');
 var uuid = require('uuid');
 var socketio = require('socket.io-client');
@@ -12,6 +13,7 @@ var summarize = require('./summarize.js');
 
 require('./styles.less');
 require('bootstrap/dist/js/npm');
+require('bootstrap-tagsinput/dist/bootstrap-tagsinput.js');
 
 
 $(function () {
@@ -72,12 +74,28 @@ $(function () {
 
   $('#run-tests').on('click', function (event) {
     var vendor = $('#vendor').val();
+    var tags = $('#tags').val();
     errorNavigation.reset();
 
     $(event.currentTarget).prop('disabled', true);
-    socket.emit('begin_tests', {vendor: vendor});
+    socket.emit('begin_tests', {
+      vendor: vendor,
+      tags: tags
+    });
 
     $('#summary').html("");
     $('#canvas').html(loading_tmpl({}));
+  });
+
+  /**
+   * Summary links may refer to elements that are collapsed.
+   * Make sure they are open before following them.
+   *
+   * Note: do not preventDefault because we do want to follow the link.
+   */
+  $('#summary').on('click', 'a[data-target]', function (event) {
+    var $el = $(event.currentTarget);
+
+    $($el.data('target')).collapse('show');
   });
 });

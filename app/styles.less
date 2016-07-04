@@ -1,4 +1,5 @@
 @import "~bootstrap/less/bootstrap.less";
+@import "~bootstrap-tagsinput/dist/bootstrap-tagsinput.less";
 
 .glyphicon-spin {
     -webkit-animation: spin 2s infinite linear running;
@@ -24,6 +25,10 @@
         -webkit-transform: rotate(359deg);
         transform: rotate(359deg);
     }
+}
+
+h2[data-toggle] {
+    cursor: pointer;
 }
 
 .steps {
@@ -118,13 +123,19 @@
 }
 
 @media (min-width: 767px) {
-  div.fixed {
-    position: fixed;
-    overflow-y: auto;
-    width: 350px;
-    height: 100%
-  }
-  div.results {
-    margin-left: 350px;
-  }
+    div.fixed {
+        position: fixed;
+        overflow-y: auto;
+        width: 350px;
+        height: 100%
+    }
+    div.results {
+        margin-left: 350px;
+    }
+}
+
+.bootstrap-tagsinput {
+    border: none;
+    box-shadow: none;
+    margin-bottom: @padding-small-vertical;
 }
