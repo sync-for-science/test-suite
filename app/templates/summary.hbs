@@ -3,6 +3,7 @@
     {{~#each scenarios~}}
     <a data-toggle="tooltip"
         data-container="body"
+        data-target="#scenarios-{{dashify ../location}}"
         title="{{name}}"
         class="scenario-summary {{status}}"
         href="#{{dashify location}}"></a>

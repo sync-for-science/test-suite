@@ -32,4 +32,5 @@ def configure_views(app, socketio):
     @socketio.on('begin_tests')
     def cb_handle_begin_tests(data):
         async = tasks.run_tests.delay(room=session['room'],
-                                      vendor=data.get('vendor'))
+                                      vendor=data.get('vendor'),
+                                      tags=data.get('tags'))
