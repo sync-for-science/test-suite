@@ -1,5 +1,5 @@
 # pylint: disable=missing-docstring,function-redefined
-import pprint
+import json
 import re
 
 from behave import given, then, when, register_type
@@ -146,4 +146,4 @@ def step_impl(context):
     assert not issues, \
         utils.bad_response_assert(context.response,
                                   ERROR_VALIDATION_ISSUES,
-                                  issues=pprint.pformat(issues))
+                                  issues=json.dumps(issues, indent=4))
