@@ -13,7 +13,6 @@ var summarize = require('./summarize.js');
 
 require('./styles.less');
 require('bootstrap/dist/js/npm');
-require('bootstrap-tagsinput/dist/bootstrap-tagsinput.js');
 
 
 $(function () {
@@ -74,7 +73,9 @@ $(function () {
 
   $('#run-tests').on('click', function (event) {
     var vendor = $('#vendor').val();
-    var tags = $('#tags').val();
+    var tags = $('input[name="tags"]:checked').map(function () {
+      return $(this).val();
+    }).get();
     errorNavigation.reset();
 
     $(event.currentTarget).prop('disabled', true);
@@ -97,5 +98,25 @@ $(function () {
     var $el = $(event.currentTarget);
 
     $($el.data('target')).collapse('show');
+  });
+
+  /**
+   * Add toggle behavior to tags.
+   */
+  $('#tags').on('change', ':checkbox', function (event) {
+    var $el = $(event.currentTarget);
+    var checked = $el.is(':checked');
+
+    if (checked) {
+      $el.parent().addClass('label-info').removeClass('label-empty');
+    } else {
+      $el.parent().addClass('label-empty').removeClass('label-info');
+    }
+  });
+  $('#toggle-all-tags').on('click', function (event) {
+    $('#tags').find('.label-empty').click();
+  });
+  $('#toggle-none-tags').on('click', function (event) {
+    $('#tags').find('.label-info').click();
   });
 });

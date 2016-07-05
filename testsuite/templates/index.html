@@ -7,9 +7,12 @@
     >{{ vendor }}</option>
 {%- endmacro %}
 
-{% macro tag_option(tag) -%}
-<option value="{{ tag }}">{{ tag }}</option>
-{%- endmacro %}
+{% macro tag_option(tag) %}
+<label class="label label-info">
+    {{- tag -}}
+    <input type="checkbox" name="tags" value="{{ tag }}" checked></label>
+
+{% endmacro %}
 
 {% block body %}
     <div class="row">
@@ -35,8 +38,10 @@
                 </div>
                 <div id="more-options" class="collapse">
                     <div class="form-group">
-                        <label for="tags">Tags</label>
-                        <select multiple data-role="tagsinput" id="tags">
+                        <label>Tags</label>
+                        <button type="button" class="btn btn-link" id="toggle-all-tags">All</button>
+                        <button type="button" class="btn btn-link" id="toggle-none-tags">None</button>
+                        <div id="tags">
                             {{ tag_option('allergies-and-intolerances') }}
                             {{ tag_option('immunizations') }}
                             {{ tag_option('lab-results') }}
@@ -52,7 +57,8 @@
                             {{ tag_option('vital-signs') }}
                             {{ tag_option('s4s') }}
                             {{ tag_option('smart') }}
-                        </select>
+                            &nbsp; {# bootstrap collapses line height for some reason if there isn't a trailing space #}
+                        </div>
                     </div>
                 </div>
             </form>

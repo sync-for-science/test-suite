@@ -1,5 +1,4 @@
 @import "~bootstrap/less/bootstrap.less";
-@import "~bootstrap-tagsinput/dist/bootstrap-tagsinput.less";
 
 .glyphicon-spin {
     -webkit-animation: spin 2s infinite linear running;
@@ -134,8 +133,15 @@ h2[data-toggle] {
     }
 }
 
-.bootstrap-tagsinput {
-    border: none;
-    box-shadow: none;
-    margin-bottom: @padding-small-vertical;
+#tags .label {
+    cursor: pointer;
+    border: 1px solid transparent;
+
+    &.label-empty {
+        .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+    }
+
+    input[type="checkbox"] {
+        display: none;
+    }
 }
