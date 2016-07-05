@@ -60,6 +60,25 @@
                             &nbsp; {# bootstrap collapses line height for some reason if there isn't a trailing space #}
                         </div>
                     </div>
+                    <div class="form-group">
+{% set sample_config_override -%}
+---
+api:
+  url:  # The FHIR base url
+  patient:  # A patient ID to run tests against
+
+auth:
+  strategy:  # The oAuth strategy to use. One of refresh_token|client_credentials|none
+  client_id:  # The oAuth client_id
+  client_secret:  # The oAuth client_secret
+  scope: launch/patient patient/*.read offline_access
+  confidential_client:  # Should the test suite use basic auth while requesting tokens.
+  token_url:  # Use when the token URL cannot be derived from a conformance statement
+  steps: []
+{%- endset %}
+                        <label for="config-override">Override</label>
+                        <textarea id="config-override" class="form-control" placeholder="{{ sample_config_override }}" rows=13></textarea>
+                    </div>
                 </div>
             </form>
             <div id="summary"></div>

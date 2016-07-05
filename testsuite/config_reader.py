@@ -4,9 +4,27 @@ import os
 import yaml
 
 
-def get_config(vendor):
+def deep_merge(orig, new):
+    """ Recursively create a new dictionary from the values of orig and new.
+    """
+    if isinstance(orig, dict) and isinstance(new, dict):
+        for key, val in new.items():
+            if key not in orig:
+                orig[key] = val
+            else:
+                orig[key] = deep_merge(orig[key], val)
+        return orig
+    else:
+        return new
+
+
+def get_config(vendor, override=''):
+
     with open('config/' + vendor + '.yml') as handle:
         config = yaml.load(handle)
+
+    if override:
+        config = deep_merge(config, yaml.safe_load(override))
 
     host = os.getenv('LETSENCRYPT_HOST')
     if host is not None:

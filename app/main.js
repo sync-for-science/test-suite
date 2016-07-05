@@ -76,12 +76,15 @@ $(function () {
     var tags = $('input[name="tags"]:checked').map(function () {
       return $(this).val();
     }).get();
+    var override = $('#config-override').val();
+
     errorNavigation.reset();
 
     $(event.currentTarget).prop('disabled', true);
     socket.emit('begin_tests', {
       vendor: vendor,
-      tags: tags
+      tags: tags,
+      override: override
     });
 
     $('#summary').html("");
