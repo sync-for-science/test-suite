@@ -1,12 +1,12 @@
 # pylint: disable=missing-docstring,function-redefined
+import pprint
 import re
 
 from behave import given, then, when, register_type
 import parse
+import requests
 
 from features.steps import utils
-from fhirclient.models.fhirabstractbase import FHIRValidationError
-from fhirclient.models.fhirelementfactory import FHIRElementFactory
 
 
 ERROR_MISSING_CONFORMANCE_STATEMENT = '''
@@ -14,6 +14,11 @@ Could not load conformance statement.
 '''
 ERROR_UNSUPPORTED_RESOURCE = '''
 Resource "{0}" not found in conformance statement.
+'''
+ERROR_VALIDATION_ISSUES = '''
+Resource failed to validate.
+
+{issues}
 '''
 MU_CCDS_MAPPINGS = {
     'Server metadata': 'metadata',
@@ -118,9 +123,27 @@ def step_impl(context, mu_ccds_query):
 @then('the resource parses as valid FHIR DSTU2 content')
 def step_impl(context):
     resource = context.response.json()
+
     assert "resourceType" in resource, \
            "Resource has no resourceType: {res}".format(res=resource)
-    try:
-        FHIRElementFactory.instantiate(resource['resourceType'], resource)
-    except FHIRValidationError as err:
-        assert False, "FHIR resource invalid because {err} in {res}".format(err=err, res=resource)
+
+    url = "{url}{resource}/$validate".format(
+        url='http://api:8080/baseDstu2/',
+        resource=resource['resourceType'],
+    )
+
+    headers = {
+        'Authorization': 'Bearer {0}'.format(context.oauth.access_token),
+        'Accept': 'application/json',
+        'Accept-Encoding': 'deflate,sdch',
+    }
+    resp = requests.post(url, json=resource, headers=headers)
+    outcome = resp.json()
+
+    issues = [issue for issue in outcome.get('issue')
+              if issue.get('severity') == 'error']
+
+    assert not issues, \
+        utils.bad_response_assert(context.response,
+                                  ERROR_VALIDATION_ISSUES,
+                                  issues=pprint.pformat(issues))
