@@ -28,7 +28,7 @@ CCDS_TAGS = {
     'immunizations',
     'patient-documents',
 }
-DEFAULT_ES_URL = 'https://search-s4s-logs-xsjsafiwd7vkpiucmjqmdjkp7y.us-west-2.es.amazonaws.com/test-suite/log/'
+DEFAULT_ES_URL = 'https://search-s4s-logs-xsjsafiwd7vkpiucmjqmdjkp7y.us-west-2.es.amazonaws.com/test-suite/log/'  # noqa, pylint: disable=line-too-long
 
 
 def before_all(context):
