@@ -28,7 +28,6 @@ CCDS_TAGS = {
     'immunizations',
     'patient-documents',
 }
-DEFAULT_ES_URL = 'https://search-s4s-logs-xsjsafiwd7vkpiucmjqmdjkp7y.us-west-2.es.amazonaws.com/test-suite/log/'  # noqa, pylint: disable=line-too-long
 
 
 def before_all(context):
@@ -47,7 +46,7 @@ def before_all(context):
     context.vendor_config = vendor_config
 
     # Set the ElasticSearch logging endpoint
-    context.config.es_url = os.getenv('ES_URL', DEFAULT_ES_URL)
+    context.config.es_url = os.getenv('ES_URL')
 
     # Authorize against the vendor FHIR server.
     context.oauth = factory(vendor_config)

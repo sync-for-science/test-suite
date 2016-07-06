@@ -67,7 +67,8 @@ def get_resource(context, resource):
     response = requests.get(url, headers=headers)
     context.cache[url] = response
 
-    log_requests_response(context.config.es_url, response)
+    if context.config.es_url:
+        log_requests_response(context.config.es_url, response)
 
     return response
 
