@@ -7,6 +7,13 @@
     >{{ vendor }}</option>
 {%- endmacro %}
 
+{% macro tag_option(tag) %}
+<label class="label label-info">
+    {{- tag -}}
+    <input type="checkbox" name="tags" value="{{ tag }}" checked></label>
+
+{% endmacro %}
+
 {% block body %}
     <div class="row">
         <div class="col-md-4 fixed">
@@ -23,10 +30,49 @@
                         {{ vendor_option('eClinicalWorks') }}
                         {{ vendor_option('athenahealth') }}
                         {{ vendor_option('McKesson') }}
+                        {{ vendor_option('Other') }}
                     </select>
                 </div>
-                <div class="btn-group" role="group">
+                <div class="form-group">
                     <button id="run-tests" type="button" class="btn btn-default">Run tests</button>
+                    <button class="btn btn-link collapsed"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#more-options"
+                        ><span class="on">Show</span><span class="off">Hide</span> more options</button>
+                </div>
+                <div id="more-options" class="collapse">
+                    <div class="form-group">
+                        <label>Tags</label>
+                        <button type="button" class="btn btn-link" id="toggle-all-tags">All</button>
+                        <button type="button" class="btn btn-link" id="toggle-none-tags">None</button>
+                        <div id="tags">
+                            {{ tag_option('allergies-and-intolerances') }}
+                            {{ tag_option('immunizations') }}
+                            {{ tag_option('lab-results') }}
+                            {{ tag_option('medication-administrations') }}
+                            {{ tag_option('medication-dispensations') }}
+                            {{ tag_option('medication-orders') }}
+                            {{ tag_option('medication-statements') }}
+                            {{ tag_option('patient-documents') }}
+                            {{ tag_option('patient-demographics') }}
+                            {{ tag_option('problems') }}
+                            {{ tag_option('procedures') }}
+                            {{ tag_option('smoking-status') }}
+                            {{ tag_option('vital-signs') }}
+                            {{ tag_option('s4s') }}
+                            {{ tag_option('smart') }}
+                            &nbsp; {# bootstrap collapses line height for some reason if there isn't a trailing space #}
+                        </div>
+                    </div>
+                    <div class="form-group">
+{% set sample_config_override -%}
+Paste a YAML document here to override the selected vendor's default configuration. (Select "Other" to start from scratch.)
+{%- endset %}
+                        <label for="config-override">Custom configuration</label>
+                        <textarea id="config-override" class="form-control" placeholder="{{ sample_config_override }}"></textarea>
+                        <p class="help-block">For more information about vendor configurations, see the <a href="https://github.com/sync-for-science/test-suite/blob/master/config/README.md" target="_blank">documentation</a>.</p>
+                    </div>
                 </div>
             </form>
             <div id="summary"></div>

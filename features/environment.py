@@ -42,8 +42,12 @@ def before_all(context):
     """
     # Get the vendor config and attach it to the context.
     vendor = getattr(context.config, 'vendor', os.getenv('VENDOR'))
-    vendor_config = get_config(vendor.lower())
+    override = getattr(context.config, 'override', os.getenv('CONFIG_OVERRIDE', ''))
+    vendor_config = get_config(vendor.lower(), override)
     context.vendor_config = vendor_config
+
+    # Set the ElasticSearch logging endpoint
+    context.config.es_url = os.getenv('ES_URL')
 
     # Authorize against the vendor FHIR server.
     context.oauth = factory(vendor_config)

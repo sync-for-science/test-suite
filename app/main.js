@@ -1,4 +1,5 @@
-var $ = require('jquery');
+require('expose?$!expose?jQuery!jquery');
+
 var _ = require('underscore');
 var uuid = require('uuid');
 var socketio = require('socket.io-client');
@@ -72,12 +73,53 @@ $(function () {
 
   $('#run-tests').on('click', function (event) {
     var vendor = $('#vendor').val();
+    var tags = $('input[name="tags"]:checked').map(function () {
+      return $(this).val();
+    }).get();
+    var override = $('#config-override').val();
+
     errorNavigation.reset();
 
     $(event.currentTarget).prop('disabled', true);
-    socket.emit('begin_tests', {vendor: vendor});
+    socket.emit('begin_tests', {
+      vendor: vendor,
+      tags: tags,
+      override: override
+    });
 
     $('#summary').html("");
     $('#canvas').html(loading_tmpl({}));
+  });
+
+  /**
+   * Summary links may refer to elements that are collapsed.
+   * Make sure they are open before following them.
+   *
+   * Note: do not preventDefault because we do want to follow the link.
+   */
+  $('#summary').on('click', 'a[data-target]', function (event) {
+    var $el = $(event.currentTarget);
+
+    $($el.data('target')).collapse('show');
+  });
+
+  /**
+   * Add toggle behavior to tags.
+   */
+  $('#tags').on('change', ':checkbox', function (event) {
+    var $el = $(event.currentTarget);
+    var checked = $el.is(':checked');
+
+    if (checked) {
+      $el.parent().addClass('label-info').removeClass('label-empty');
+    } else {
+      $el.parent().addClass('label-empty').removeClass('label-info');
+    }
+  });
+  $('#toggle-all-tags').on('click', function (event) {
+    $('#tags').find('.label-empty').click();
+  });
+  $('#toggle-none-tags').on('click', function (event) {
+    $('#tags').find('.label-info').click();
   });
 });
