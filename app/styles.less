@@ -133,6 +133,23 @@ h2[data-toggle] {
     }
 }
 
+[data-toggle="collapse"] {
+    .on {
+        display: none;
+    }
+    .off {
+        display: initial;
+    }
+    &.collapsed {
+        .on {
+            display: initial;
+        }
+        .off {
+            display: none;
+        }
+    }
+}
+
 #tags .label {
     cursor: pointer;
     border: 1px solid transparent;

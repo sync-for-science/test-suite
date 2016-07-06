@@ -14,7 +14,7 @@ socketio = flask_socketio.SocketIO(message_queue='redis://')
 
 
 @app.task
-def run_tests(room, vendor, tags):
+def run_tests(room, vendor, tags, override):
 
     def on_snapshot(snapshot, plan):
         event = {
@@ -31,6 +31,7 @@ def run_tests(room, vendor, tags):
             format=['json.chunked'],
             on_snapshot=on_snapshot,
             vendor=vendor,
+            override=override,
             command_args=[],
             tags=[','.join(tags)],
         )
