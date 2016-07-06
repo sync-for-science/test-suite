@@ -6,6 +6,9 @@ features.steps.utils
 This module contains useful functions that don't really fit anywhere in
 particular.
 """
+import datetime
+import json
+
 import jinja2
 import requests
 
@@ -64,7 +67,56 @@ def get_resource(context, resource):
     response = requests.get(url, headers=headers)
     context.cache[url] = response
 
+    if context.config.es_url:
+        log_requests_response(context.config.es_url, response)
+
     return response
+
+
+def log_requests_response(es_url, response):
+    """ Log the response from a FHIR query.
+
+    Args:
+        es_url (string): The ElasticSearch endpoint.
+        response (requests.models.Response): The resposne to log.
+    """
+    payload = {
+        'request': _clean(response.request),
+        'response': _clean(response),
+        'now': datetime.datetime.now().isoformat(),
+    }
+
+    requests.post(es_url, data=json.dumps(payload))
+
+
+def _clean(data):
+    """ Prepare request/response for logging.
+
+    Limits objects to just a few fields and makes sure that they're
+    json-serializable.
+
+    Args:
+        data: The requests request or response to clean.
+
+    Returns:
+        {
+            body: ...
+            headers: ...
+            method: ...
+            url: ...
+        }
+    """
+
+    valid = ('body', '_content', 'headers', 'method', 'url')
+    data = {k: v for k, v in vars(data).items() if k in valid}
+
+    data['headers'] = dict(data['headers'])
+
+    if '_content' in data:
+        data['body'] = data['_content'].decode('utf-8')
+        del data['_content']
+
+    return data
 
 
 def find_references(resource, found=None):
