@@ -29,4 +29,6 @@ COPY requirements.txt /usr/src/app/
 RUN  pip install --no-cache-dir -r requirements.txt
 COPY . /usr/src/app
 
+ENV ES_URL "https://search-s4s-logs-xsjsafiwd7vkpiucmjqmdjkp7y.us-west-2.es.amazonaws.com/test-suite/log/"
+
 CMD supervisord -c supervisord.conf
