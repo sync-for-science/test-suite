@@ -19,7 +19,7 @@ def deep_merge(orig, new):
 
 
 def get_config(vendor, override=''):
-    vendor_file = os.path.split(vendor + '.yml')[-1]
+    vendor_file = os.path.basename(vendor + '.yml')
     vendor_path = os.path.join('config', vendor_file)
     with open(vendor_path) as handle:
         config = yaml.load(handle)
