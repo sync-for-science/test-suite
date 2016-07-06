@@ -30,6 +30,7 @@
                         {{ vendor_option('eClinicalWorks') }}
                         {{ vendor_option('athenahealth') }}
                         {{ vendor_option('McKesson') }}
+                        {{ vendor_option('Other') }}
                     </select>
                 </div>
                 <div class="form-group">
@@ -66,7 +67,7 @@
                     </div>
                     <div class="form-group">
 {% set sample_config_override -%}
-Paste a YAML document here to override the selected vendor's default configuration.
+Paste a YAML document here to override the selected vendor's default configuration. (Select "Other" to start from scratch.)
 {%- endset %}
                         <label for="config-override">Custom configuration</label>
                         <textarea id="config-override" class="form-control" placeholder="{{ sample_config_override }}"></textarea>
