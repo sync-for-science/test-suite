@@ -9,6 +9,7 @@ particular.
 import datetime
 import json
 
+import grequests
 import jinja2
 import requests
 
@@ -86,7 +87,9 @@ def log_requests_response(es_url, response):
         'now': datetime.datetime.now().isoformat(),
     }
 
-    requests.post(es_url, data=json.dumps(payload))
+    # Use the asyncronous grequests library because we don't need a response.
+    req = grequests.post(es_url, data=json.dumps(payload))
+    grequests.send(req)
 
 
 def _clean(data):
