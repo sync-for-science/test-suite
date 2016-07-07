@@ -13,6 +13,9 @@ enum34==1.1.6
 Flask==0.10.1
 flask-log==0.1.0
 Flask-SocketIO==2.4
+gevent==1.1.1
+greenlet==0.4.10
+grequests==0.3.0
 httpretty==0.8.14
 isodate==0.5.4
 itsdangerous==0.24
