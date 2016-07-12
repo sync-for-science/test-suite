@@ -10,13 +10,53 @@ auth:
   client_secret: D9rE+xExGY7ZhW6aJJFloDjIoaBZVwguHXSIlUzcX/MEVBGU8S+eUCk44YHWYDTQuL4Gt9P/wlfPsHSM+dVoKA==
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
+
   steps:
-    - element: "[translate='DEFAULT_LOGIN_BUTTON']"
-      click: True
-      optional: True
     - element: "#UserName"
       send_keys: "s4s_6-22-16"
     - element: "#Password"
       send_keys: "s4s!2345"
     - element: "[translate='Login_LogIn']"
       click: True
+    - element: "input.demographics"
+      click: True
+      tag: Approve.patient-demographics
+    - element: "input.smoking"
+      click: True
+      tag: Approve.smoking-status
+    - element: "input.problems"
+      click: True
+      tag: Approve.problems
+    - element: "input.medorders"
+      click: True
+      tag: Approve.medication-orders
+    - element: "input.medstatements"
+      click: True
+      tag: Approve.medication-statements
+    - element: "input.meddispen"
+      click: True
+      tag: Approve.medication-dispensations
+    - element: "input.medadmin"
+      click: True
+      tag: Approve.medication-administrations
+    - element: "input.allergies"
+      click: True
+      tag: Approve.allergies-and-intolerances
+    - element: "input.results"
+      click: True
+      tag: Approve.lab-results
+    - element: "input.vitals"
+      click: True
+      tag: Approve.vital-signs
+    - element: "input.procedures"
+      click: True
+      tag: Approve.procedures
+    - element: "input.immunizations"
+      click: True
+      tag: Approve.immunizations
+    - element: "input.documents"
+      click: True
+      tag: Approve.patient-documents
+    - element: "input.pt"
+      click: True
+      tag: Deny.patient
