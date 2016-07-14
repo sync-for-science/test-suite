@@ -3,13 +3,13 @@
 from urllib import parse
 import uuid
 
-from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.remote.remote_connection import RemoteConnection
 from selenium.webdriver.support.ui import WebDriverWait
 
 
+CONNECTION_TIMEOUT = 60
 AUTHORIZE_TIMEOUT = 15
 
 
@@ -129,7 +129,6 @@ class Authorizer(object):
         """ Close the virtual browser.
         """
         self.browser.quit()
-        self.display.stop()
 
     def __enter__(self):
         self.open()
@@ -141,13 +140,9 @@ class Authorizer(object):
     def _browser(self):
         """ Initialize a Chrome webdriver.
         """
-        self.display = Display(visible=0, size=(800, 600))
-        self.display.start()
+        RemoteConnection.set_timeout(CONNECTION_TIMEOUT)
 
-        options = Options()
-        options.add_argument("--no-sandbox")
-
-        return webdriver.Chrome(chrome_options=options)
+        return webdriver.Firefox()
 
     def _execute_step(self, step):
         try:

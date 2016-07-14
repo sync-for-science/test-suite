@@ -4,24 +4,29 @@ MAINTAINER Josh Mandel
 # Install required packages
 RUN apt-get update
 RUN apt-get install -y \
-    xvfb unzip chromium chromium-l10n \
+    xvfb unzip \
     redis-server \
     supervisor
+
+#========
+# Firefox
+#========
+ENV FIREFOX_VERSION 45.0.2
+# Install iceweasel so that we have all the firefox dependencies
+RUN apt-get install -y iceweasel \
+    && apt-get purge -y iceweasel
+# Install the firefox binary
+RUN wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2 \
+    && rm -rf /opt/firefox \
+    && tar -C /opt -xjf /tmp/firefox.tar.bz2 \
+    && rm /tmp/firefox.tar.bz2 \
+    && mv /opt/firefox /opt/firefox-$FIREFOX_VERSION \
+    && ln -fs /opt/firefox-$FIREFOX_VERSION/firefox /usr/bin/firefox
+
+# Clean up now that we're done
 RUN apt-get clean
 
-WORKDIR /opt
-
-# Install chromedriver
-RUN wget --quiet http://chromedriver.storage.googleapis.com/2.22/chromedriver_linux64.zip
-RUN unzip /opt/chromedriver_linux64.zip -d /opt/ && \
-    ln -s /opt/chromedriver /usr/bin/chromedriver
-
-# Install phantomjs
-RUN wget --quiet https://github.com/Medium/phantomjs/releases/download/v2.1.1/phantomjs-2.1.1-linux-x86_64.tar.bz2
-RUN tar xvfj /opt/phantomjs-2.1.1-linux-x86_64.tar.bz2 && \
-    ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/bin/phantomjs
-
-
+# Install the app
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
