@@ -12,6 +12,10 @@ RUN apt-get install -y \
 # Firefox
 #========
 ENV FIREFOX_VERSION 45.0.2
+# Install iceweasel so that we have all the firefox dependencies
+RUN apt-get install -y iceweasel \
+    && apt-get purge -y iceweasel
+# Install the firefox binary
 RUN wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2 \
     && rm -rf /opt/firefox \
     && tar -C /opt -xjf /tmp/firefox.tar.bz2 \
