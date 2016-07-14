@@ -11,10 +11,10 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
 # Limit celery tasks so that if one hangs it doesn't lock the server forever
-CELERYD_TASK_TIME_LIMIT = 15 * 60
+CELERYD_TASK_TIME_LIMIT = 10 * 60
 
 # Restart every time in case of memory leaks
 CELERYD_MAX_TASKS_PER_CHILD = 1
 
 # We should be able to handle more than 2 task runners
-CELERYD_CONCURRENCY = 4
+CELERYD_CONCURRENCY = 8
