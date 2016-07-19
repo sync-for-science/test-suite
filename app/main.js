@@ -4,6 +4,7 @@ var _ = require('underscore');
 var uuid = require('uuid');
 var socketio = require('socket.io-client');
 
+var stateManager = require('./state-manager.js');
 var summary_tmpl = require('./templates/summary.hbs');
 var features_tmpl = require('./templates/features.hbs');
 var loading_tmpl = require('./templates/loading.hbs');
@@ -78,6 +79,12 @@ $(function () {
     }).get();
     var override = $('#config-override').val();
 
+    stateManager.save({
+      vendor: vendor,
+      tags: tags,
+      override: override
+    });
+
     errorNavigation.reset();
 
     $(event.currentTarget).prop('disabled', true);
@@ -116,10 +123,21 @@ $(function () {
       $el.parent().addClass('label-empty').removeClass('label-info');
     }
   });
+
   $('#toggle-all-tags').on('click', function (event) {
     $('#tags').find('.label-empty').click();
   });
   $('#toggle-none-tags').on('click', function (event) {
     $('#tags').find('.label-info').click();
   });
+
+  var state = stateManager.load();
+  if (state) {
+    $('#vendor').val(state.vendor)
+    $('#config-override').text(state.override);
+    $('#tags').find('.label-info').click();
+    state.tags.forEach(function(tag){
+      $('#tags').find('.label-empty input[value="'+tag+'"]').click();
+    })
+  }
 });
