@@ -10,10 +10,11 @@ auth:
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
   steps:
+    - element: '#sign-in'
+      click: True
     - element: '#consent-carousel'
       execute_script: |
         $('#consent-carousel')
-          .removeClass('slide')
           .carousel(5);
     - element: '#authorize'
       click: True
