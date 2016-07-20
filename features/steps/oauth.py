@@ -4,11 +4,12 @@ import uuid
 from behave import given, then, when
 import requests
 
-from features.steps import utils
+from features.steps import s4s, utils
 from testsuite.oauth import authorize
 from testsuite import fhir
 
 
+AUTHORIZATION_ACTIONS = ['allow', 'deny']
 ERROR_AUTHORIZATION_FAILED = 'Authorization failed.'
 ERROR_BAD_CONFORMANCE = 'Could not parse conformance statement.'
 ERROR_OAUTH_DISABLED = 'OAuth is not enabled on this server.'
@@ -107,6 +108,37 @@ def step_impl(context):
 
 @when('I ask for authorization')
 def step_impl(context):
+    try:
+        context.code = context.oauth.request_authorization()
+    except authorize.AuthorizationException as err:
+        error = ERROR_SELENIUM_SCREENSHOT.format(
+            err.args[0],
+            err.args[1],
+            context.vendor_config['host'],
+        )
+        assert False, error
+
+
+@when('I authorize the app {action}ing access to {resource_type}')
+def step_impl(context, action, resource_type):
+
+    assert action in AUTHORIZATION_ACTIONS
+    assert resource_type in s4s.MU_CCDS_MAPPINGS
+
+    # Filter the steps to only what is required for this authorization
+    condition = '{0}.{1}'.format(action, resource_type)
+    steps = context.vendor_config['auth'].get('steps', [])
+    steps = [step for step in steps
+             if 'tag' not in step or step['tag'] == condition]
+    context.vendor_config['auth']['steps'] = steps
+
+    # Construct a modified authorizer
+    urls = fhir.get_oauth_uris(context.conformance)
+    authorizer = authorize.Authorizer(config=context.vendor_config['auth'],
+                                      authorize_url=urls['authorize'])
+    context.oauth.authorizer = authorizer
+
+    # Authorize the app as usual
     try:
         context.code = context.oauth.request_authorization()
     except authorize.AuthorizationException as err:
