@@ -1,4 +1,5 @@
 # pylint: disable=missing-docstring,unused-argument
+import copy
 import logging
 import os
 import pickle
@@ -44,7 +45,12 @@ def before_all(context):
     vendor = getattr(context.config, 'vendor', os.getenv('VENDOR'))
     override = getattr(context.config, 'override', os.getenv('CONFIG_OVERRIDE', ''))
     vendor_config = get_config(vendor.lower(), override)
-    context.vendor_config = vendor_config
+    context.vendor_config = copy.deepcopy(vendor_config)
+
+    # Filter out any tagged vendor config steps
+    steps = vendor_config['auth'].get('steps', [])
+    steps = [step for step in steps if 'when' not in step]
+    vendor_config['auth']['steps'] = steps
 
     # Set the ElasticSearch logging endpoint
     context.config.es_url = os.getenv('ES_URL')
@@ -54,7 +60,7 @@ def before_all(context):
     try:
         context.oauth.authorize()
         if getattr(context.oauth, 'patient', None) is not None:
-            vendor_config['api']['patient'] = context.oauth.patient
+            context.vendor_config['api']['patient'] = context.oauth.patient
     except AssertionError as error:
         logging.error(utils.bad_response_assert(error.args[0], ''))
     except authorize.AuthorizationException as err:

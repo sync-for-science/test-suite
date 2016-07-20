@@ -28,9 +28,12 @@ We use selenium to follow the authorization process for each vendor. In order to
 - element: '#username'  # a css selector
   send_keys: 'user.name123'
   optional: True
+  when: deny.ResourceType
 ```
 
 Each step should be a dictionary with an `element` key and an action (`send_keys` or `click`). Unless `optional` is set, an exception will be raised if the css selector defined in `element` can be found.
+
+Steps tagged with a `when` conditional will not be run by default. They can however be toggled on in some features to selectively authorize or de-authorize some resource types. (see: `I authorize the app {action}ing access to {resource_type}` in [features.steps.oauth](https://github.com/sync-for-science/test-suite/blob/master/features/steps/oauth.py))
 
 ## A note on `client_secret`
 
