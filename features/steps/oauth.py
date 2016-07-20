@@ -129,7 +129,7 @@ def step_impl(context, action, resource_type):
     condition = '{0}.{1}'.format(action, resource_type)
     steps = context.vendor_config['auth'].get('steps', [])
     steps = [step for step in steps
-             if 'tag' not in step or step['tag'] == condition]
+             if 'when' not in step or step['when'] == condition]
     context.vendor_config['auth']['steps'] = steps
 
     # Construct a modified authorizer
