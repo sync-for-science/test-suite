@@ -21,3 +21,8 @@ Feature: Lab results
     Scenario: All references will resolve
         Given I have a Lab results response
         Then all references will resolve
+
+    Scenario: There are multiple pages of results
+        Given I have a Lab results response
+        When I follow the "next" link
+        Then the response code should be 200

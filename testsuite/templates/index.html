@@ -7,10 +7,15 @@
     >{{ vendor }}</option>
 {%- endmacro %}
 
-{% macro tag_option(tag) %}
-<label class="label label-info">
+{% macro tag_option(tag, checked='checked') %}
+{% set label = 'label-info' %}
+{% if not checked %}
+    {% set label = 'label-empty' %}
+{% endif %}
+
+<label class="label {{ label }}">
     {{- tag -}}
-    <input type="checkbox" name="tags" value="{{ tag }}" checked></label>
+    <input type="checkbox" name="tags" value="{{ tag }}" {{ checked }}></label>
 
 {% endmacro %}
 
@@ -62,6 +67,11 @@
                             {{ tag_option('vital-signs') }}
                             {{ tag_option('s4s') }}
                             {{ tag_option('smart') }}
+                            {{ tag_option('ask-authorization') }}
+                            {{ tag_option('evaluate-request') }}
+                            {{ tag_option('exchange-code') }}
+                            {{ tag_option('use-refresh-token') }}
+                            {{ tag_option('optional', checked='') }}
                             &nbsp; {# bootstrap collapses line height for some reason if there isn't a trailing space #}
                         </div>
                     </div>

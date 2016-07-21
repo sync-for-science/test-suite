@@ -10,7 +10,7 @@ Feature: Vital signs
         Given I have a Vital signs response
         Then the resource parses as valid FHIR DSTU2 content
 
-     Scenario: Results exist
+    Scenario: Results exist
         Given I have a Vital signs response
         Then there should be at least 1 entry
 

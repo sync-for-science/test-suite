@@ -1,4 +1,4 @@
-@smart
+@smart @evaluate-request
 Feature: EHR evaluates authorization request
 
     Scenario: Very long "state"

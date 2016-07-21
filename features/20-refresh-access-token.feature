@@ -1,4 +1,4 @@
-@smart
+@smart @use-refresh-token
 Feature: App uses a refresh token to obtain a new access token
 
     Scenario: Success response has all required parameters
