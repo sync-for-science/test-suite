@@ -6,11 +6,13 @@ import uuid
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.remote.remote_connection import RemoteConnection
+from selenium.webdriver.support.expected_conditions import visibility_of
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-CONNECTION_TIMEOUT = 60
 AUTHORIZE_TIMEOUT = 15
+CONNECTION_TIMEOUT = 60
+VISIBILITY_TIMEOUT = 10
 
 
 class Authorizer(object):
@@ -153,10 +155,15 @@ class Authorizer(object):
             raise ElementNotFoundException(str(err), self.browser)
 
         # Make sure the element exists before we continue
-        if not elem.is_displayed() and step.get('optional'):
-            return
-        elif not elem.is_displayed():
-            raise ElementNotFoundException('Element is hidden', self.browser)
+        try:
+            wait = WebDriverWait(self.browser, VISIBILITY_TIMEOUT)
+            wait.until(visibility_of(elem))
+        except TimeoutException:
+            if not elem.is_displayed() and step.get('optional'):
+                return
+            elif not elem.is_displayed():
+                msg = 'Element is hidden: {0}'.format(step['element'])
+                raise ElementNotFoundException(msg, self.browser)
 
         # Apply the action to the matched element.
         # Only one action can be applied per step.

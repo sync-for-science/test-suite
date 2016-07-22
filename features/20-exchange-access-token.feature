@@ -1,4 +1,4 @@
-@smart
+@smart @exchange-code
 Feature: App exchanges authorization code for access token
 
     Scenario: Success response has all required parameters

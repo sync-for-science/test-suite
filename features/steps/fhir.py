@@ -1,5 +1,5 @@
 # pylint: disable=missing-docstring,function-redefined
-from behave import then
+from behave import then, when
 
 from features.steps import utils
 
@@ -9,7 +9,23 @@ ERROR_FIELD_MISSING = "Resource field '{field_name}' is missing."
 ERROR_FIELD_UNEXPECTED_VALUE = """
 Resource field '{field_name}' does not match expected '{expected}', got '{actual}'.
 """
+ERROR_NO_NEXT_LINK = 'Link with relation "next" not found.'
 ERROR_UNRESOLVED_REFERENCE = "Reference '{reference}' failed to resolve."
+
+
+@when('I follow the "next" link')
+def step_impl(context):
+    resource = context.response.json()
+
+    links = resource.get('link', [])
+    urls = [link['url'] for link in links
+            if link['relation'] == 'next']
+
+    if len(urls) is not 1:
+        context.scenario.skip(reason=ERROR_NO_NEXT_LINK)
+        return
+
+    context.response = utils.get_resource(context, urls[0])
 
 
 @then('the {field_name} field will be {value}')

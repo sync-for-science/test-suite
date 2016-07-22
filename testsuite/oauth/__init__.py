@@ -14,7 +14,6 @@ def authorization_code_factory(config):
         authorization_code.AuthorizationCodeStrategy
     """
     auth_config = config['auth']
-    auth_config['aud'] = config['api']['url']
     conformance = fhir.get_conformance_statement(config['api']['url'])
     urls = fhir.get_oauth_uris(conformance)
     authorizer = authorize.Authorizer(config=auth_config,
