@@ -155,13 +155,13 @@ class Authorizer(object):
             raise ElementNotFoundException(str(err), self.browser)
 
         # Make sure the element exists before we continue
-        if not elem.is_displayed() and step.get('optional'):
-            return
-        elif not elem.is_displayed():
-            try:
-                wait = WebDriverWait(self.browser, VISIBILITY_TIMEOUT)
-                wait.until(visibility_of(elem))
-            except TimeoutException:
+        try:
+            wait = WebDriverWait(self.browser, VISIBILITY_TIMEOUT)
+            wait.until(visibility_of(elem))
+        except TimeoutException:
+            if not elem.is_displayed() and step.get('optional'):
+                return
+            elif not elem.is_displayed():
                 msg = 'Element is hidden: {0}'.format(step['element'])
                 raise ElementNotFoundException(msg, self.browser)
 
