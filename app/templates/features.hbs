@@ -43,6 +43,13 @@
                         {{/if}}
                     {{/each}}
                     </div>
+                    {{#if skip_reason}}
+                        <blockquote><small>
+                        {{~#each (lines skip_reason) ~}}
+                            {{~ this ~}}<br>
+                        {{~/each~}}
+                        </small></blockquote>
+                    {{/if}}
                 </div>
             {{/each}}
         </div>

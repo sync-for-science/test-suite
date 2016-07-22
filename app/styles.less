@@ -85,6 +85,7 @@ h2[data-toggle] {
         text-align: center;
         border-radius: 10px;
         border: 1px solid @gray-light;
+        font-weight: bold;
 
         &.passed {
             border: 1px solid @brand-success;
@@ -92,14 +93,12 @@ h2[data-toggle] {
         }
 
         &.passed:before {
-            font-weight: bold;
             content: 'P';
         }
 
         &.failed {
             border: 1px solid @brand-danger;
             background: @brand-danger;
-            font-weight: bold;
             color: white;
         }
 
@@ -109,6 +108,10 @@ h2[data-toggle] {
 
         &.skipped {
             color: @gray-light;
+            /* The lack of bolding pushes these elements down */
+            font-weight: normal;
+            position: relative;
+            top: -1px;
         }
 
         &.skipped:before {

@@ -11,22 +11,26 @@ module.exports = function(event) {
       return feature.location === f.location;
     });
 
-    f.scenarios.forEach(function(s, j){
+    f.scenarios.forEach(function(s, j) {
       s.status = 'pending';
-      if (fkey && fkey < event.snapshot.length){
-        if (event.snapshot[fkey].status === 'skipped'){
+      if (fkey && fkey < event.snapshot.length) {
+        if (event.snapshot[fkey].status === 'skipped') {
           s.status = 'skipped';
           return;
         }
-        if (j < event.snapshot[fkey].elements.length){
+        if (j < event.snapshot[fkey].elements.length) {
           s.status = 'passed';
-          event.snapshot[fkey].elements[j].steps.forEach(function(r){
-            if (r.result && r.result.status === 'failed'){
+          event.snapshot[fkey].elements[j].steps.forEach(function(r) {
+            if (r.result && r.result.status === 'failed') {
               s.status = 'failed';
               errors.push(s);
             }
             // This happens if a step does not have a definition
             if (r.result && r.result.status === 'undefined') {
+              s.status = 'skipped';
+            }
+            // Skipped steps should mark scenarios as skipped
+            if (r.result && r.result.status === 'skipped') {
               s.status = 'skipped';
             }
           });

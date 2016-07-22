@@ -122,7 +122,7 @@ def _clean(data):
     return data
 
 
-def find_references(resource, found=None):
+def find_named_key(resource, named_key, found=None):
     """ Find references to other resources.
 
     Look for key-value pairs in the form:
@@ -145,13 +145,13 @@ def find_references(resource, found=None):
 
     if isinstance(resource, dict):
         for key in resource:
-            if key == 'reference':
-                found.append(resource['reference'])
+            if key == named_key:
+                found.append(resource[named_key])
             else:
-                find_references(resource[key], found)
+                find_named_key(resource[key], named_key, found)
     elif isinstance(resource, list):
         for value in resource:
-            find_references(value, found)
+            find_named_key(value, named_key, found)
     elif isinstance(resource, str):
         pass
     elif isinstance(resource, bool):
