@@ -21,9 +21,9 @@ def step_impl(context):
     urls = [link['url'] for link in links
             if link['relation'] == 'next']
 
-    assert len(urls) == 1, \
-        utils.bad_response_assert(context.response,
-                                  ERROR_NO_NEXT_LINK)
+    if len(urls) is not 1:
+        context.scenario.skip(reason=ERROR_NO_NEXT_LINK)
+        return
 
     context.response = utils.get_resource(context, urls[0])
 
