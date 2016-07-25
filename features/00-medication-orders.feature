@@ -14,10 +14,14 @@ Feature: Medication orders
         Given I have a Medication orders response
         Then there should be at least 1 entry
 
-     Scenario: Resources have ids
+    Scenario: Resources have ids
         Given I have a Medication orders response
         Then all resources will have a id field
 
     Scenario: All references will resolve
         Given I have a Medication orders response
         Then all references will resolve
+
+    Scenario: All the codes are valid
+        Given I have a Medication orders response
+        Then all the codes will be valid

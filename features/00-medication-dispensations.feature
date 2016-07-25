@@ -21,3 +21,7 @@ Feature: Medication dispensations
     Scenario: All references will resolve
         Given I have a Medication dispensations response
         Then all references will resolve
+
+    Scenario: All the codes are valid
+        Given I have a Medication dispensations response
+        Then all the codes will be valid
