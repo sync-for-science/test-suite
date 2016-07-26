@@ -2,6 +2,7 @@
 amqp==1.4.9
 anyjson==0.3.3
 astroid==1.4.5
+beautifulsoup4==4.5.0
 behave==1.2.5
 billiard==3.3.0.23
 bitarray==0.8.1
