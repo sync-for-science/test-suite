@@ -14,18 +14,13 @@ def bf_provider(func):
     instantiate the bloom filter once.
     """
     with open('./data/codes.bf', 'rb') as handle:
-        bloom = ScalableBloomFilter.fromfile(handle)
+        func.bloom = ScalableBloomFilter.fromfile(handle)
 
-    def func_wrapper(*args, **kwargs):
-        """ Wrapper function.
-        """
-        return func(bloom, *args, **kwargs)
-
-    return func_wrapper
+    return func
 
 
 @bf_provider
-def validate_coding(bloom, coding):
+def validate_coding(coding):
     """ If the coding system is recognized, check the code.
     """
     if coding.get('system') not in [LOINC, SNOMED, RXNORM, ICD10]:
@@ -33,4 +28,4 @@ def validate_coding(bloom, coding):
 
     key = coding['system'] + '|' + coding['code']
 
-    return key in bloom
+    return key in validate_coding.bloom
