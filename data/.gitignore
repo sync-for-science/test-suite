@@ -1,0 +1,7 @@
+# Ignore everything
+*
+# Except myself
+!.gitignore
+!codes.bf
+!README.md
+!build_bf.py

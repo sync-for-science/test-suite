@@ -26,3 +26,7 @@ Feature: Lab results
         Given I have a Lab results response
         When I follow the "next" link
         Then the response code should be 200
+
+    Scenario: All the codes are valid
+        Given I have a Lab results response
+        Then all the codes will be valid

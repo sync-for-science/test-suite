@@ -21,3 +21,7 @@ Feature: Immunizations
     Scenario: All references will resolve
         Given I have a Immunizations response
         Then all references will resolve
+
+    Scenario: All the codes are valid
+        Given I have a Immunizations response
+        Then all the codes will be valid

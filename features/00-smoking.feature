@@ -21,3 +21,7 @@ Feature: Smoking status
     Scenario: All references will resolve
         Given I have a Smoking status response
         Then all references will resolve
+
+    Scenario: All the codes are valid
+        Given I have a Smoking status response
+        Then all the codes will be valid

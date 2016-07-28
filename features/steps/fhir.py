@@ -2,6 +2,7 @@
 from behave import then, when
 
 from features.steps import utils
+from testsuite import systems
 
 
 ERROR_ENTRY_COUNT = "Found {count} entries."
@@ -26,6 +27,23 @@ def step_impl(context):
         return
 
     context.response = utils.get_resource(context, urls[0])
+
+
+@then('all the codes will be valid')
+def step_impl(context):
+
+    resource = context.response.json()
+
+    if resource['resourceType'] == 'Bundle':
+        entries = [entry['resource'] for entry in resource.get('entry', [])]
+    else:
+        entries = [resource]
+
+    for entry in entries:
+        found = utils.find_named_key(entry, 'coding')
+        for codings in found:
+            if not all([systems.validate_coding(coding) for coding in codings]):
+                context.scenario.skip(reason='Bad coding: {0}'.format(codings))
 
 
 @then('the {field_name} field will be {value}')
@@ -64,7 +82,7 @@ def step_impl(context):
         entries = [resource]
 
     for entry in entries:
-        found = utils.find_references(entry)
+        found = utils.find_named_key(entry, 'reference')
         for reference in found:
             check_reference(reference, entry, context)
 

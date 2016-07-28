@@ -21,3 +21,7 @@ Feature: Vital signs
     Scenario: All references will resolve
         Given I have a Vital signs response
         Then all references will resolve
+
+    Scenario: All the codes are valid
+        Given I have a Vital signs response
+        Then all the codes will be valid
