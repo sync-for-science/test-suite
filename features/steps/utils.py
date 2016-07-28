@@ -92,32 +92,37 @@ def log_requests_response(es_url, response):
     grequests.send(req)
 
 
-def _clean(data):
+def _clean(loggable):
     """ Prepare request/response for logging.
 
     Limits objects to just a few fields and makes sure that they're
     json-serializable.
 
     Args:
-        data: The requests request or response to clean.
+        loggable: The requests request or response to clean.
 
     Returns:
         {
             body: ...
             headers: ...
+            json: ...
             method: ...
             url: ...
         }
     """
 
-    valid = ('body', '_content', 'headers', 'method', 'url')
-    data = {k: v for k, v in vars(data).items() if k in valid}
+    valid = ('body', 'headers', 'method', 'url')
+    data = {k: v for k, v in vars(loggable).items() if k in valid}
 
     data['headers'] = dict(data['headers'])
 
-    if '_content' in data:
-        data['body'] = data['_content'].decode('utf-8')
-        del data['_content']
+    if hasattr(loggable, 'text'):
+        data['body'] = loggable.text
+
+    try:
+        data['json'] = loggable.json()
+    except:  # pylint: disable=bare-except
+        pass
 
     return data
 
