@@ -20,7 +20,7 @@ LOINC_PATH = './loinc/loinc.csv'
 SNOMED_PATH = './snomed/SnomedCT_RF2Release_INT_20160131/Full/Terminology/sct2_Concept_Full_INT_20160131.txt'
 RXNORM_PATH = './rxnorm/rrf/RXNCONSO.RRF'
 RXNORM_DEPRECATED_PATH = './rxnorm/rrf/RXNCUI.RRF'
-ICD10_PATH = './icd10/icd10cm_index_2017.xml'
+ICD10_PATH = './icd10/icd10cm_tabular_2017.xml'
 
 
 def import_loinc(bf):
@@ -68,7 +68,7 @@ def import_icd10(bf):
     with open(ICD10_PATH) as handle:
         soup = BeautifulSoup(handle, 'html.parser')
 
-    tags = soup.select('code')
+    tags = soup.select('section name')
     unique = set([tag.string for tag in tags])
 
     for code in unique:
