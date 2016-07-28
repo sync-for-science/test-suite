@@ -10,7 +10,7 @@ auth:
   client_secret: D9rE+xExGY7ZhW6aJJFloDjIoaBZVwguHXSIlUzcX/MEVBGU8S+eUCk44YHWYDTQuL4Gt9P/wlfPsHSM+dVoKA==
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
-  steps:
+  sign_in_steps:
     - element: "[translate='DEFAULT_LOGIN_BUTTON']"
       click: True
       optional: True
