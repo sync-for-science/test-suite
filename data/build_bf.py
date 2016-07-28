@@ -19,6 +19,7 @@ ICD10 = 'http://hl7.org/fhir/sid/icd-10'
 LOINC_PATH = './loinc/loinc.csv'
 SNOMED_PATH = './snomed/SnomedCT_RF2Release_INT_20160131/Full/Terminology/sct2_Concept_Full_INT_20160131.txt'
 RXNORM_PATH = './rxnorm/rrf/RXNCONSO.RRF'
+RXNORM_DEPRECATED_PATH = './rxnorm/rrf/RXNCUI.RRF'
 ICD10_PATH = './icd10/icd10cm_index_2017.xml'
 
 
@@ -39,6 +40,8 @@ def import_snomed(bf):
 
 
 def import_rxnorm(bf):
+    unique = set()
+
     fieldnames = [
         'RXCUI', 'LAT', 'TS', 'LUI', 'STT', 'SUI', 'ISPREF', 'RXAUI',
         'SAUI', 'SCUI', 'SDUI', 'SAB', 'TTY', 'CODE', 'STR', 'SRL',
@@ -47,7 +50,15 @@ def import_rxnorm(bf):
 
     with open(RXNORM_PATH) as handle:
         reader = csv.DictReader(handle, delimiter='|', fieldnames=fieldnames)
-        unique = set([row['RXCUI'] for row in reader])
+        unique.update([row['RXCUI'] for row in reader])
+
+    fieldnames = [
+        'RXCUI1', 'VSAB_START', 'VSAB_END', 'Cardinality', 'RXCUI2',
+    ]
+
+    with open(RXNORM_DEPRECATED_PATH) as handle:
+        reader = csv.DictReader(handle, delimiter='|', fieldnames=fieldnames)
+        unique.update([row['RXCUI1'] for row in reader])
 
     for code in unique:
         bf.add(RXNORM + '|' + code)

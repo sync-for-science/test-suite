@@ -1,6 +1,6 @@
 # Code Systems
 
-`codes.bf` is a bloom filter.
+`codes.bf` is a bloom filter. To generate it yourself, download the following sources and run `build_bf.py`.
 
 ## LOINC
 
@@ -13,6 +13,7 @@
 ## RxNorm
 
 * Headers: [https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/RXNORM/sourcerepresentation.html#file1]
+* Headers (deprecated): [https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/RXNORM/sourcerepresentation.html#file9]
 * Source: [http://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_07052016.zip]
 
 ## ICD10
