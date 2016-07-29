@@ -17,10 +17,11 @@ auth:
   scope: launch/patient patient/*.read offline_access
   confidential_client:  # Should the test suite use basic auth while requesting tokens.
   token_url:  # Use when the token URL cannot be derived from a conformance statement
-  steps: []
+  sign_in_steps: []
+  authorize_steps: []
 ```
 
-## Authorization steps
+## Steps
 
 We use selenium to follow the authorization process for each vendor. In order to make it easier to add new vendors and to manage their various authorization screens, the selenium code has been abstracted into a slim configuration language.
 

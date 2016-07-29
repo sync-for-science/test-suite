@@ -1,5 +1,6 @@
 """ Authorize the SMART API.
 """
+import itertools
 from urllib import parse
 import uuid
 
@@ -84,7 +85,9 @@ class Authorizer(object):
         Step 2 of the SMART authorization process. Usually this would include
         logging in and clicking an "authorize" button.
         """
-        for step in self.config.get('steps', []):
+        steps = itertools.chain(self.config.get('sign_in_steps', []),
+                                self.config.get('authorize_steps', []))
+        for step in steps:
             self._execute_step(step)
 
         # Some vendors implement an AJAX based login procedure.

@@ -10,8 +10,7 @@ auth:
   client_secret: argonaut
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
-
-  steps:
+  sign_in_steps:
     - element: "#txtUsername"
       send_keys: "ARGONAUT"
     - element: "#txtPassword"
