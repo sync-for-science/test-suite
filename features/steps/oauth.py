@@ -81,6 +81,30 @@ def step_impl(context, field_name):
     context.response = response
 
 
+@when('I request authorization with the following override')
+def step_impl(context):
+    """ A step 1 implementation with a named field missing.
+    """
+    fields = {
+        'response_type': 'code',
+        'client_id': context.vendor_config['auth']['client_id'],
+        'redirect_uri': context.vendor_config['auth']['redirect_uri'],
+        'scope': context.vendor_config['auth']['scope'],
+        'state': uuid.uuid4(),
+    }
+
+    fields.update(dict(context.table))
+
+    uris = fhir.get_oauth_uris(context.conformance)
+
+    response = requests.get(uris['authorize'],
+                            params=fields,
+                            allow_redirects=False,
+                            timeout=5)
+
+    context.response = response
+
+
 @when('I ask for authorization with the following override')
 def step_impl(context):
     urls = fhir.get_oauth_uris(context.conformance)

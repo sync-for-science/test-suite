@@ -58,3 +58,11 @@ Feature: App exchanges authorization code for access token
             | key | value |
             | redirect_uri | https://example.com |
         Then the response code should not be 200
+
+    Scenario: Use received code twice
+        Given OAuth is enabled
+        And I am not logged in
+        When I ask for authorization
+        And I exchange my authorization code
+        And I exchange my authorization code
+        Then the response code should not be 200
