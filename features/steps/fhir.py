@@ -51,9 +51,12 @@ def step_impl(context):
     else:
         entries = [resource]
 
+    context.scenario.systems = set([])
+
     for entry in entries:
         found = utils.find_named_key(entry, 'coding')
         for codings in found:
+            context.scenario.systems.update([coding.get('system') for coding in codings])
             if not all([systems.validate_coding(coding) for coding in codings]):
                 context.scenario.skip(reason='Bad coding: {0}'.format(codings))
 

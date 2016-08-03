@@ -4,6 +4,7 @@ module.exports = function(event) {
   var errors = [];
   // Deep-clone the event plan
   var summary = JSON.parse(JSON.stringify(event.plan));
+  var systems = [];
 
   summary.forEach(function(f, i){
     // Plan and snapshot offsets may not match, get the correct key
@@ -34,6 +35,9 @@ module.exports = function(event) {
               s.status = 'skipped';
             }
           });
+          (event.snapshot[fkey].elements[j]['systems'] || []).forEach(function(system) {
+            systems.push(system);
+          });
         }
       }
     })
@@ -41,7 +45,8 @@ module.exports = function(event) {
 
   return {
     summary: summary,
-    errors: errors
+    errors: errors,
+    systems: _.uniq(systems)
   };
 };
 
