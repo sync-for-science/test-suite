@@ -70,8 +70,8 @@ $(function () {
 
   socket.on('tests_complete', function () {
     $('#run-tests').prop('disabled', false);
+    $('#report').show();
     $('#report-modal').modal({'show': true});
-    $('#report button[data-toggle="modal"]').removeClass('hidden');
   });
   socket.on('disconnect', function () {
     $('#run-tests').prop('disabled', false);
@@ -107,6 +107,7 @@ $(function () {
 
     $('#summary').html("");
     $('#canvas').html(loading_tmpl({}));
+    $('#report').hide();
   });
 
   /**

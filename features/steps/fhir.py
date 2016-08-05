@@ -51,14 +51,23 @@ def step_impl(context):
     else:
         entries = [resource]
 
-    context.scenario.systems = set([])
+    context.scenario.systems = []
 
     for entry in entries:
         found = utils.find_named_key(entry, 'coding')
         for codings in found:
-            context.scenario.systems.update([coding.get('system') for coding in codings])
-            if not all([systems.validate_coding(coding) for coding in codings]):
-                context.scenario.skip(reason='Bad coding: {0}'.format(codings))
+            for coding in codings:
+                valid = systems.validate_coding(coding)
+
+                context.scenario.systems.append({
+                    'system': coding.get('system'),
+                    'code': coding.get('code'),
+                    'valid': valid,
+                    'recognized': coding.get('system') in systems.RECOGNIZED,
+                })
+
+                if not valid:
+                    context.scenario.skip(reason='Bad coding: {0}'.format(coding))
 
 
 @then('the {field_name} field will be {value}')

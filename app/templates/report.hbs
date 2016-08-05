@@ -1,4 +1,8 @@
-<button type="button" class="btn btn-primary hidden" data-toggle="modal" data-target="#report-modal">Show report</button>
+<h1>
+    Tests Complete!
+    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#report-modal">Show report</button>
+</h1>
+<hr>
 
 <div class="modal fade" id="report-modal" tabindex="-1">
     <div class="modal-dialog" role="document">
@@ -26,14 +30,24 @@
                 </p>
                 <h4>Coding systems</h4>
                 <ul>
-                    {{#each systems as |system index|}}
-                        {{#if system}}
-                            <li>{{ system }}</li>
-                        {{else}}
-                            <li><span class="text-muted">system not specified</span></li>
-                        {{/if}}
+                    {{#each systems}}
+                        <li>
+                            {{#if system}}
+                                {{ system }}
+                            {{else}}
+                                <span class="text-muted">system not specified</span>
+                            {{/if}}
+                            - count {{ count }}
+                            {{~#if recognized~}}
+                                , valid {{ valid }}.
+                            {{/if}}
+                        </li>
                     {{/each}}
                 </ul>
+            </div>
+
+            <div class="modal-footer">
+                You can restore this report by clicking the "show report" button.
             </div>
         </div>
     </div>

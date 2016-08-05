@@ -35,18 +35,34 @@ module.exports = function(event) {
               s.status = 'skipped';
             }
           });
-          (event.snapshot[fkey].elements[j]['systems'] || []).forEach(function(system) {
-            systems.push(system);
-          });
+          systems = systems.concat(event.snapshot[fkey].elements[j]['systems']);
         }
       }
     })
   });
 
+  systems = _.reduce(systems, function (memo, value) {
+    var system = memo[value['system']] || {
+      system: value['system'],
+      count: 0,
+      valid: 0,
+      recognized: value['recognized'],
+    };
+
+    system['count'] += 1
+    if (value['valid']) {
+      system['valid'] += 1
+    }
+
+    memo[value['system']] = system;
+
+    return memo;
+  }, {});
+
   return {
     summary: summary,
     errors: errors,
-    systems: _.uniq(systems)
+    systems: _.sortBy(systems, 'count').reverse()
   };
 };
 

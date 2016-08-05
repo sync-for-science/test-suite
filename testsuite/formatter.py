@@ -28,7 +28,7 @@ class ChunkedJsonFormatter(PrettyJSONFormatter):
             if 'skip_reason' in element:
                 element['skip_reason'] = element['skip_reason']()
             if 'systems' in element:
-                element['systems'] = list(element['systems']())
+                element['systems'] = element['systems']()
 
         self.snapshot.append(current_feature)
         self.config.on_snapshot(self.snapshot, self.plan)
