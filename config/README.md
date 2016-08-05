@@ -40,7 +40,7 @@ Steps tagged with a `when` conditional will not be run by default. They can howe
 
 There are three sets of "steps" that will be run in the course of this test suite.
 
-+ __sign_in_steps:__ The steps a user takes to sign in. These are run before either the `authorize_steps` or the `revoke_steps`.
++ **sign_in_steps:** The steps a user takes to sign in. These are run before either the `authorize_steps` or the `revoke_steps`.
 + **authorize_steps:** The steps a user takes to authorize this app.
 + **revoke_steps:** The steps a user takes to revoke an authorization.
 
