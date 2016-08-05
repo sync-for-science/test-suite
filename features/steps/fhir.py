@@ -1,7 +1,7 @@
 # pylint: disable=missing-docstring,function-redefined
-from behave import then, when
+from behave import given, then, when
 
-from features.steps import utils
+from features.steps import s4s, utils
 from testsuite import systems
 
 
@@ -10,8 +10,20 @@ ERROR_FIELD_MISSING = "Resource field '{field_name}' is missing."
 ERROR_FIELD_UNEXPECTED_VALUE = """
 Resource field '{field_name}' does not match expected '{expected}', got '{actual}'.
 """
+ERROR_NO_ACCESS = 'Could not fetch Patient demographics'
 ERROR_NO_NEXT_LINK = 'Link with relation "next" not found.'
 ERROR_UNRESOLVED_REFERENCE = "Reference '{reference}' failed to resolve."
+
+
+@given(u'I have access to Patient demographics')
+def step_impl(context):
+    query = s4s.MU_CCDS_MAPPINGS['Patient demographics']
+    query = query.format(patientId=context.vendor_config['api'].get('patient'))
+    response = utils.get_resource(context, query)
+
+    assert response.status_code == 200, \
+        utils.bad_response_assert(response,
+                                  ERROR_NO_ACCESS)
 
 
 @when('I follow the "next" link')

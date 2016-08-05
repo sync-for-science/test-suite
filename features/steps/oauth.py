@@ -12,6 +12,7 @@ from testsuite import fhir
 AUTHORIZATION_ACTIONS = ['allow', 'deny']
 ERROR_AUTHORIZATION_FAILED = 'Authorization failed.'
 ERROR_BAD_CONFORMANCE = 'Could not parse conformance statement.'
+ERROR_NO_REVOKE = 'Revoking authorizations is not enabled.'
 ERROR_OAUTH_DISABLED = 'OAuth is not enabled on this server.'
 ERROR_SELENIUM_SCREENSHOT = '''
 An authorization error occurred: {0}
@@ -32,6 +33,16 @@ def step_impl(context):
     fhir.get_oauth_uris(context.conformance)
 
 
+@given('revoking authorizations is enabled')
+def step_impl(context):
+    auth_config = context.vendor_config['auth']
+    keys = ('revoke_steps', 'revoke_url')
+
+    if not all(key in auth_config for key in keys):
+        context.scenario.skip(reason=ERROR_NO_REVOKE)
+        return
+
+
 @given('I am logged in')
 def step_impl(context):
     assert context.oauth is not None, ERROR_AUTHORIZATION_FAILED
@@ -42,6 +53,8 @@ def step_impl(context):
 @given('I am not logged in')
 def step_impl(context):
     context.oauth.access_token = None
+
+    context.cache.clear()
 
 
 @when('I log in')
@@ -55,6 +68,24 @@ def step_impl(context):
             context.vendor_config['host'],
         )
         assert False, error
+
+
+@when('I revoke my authorization')
+def step_impl(context):
+    revoker = authorize.AuthorizationRevoker(context.vendor_config['auth'])
+
+    try:
+        with revoker:
+            revoker.revoke_authorization()
+    except authorize.AuthorizationException as err:
+        error = ERROR_SELENIUM_SCREENSHOT.format(
+            err.args[0],
+            err.args[1],
+            context.vendor_config['host'],
+        )
+        assert False, error
+
+    context.cache.clear()
 
 
 @when('I ask for authorization without the {field_name} field')
