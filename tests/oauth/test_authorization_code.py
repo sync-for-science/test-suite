@@ -115,11 +115,8 @@ class NoneAuthorizer(authorize.Authorizer):
     def authorize(self):
         return None
 
-    def _browser(self):
-        return True
+    def __enter__(self):
+        pass
 
-    def open(self):
-        self.browser = self._browser()
-
-    def close(self):
-        self.browser = None
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass

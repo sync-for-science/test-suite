@@ -144,3 +144,10 @@ class Cache(object):
     def __contains__(self, key):
         key = self.prefix + key
         return self.redis_client.exists(key)
+
+    def clear(self):
+        pattern = self.prefix + '*'
+        keys = self.redis_client.keys(pattern)
+        if keys:
+            deleted = self.redis_client.delete(*keys)
+            logging.info('Deleted %d records from cache.', deleted)

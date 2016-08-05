@@ -17,8 +17,10 @@ auth:
   scope: launch/patient patient/*.read offline_access
   confidential_client:  # Should the test suite use basic auth while requesting tokens.
   token_url:  # Use when the token URL cannot be derived from a conformance statement
+  revoke_url:  # The URL of a page where a user would revoke authorizations
   sign_in_steps: []
   authorize_steps: []
+  revoke_steps: []
 ```
 
 ## Steps
@@ -35,6 +37,12 @@ We use selenium to follow the authorization process for each vendor. In order to
 Each step should be a dictionary with an `element` key and an action (`send_keys` or `click`). Unless `optional` is set, an exception will be raised if the css selector defined in `element` can be found.
 
 Steps tagged with a `when` conditional will not be run by default. They can however be toggled on in some features to selectively authorize or de-authorize some resource types. (see: `I authorize the app {action}ing access to {resource_type}` in [features.steps.oauth](https://github.com/sync-for-science/test-suite/blob/master/features/steps/oauth.py))
+
+There are three sets of "steps" that will be run in the course of this test suite.
+
++ **sign_in_steps:** The steps a user takes to sign in. These are run before either the `authorize_steps` or the `revoke_steps`.
++ **authorize_steps:** The steps a user takes to authorize this app.
++ **revoke_steps:** The steps a user takes to revoke an authorization.
 
 ## A note on `client_secret`
 
