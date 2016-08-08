@@ -3,55 +3,65 @@
         data-toggle="collapse"
         data-target="#scenarios-{{dashify location}}"
         >Feature: {{ name }} {{result status}}</h2>
-    {{#each tags}}
-        <span class="label label-info">{{ this }}</span>
-    {{/each}}
-    {{#testWasSkipped}}
-        <span class="label label-default">skipped</span>
-    {{else}}
-        <div class="collapse {{#featureFailed}}in{{/featureFailed}}" id="scenarios-{{dashify location}}">
-            {{#each elements}}
-                <div id="{{dashify location}}">
-                    <h3>Scenario: {{ name }}</h3>
-                    <div class="steps">
-                    {{#each steps}}
-                        <span class="{{ result.status }}">{{ keyword }} {{ name }} {{result result.status}}</span>
-                        {{#if table}}
-                            <table class="table table-condensed table-bordered">
-                                <tr class="text-capitalize">
-                                    {{#each table.headings}}
-                                        <th>{{~ this ~}}</th>
-                                    {{/each}}
-                                </tr>
-                                {{#each table.rows}}
-                                    <tr>
-                                        {{#each this}}
-                                            <td>{{~ this ~}}</td>
+    <p>
+        {{#each tags}}
+            <span class="label label-info">{{ this }}</span>
+        {{/each}}
+        {{#testWasSkipped}}
+            <span class="label label-default">skipped</span>
+        {{else}}
+            <div class="collapse {{#featureFailed}}in{{/featureFailed}}" id="scenarios-{{dashify location}}">
+                {{#each elements}}
+                    <div id="{{dashify location}}">
+                        <h3>Scenario: {{ name }}</h3>
+                        <div class="steps">
+                            {{#each steps}}
+                                <span class="{{ result.status }}">{{ keyword }} {{ name }} {{result result.status}}</span>
+                                {{#if table}}
+                                    <table class="table table-condensed table-bordered">
+                                        <tr class="text-capitalize">
+                                            {{#each table.headings}}
+                                                <th>{{~ this ~}}</th>
+                                            {{/each}}
+                                        </tr>
+                                        {{#each table.rows}}
+                                            <tr>
+                                                {{#each this}}
+                                                    <td>{{~ this ~}}</td>
+                                                {{/each}}
+                                            </tr>
                                         {{/each}}
-                                    </tr>
-                                {{/each}}
-                            </table>
-                        {{/if}}
-                        {{#if result.error_message}}
+                                    </table>
+                                {{/if}}
+                                {{#if result.error_message}}
+                                    <blockquote><small>
+                                        {{~#each (lines result.error_message) ~}}
+                                            {{~ this ~}}<br>
+                                        {{~/each~}}
+                                    </small></blockquote>
+                                {{else}}
+                                    <br>
+                                {{/if}}
+                            {{/each}}
+                        </div>
+                        {{#if skip_reason}}
                             <blockquote><small>
-                            {{~#each (lines result.error_message) ~}}
-                                {{~ this ~}}<br>
-                            {{~/each~}}
+                                {{~#each (lines skip_reason) ~}}
+                                    {{~ this ~}}<br>
+                                {{~/each~}}
                             </small></blockquote>
-                        {{else}}
-                            <br>
                         {{/if}}
-                    {{/each}}
+                        {{#if codes}}
+                            <h3>Found systems:</h3>
+                            <ul>
+                                {{#each codes as |code index|}}
+                                    <li>{{ code }}</li>
+                                {{/each}}
+                            </ul>
+                        {{/if}}
                     </div>
-                    {{#if skip_reason}}
-                        <blockquote><small>
-                        {{~#each (lines skip_reason) ~}}
-                            {{~ this ~}}<br>
-                        {{~/each~}}
-                        </small></blockquote>
-                    {{/if}}
-                </div>
-            {{/each}}
-        </div>
-    {{/testWasSkipped}}
+                {{/each}}
+            </div>
+        {{/testWasSkipped}}
+    </p>
 {{/each}}

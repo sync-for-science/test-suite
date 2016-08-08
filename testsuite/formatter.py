@@ -27,6 +27,8 @@ class ChunkedJsonFormatter(PrettyJSONFormatter):
         for element in current_feature['elements']:
             if 'skip_reason' in element:
                 element['skip_reason'] = element['skip_reason']()
+            if 'systems' in element:
+                element['systems'] = element['systems']()
 
         self.snapshot.append(current_feature)
         self.config.on_snapshot(self.snapshot, self.plan)
@@ -39,7 +41,8 @@ class ChunkedJsonFormatter(PrettyJSONFormatter):
             'tags': scenario.tags,
             'location': six.text_type(scenario.location),
             'steps': [],
-            'skip_reason': lambda: getattr(scenario, 'skip_reason')
+            'skip_reason': lambda: getattr(scenario, 'skip_reason'),
+            'systems': lambda: getattr(scenario, 'systems', []),
         })
         if scenario.description:
             element['description'] = scenario.description

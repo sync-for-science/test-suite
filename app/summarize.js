@@ -4,6 +4,7 @@ module.exports = function(event) {
   var errors = [];
   // Deep-clone the event plan
   var summary = JSON.parse(JSON.stringify(event.plan));
+  var systems = [];
 
   summary.forEach(function(f, i){
     // Plan and snapshot offsets may not match, get the correct key
@@ -34,14 +35,34 @@ module.exports = function(event) {
               s.status = 'skipped';
             }
           });
+          systems = systems.concat(event.snapshot[fkey].elements[j]['systems']);
         }
       }
     })
   });
 
+  systems = _.reduce(systems, function (memo, value) {
+    var system = memo[value['system']] || {
+      system: value['system'],
+      count: 0,
+      valid: 0,
+      recognized: value['recognized'],
+    };
+
+    system['count'] += 1
+    if (value['valid']) {
+      system['valid'] += 1
+    }
+
+    memo[value['system']] = system;
+
+    return memo;
+  }, {});
+
   return {
     summary: summary,
-    errors: errors
+    errors: errors,
+    systems: _.sortBy(systems, 'count').reverse()
   };
 };
 

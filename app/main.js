@@ -8,9 +8,11 @@ var stateManager = require('./state-manager.js');
 var summary_tmpl = require('./templates/summary.hbs');
 var features_tmpl = require('./templates/features.hbs');
 var loading_tmpl = require('./templates/loading.hbs');
+var report_tmpl = require('./templates/report.hbs');
 var error_tmpl = require('./templates/error.hbs');
 var errorNavigation = require('./error-navigation.js');
 var summarize = require('./summarize.js');
+var report = require('./report.js');
 
 require('./styles.less');
 require('bootstrap/dist/js/npm');
@@ -48,6 +50,13 @@ $(function () {
     $('#summary')
       .html(summary_tmpl({summary: summaryResult.summary}))
       .find('[data-toggle="tooltip"]').tooltip();
+
+    var reportResult = {
+      report: report(event.snapshot),
+      systems: summaryResult.systems
+    };
+
+    $('#report').html(report_tmpl(reportResult));
   });
 
   socket.on('global_error', function (error) {
@@ -61,6 +70,8 @@ $(function () {
 
   socket.on('tests_complete', function () {
     $('#run-tests').prop('disabled', false);
+    $('#report').show();
+    $('#report-modal').modal({'show': true});
   });
   socket.on('disconnect', function () {
     $('#run-tests').prop('disabled', false);
@@ -96,6 +107,7 @@ $(function () {
 
     $('#summary').html("");
     $('#canvas').html(loading_tmpl({}));
+    $('#report').hide();
   });
 
   /**
