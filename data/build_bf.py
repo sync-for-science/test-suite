@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # pylint: disable=missing-docstring,invalid-name,redefined-outer-name
 import csv
+import json
 
 from bs4 import BeautifulSoup
 from pybloom import ScalableBloomFilter
+import requests
 
 # Settings
 INITIAL_CAPACITY = 2000000
@@ -75,13 +77,50 @@ def import_icd10(bf):
         bf.add(ICD10 + '|' + code)
 
 
-bf = ScalableBloomFilter(mode=ScalableBloomFilter.SMALL_SET_GROWTH,
-                         initial_capacity=INITIAL_CAPACITY,
-                         error_rate=ERROR_RATE)
+def import_fhir(bf):
+    res = requests.get('http://hl7.org/fhir/valuesets.json')
+    bundle = res.json()
+
+    fhir_systems = []
+
+    systems = [entry['resource'] for entry in bundle['entry']
+               if 'codeSystem' in entry['resource']]
+
+    for system in systems:
+        url = system['codeSystem']['system']
+        concepts = system['codeSystem']['concept']
+
+        codes = []
+        for concept in concepts:
+            if 'concept' in concept:
+                codes += [s_concept['code'] for s_concept in concept['concept']]
+            else:
+                codes.append(concept['code'])
+
+        for code in codes:
+            bf.add(url + '|' + code)
+
+        fhir_systems.append(url)
+
+    with open('./fhir/systems.json', 'w') as handle:
+        json.dump(fhir_systems, handle)
+
+
+try:
+    # If the bloom filter already exists, we're probably just appending to it
+    with open('./codes.bf', 'rb') as handle:
+        bf = ScalableBloomFilter.fromfile(handle)
+except FileNotFoundError:
+    # If it doesn't, we need to make one
+    bf = ScalableBloomFilter(mode=ScalableBloomFilter.SMALL_SET_GROWTH,
+                             initial_capacity=INITIAL_CAPACITY,
+                             error_rate=ERROR_RATE)
+
 import_loinc(bf)
 import_snomed(bf)
 import_rxnorm(bf)
 import_icd10(bf)
+import_fhir(bf)
 
 if __name__ == '__main__':
     with open('./codes.bf', 'wb') as handle:
