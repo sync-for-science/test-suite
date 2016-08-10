@@ -1,6 +1,7 @@
 """ Authorize the SMART API.
 """
 import itertools
+import logging
 from urllib import parse
 import uuid
 
@@ -89,6 +90,10 @@ class StepRunner(object):
         url = parse.urlparse(self.browser.current_url)
         return parse.parse_qs(url.query)
 
+    @property
+    def current_url(self):
+        return self.browser.current_url
+
     def _browser(self):
         """ Initialize a Firefox webdriver.
         """
@@ -129,6 +134,7 @@ class Authorizer(object):
         self.config = config
         self.authorize_url = authorize_url
         self.runner = step_runner
+        self.log = logging.getLogger(__name__)
 
         if not self.runner:
             self.runner = StepRunner()
@@ -157,11 +163,16 @@ class Authorizer(object):
 
         Step 1 of the SMART authorization process.
         """
+        self.log.info('Ask for authorization')
+
         # Store the "state" parameter so that we can validate it later
         self._state = parameters['state']
+        self.log.info('STATE: %s', self._state)
 
-        launch_url = self.authorize_url + '?' + parse.urlencode(parameters)
-        self.runner.get(launch_url)
+        authorize_url = self.authorize_url + '?' + parse.urlencode(parameters)
+        self.log.info('AUTHORIZE URL: %s', authorize_url)
+
+        self.runner.get(authorize_url)
 
     def provide_user_input(self):
         """ Provide end-user input to EHR.
@@ -169,12 +180,15 @@ class Authorizer(object):
         Step 2 of the SMART authorization process. Usually this would include
         logging in and clicking an "authorize" button.
         """
+        self.log.info('Provide user input')
+
         steps = itertools.chain(self.config.get('sign_in_steps', []),
                                 self.config.get('authorize_steps', []))
         for step in steps:
             self.runner.execute_step(step)
 
         query = self.runner.get_query(base_url=self.config['redirect_uri'])
+        self.log.info('REDIRECT URI: %s', self.runner.current_url)
 
         if 'error' in query:
             raise ReturnedErrorException(query['error'],
