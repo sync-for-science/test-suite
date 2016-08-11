@@ -86,16 +86,21 @@ def import_fhir(bf):
     systems = [entry['resource'] for entry in bundle['entry']
                if 'codeSystem' in entry['resource']]
 
-    for system in systems:
-        url = system['codeSystem']['system']
-        concepts = system['codeSystem']['concept']
-
+    def get_codes_from_concept(code_system):
+        concepts = code_system.get('concept', [])
         codes = []
+
         for concept in concepts:
             if 'concept' in concept:
-                codes += [s_concept['code'] for s_concept in concept['concept']]
+                codes += get_codes_from_concept(concept)
             else:
                 codes.append(concept['code'])
+
+        return codes
+
+    for system in systems:
+        url = system['codeSystem']['system']
+        codes = get_codes_from_concept(system['codeSystem'])
 
         for code in codes:
             bf.add(url + '|' + code)
