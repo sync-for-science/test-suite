@@ -137,7 +137,11 @@ def step_impl(context):
         'Accept': 'application/json',
         'Accept-Encoding': 'deflate,sdch',
     }
-    resp = requests.post(url, json=resource, headers=headers)
+    try:
+        resp = requests.post(url, json=resource, headers=headers)
+    except requests.exceptions.ConnectionError as err:
+        return context.scenario.skip(reason=str(err))
+
     outcome = resp.json()
 
     issues = [issue for issue in outcome.get('issue')
