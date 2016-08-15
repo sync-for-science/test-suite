@@ -2,6 +2,10 @@
 *
 # Except myself
 !.gitignore
+
+# And some other things
 !codes.bf
 !README.md
 !build_bf.py
+!fhir/
+!fhir/systems.json

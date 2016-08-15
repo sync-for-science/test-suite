@@ -1,4 +1,6 @@
 # pylint: disable=missing-docstring,function-redefined
+import json
+
 from behave import given, then, when
 
 from features.steps import s4s, utils
@@ -52,6 +54,7 @@ def step_impl(context):
         entries = [resource]
 
     context.scenario.systems = []
+    bad_codings = []
 
     for entry in entries:
         found = utils.find_named_key(entry, 'coding')
@@ -67,7 +70,12 @@ def step_impl(context):
                 })
 
                 if not valid:
-                    context.scenario.skip(reason='Bad coding: {0}'.format(coding))
+                    bad_codings.append(coding)
+
+    assert not bad_codings, \
+        utils.bad_response_assert(context.response,
+                                  'Bad codings: {codings}',
+                                  codings=json.dumps(bad_codings, indent=2))
 
 
 @then('the {field_name} field will be {value}')

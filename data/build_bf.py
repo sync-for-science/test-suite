@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # pylint: disable=missing-docstring,invalid-name,redefined-outer-name
 import csv
+import json
 
 from bs4 import BeautifulSoup
 from pybloom import ScalableBloomFilter
+import requests
 
 # Settings
 INITIAL_CAPACITY = 2000000
@@ -75,13 +77,65 @@ def import_icd10(bf):
         bf.add(ICD10 + '|' + code)
 
 
-bf = ScalableBloomFilter(mode=ScalableBloomFilter.SMALL_SET_GROWTH,
-                         initial_capacity=INITIAL_CAPACITY,
-                         error_rate=ERROR_RATE)
+def import_fhir(bf):
+    value_set_definition_urls = [
+        'http://hl7.org/fhir/valuesets.json',
+        'http://hl7.org/fhir/v2-tables.json',
+        'http://hl7.org/fhir/v3-codesystems.json',
+    ]
+
+    fhir_systems = []
+
+    def get_codes_from_concept(code_system):
+        codes = []
+
+        if 'code' in code_system:
+            codes.append(code_system['code'])
+
+        concepts = code_system.get('concept', [])
+        for concept in concepts:
+            codes += get_codes_from_concept(concept)
+
+        return codes
+
+    def get_value_sets(url):
+        res = requests.get(url)
+        bundle = res.json()
+
+        return [entry['resource'] for entry in bundle['entry']
+                if 'codeSystem' in entry['resource']]
+
+    for value_set_url in value_set_definition_urls:
+        value_sets = get_value_sets(value_set_url)
+
+        for value_set in value_sets:
+            url = value_set['codeSystem']['system']
+            codes = get_codes_from_concept(value_set['codeSystem'])
+
+            for code in codes:
+                bf.add(url + '|' + code)
+
+            fhir_systems.append(url)
+
+    with open('./fhir/systems.json', 'w') as handle:
+        json.dump(fhir_systems, handle)
+
+
+try:
+    # If the bloom filter already exists, we're probably just appending to it
+    with open('./codes.bf', 'rb') as handle:
+        bf = ScalableBloomFilter.fromfile(handle)
+except FileNotFoundError:
+    # If it doesn't, we need to make one
+    bf = ScalableBloomFilter(mode=ScalableBloomFilter.SMALL_SET_GROWTH,
+                             initial_capacity=INITIAL_CAPACITY,
+                             error_rate=ERROR_RATE)
+
 import_loinc(bf)
 import_snomed(bf)
 import_rxnorm(bf)
 import_icd10(bf)
+import_fhir(bf)
 
 if __name__ == '__main__':
     with open('./codes.bf', 'wb') as handle:
