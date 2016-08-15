@@ -78,34 +78,44 @@ def import_icd10(bf):
 
 
 def import_fhir(bf):
-    res = requests.get('http://hl7.org/fhir/valuesets.json')
-    bundle = res.json()
+    value_set_definition_urls = [
+        'http://hl7.org/fhir/valuesets.json',
+        'http://hl7.org/fhir/v2-tables.json',
+        'http://hl7.org/fhir/v3-codesystems.json',
+    ]
 
     fhir_systems = []
 
-    systems = [entry['resource'] for entry in bundle['entry']
-               if 'codeSystem' in entry['resource']]
-
     def get_codes_from_concept(code_system):
-        concepts = code_system.get('concept', [])
         codes = []
 
+        if 'code' in code_system:
+            codes.append(code_system['code'])
+
+        concepts = code_system.get('concept', [])
         for concept in concepts:
-            if 'concept' in concept:
-                codes += get_codes_from_concept(concept)
-            else:
-                codes.append(concept['code'])
+            codes += get_codes_from_concept(concept)
 
         return codes
 
-    for system in systems:
-        url = system['codeSystem']['system']
-        codes = get_codes_from_concept(system['codeSystem'])
+    def get_value_sets(url):
+        res = requests.get(url)
+        bundle = res.json()
 
-        for code in codes:
-            bf.add(url + '|' + code)
+        return [entry['resource'] for entry in bundle['entry']
+                if 'codeSystem' in entry['resource']]
 
-        fhir_systems.append(url)
+    for value_set_url in value_set_definition_urls:
+        value_sets = get_value_sets(value_set_url)
+
+        for value_set in value_sets:
+            url = value_set['codeSystem']['system']
+            codes = get_codes_from_concept(value_set['codeSystem'])
+
+            for code in codes:
+                bf.add(url + '|' + code)
+
+            fhir_systems.append(url)
 
     with open('./fhir/systems.json', 'w') as handle:
         json.dump(fhir_systems, handle)

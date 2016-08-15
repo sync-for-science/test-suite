@@ -72,9 +72,10 @@ def step_impl(context):
                 if not valid:
                     bad_codings.append(coding)
 
-    if bad_codings:
-        reason = 'Bad coding: ' + json.dumps(bad_codings, indent=2)
-        context.scenario.skip(reason=reason)
+    assert not bad_codings, \
+        utils.bad_response_assert(context.response,
+                                  'Bad codings: {codings}',
+                                  codings=json.dumps(bad_codings, indent=2))
 
 
 @then('the {field_name} field will be {value}')

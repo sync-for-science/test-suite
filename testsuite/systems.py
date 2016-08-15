@@ -35,6 +35,9 @@ def validate_coding(coding):
     if coding.get('system') not in RECOGNIZED:
         return True
 
+    if not coding.get('code'):
+        return False
+
     key = coding['system'] + '|' + coding['code']
 
     return key in validate_coding.bloom
