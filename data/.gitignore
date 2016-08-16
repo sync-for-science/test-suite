@@ -9,3 +9,4 @@
 !build_bf.py
 !fhir/
 !fhir/systems.json
+!fhir/daf.json

@@ -10,7 +10,7 @@ Feature: Smoking status
         Given I have a Smoking status response
         Then the resource parses as valid FHIR DSTU2 content
 
-     Scenario: Results exist
+    Scenario: Results exist
         Given I have a Smoking status response
         Then there should be at least 1 entry
 
@@ -25,3 +25,15 @@ Feature: Smoking status
     Scenario: All the codes are valid
         Given I have a Smoking status response
         Then all the codes will be valid
+
+    Scenario: Resources fulfill the Argonaut Smoking Status profile
+        Given I have a Smoking status response
+        Then there exists one status in Observation.status
+        Then Observation.status is bound to http://hl7.org/fhir/observation-status
+        Then there exists one code in Observation.code
+        Then there exists a fixed Observation.code.coding.system=http://loinc.org
+        Then there exists a fixed Observation.code.coding.code=72166-2
+        Then there exists one reference to a Patient in Observation.subject
+        Then there exists one instant in Observation.issued
+        Then there exists one value in Observation.valueCodeableConcept
+        Then Observation.valueCodeableConcept.coding.code is bound to http://hl7.org/fhir/ValueSet/daf-observation-ccdasmokingstatus

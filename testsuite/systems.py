@@ -16,6 +16,8 @@ RECOGNIZED = [LOINC, SNOMED, RXNORM, ICD10]
 # so load them from the constructed json file.
 with open('./data/fhir/systems.json') as fhir_handle:
     RECOGNIZED += json.load(fhir_handle)
+with open('./data/fhir/daf.json') as daf_handle:
+    RECOGNIZED += json.load(daf_handle)
 
 
 def bf_provider(func):

@@ -121,6 +121,45 @@ def import_fhir(bf):
         json.dump(fhir_systems, handle)
 
 
+def import_daf(bf):
+    value_set_definition_urls = [
+        'http://hl7.org/fhir/daf/valueset-daf-observation-ccdasmokingstatus.json',
+    ]
+
+    daf_systems = []
+
+    def get_codes_from_concept(code_system):
+        codes = []
+
+        if 'code' in code_system:
+            codes.append(code_system['code'])
+
+        concepts = code_system.get('concept', [])
+        for concept in concepts:
+            codes += get_codes_from_concept(concept)
+
+        return codes
+
+    def get_value_set(url):
+        res = requests.get(url)
+        return res.json()
+
+    for value_set_url in value_set_definition_urls:
+        value_set = get_value_set(value_set_url)
+        url = value_set['url']
+
+        for include in value_set['compose']['include']:
+            codes = get_codes_from_concept(include)
+
+            for code in codes:
+                bf.add(url + '|' + code)
+
+        daf_systems.append(url)
+
+    with open('./fhir/daf.json', 'w') as handle:
+        json.dump(daf_systems, handle)
+
+
 try:
     # If the bloom filter already exists, we're probably just appending to it
     with open('./codes.bf', 'rb') as handle:
@@ -136,6 +175,7 @@ import_snomed(bf)
 import_rxnorm(bf)
 import_icd10(bf)
 import_fhir(bf)
+import_daf(bf)
 
 if __name__ == '__main__':
     with open('./codes.bf', 'wb') as handle:
