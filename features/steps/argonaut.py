@@ -23,14 +23,49 @@ def traverse(resource, path):
     return reduce(walk, path, resource)
 
 
-@then(u'there exists one reference to a {resource_type} in {field_name}')
-def step_impl(context, resource_type, field_name):
-    resource = context.response.json()
+def get_resources(resource, filter_type):
+    if 'entry' in resource:
+        return [entry['resource'] for entry in resource['entry']
+                if entry['resource']['resourceType'] == filter_type]
+    else:
+        return [resource]
 
+
+@then(u'there exists one or more {name} in {field_name}')
+def step_impl(context, name, field_name):
     path = field_name.split('.')
     filter_type = path.pop(0)
-    resources = [entry['resource'] for entry in resource['entry']
-                 if entry['resource']['resourceType'] == filter_type]
+    resources = get_resources(context.response.json(), filter_type)
+
+    for res in resources:
+        found = traverse(res, path)
+        assert len(found) > 0, utils.bad_response_assert(context.response,
+                                                         ERROR_REQUIRED,
+                                                         name=name)
+
+
+@then(u'each {field_name} must have a {sub_field}')
+def step_impl(context, field_name, sub_field):
+    path = field_name.split('.')
+    filter_type = path.pop(0)
+    sub_path = sub_field.split('.')
+    sub_type = sub_path.pop(0)
+    resources = get_resources(context.response.json(), filter_type)
+
+    for res in resources:
+        found = traverse(res, path)
+        for item in found:
+            match = traverse(item, sub_path)
+            assert match, utils.bad_response_assert(context.response,
+                                                    ERROR_REQUIRED,
+                                                    name=sub_type)
+
+
+@then(u'there exists one reference to a {resource_type} in {field_name}')
+def step_impl(context, resource_type, field_name):
+    path = field_name.split('.')
+    filter_type = path.pop(0)
+    resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
         reference = traverse(res, path).get('reference')
@@ -41,14 +76,31 @@ def step_impl(context, resource_type, field_name):
                                       resource_type=resource_type)
 
 
+@then(u'there exists one {name} in {field_one_name} or {field_two_name}')
+def step_impl(context, name, field_one_name, field_two_name):
+    path_one = field_one_name.split('.')
+    path_two = field_two_name.split('.')
+
+    filter_type = path_one.pop(0)
+    assert filter_type == path_two.pop(0)
+
+    resources = get_resources(context.response.json(), filter_type)
+
+    for res in resources:
+        found_one = traverse(res, path_one)
+        found_two = traverse(res, path_two)
+
+        assert found_one or found_two, \
+            utils.bad_response_assert(context.response,
+                                      ERROR_REQUIRED,
+                                      name=name)
+
+
 @then(u'there exists one {name} in {field_name}')
 def step_impl(context, name, field_name):
-    resource = context.response.json()
-
     path = field_name.split('.')
     filter_type = path.pop(0)
-    resources = [entry['resource'] for entry in resource['entry']
-                 if entry['resource']['resourceType'] == filter_type]
+    resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
         found = traverse(res, path)
@@ -59,12 +111,9 @@ def step_impl(context, name, field_name):
 
 @then(u'{field_name} is bound to {value_set_url}')
 def step_impl(context, field_name, value_set_url):
-    resource = context.response.json()
-
     path = field_name.split('.')
     filter_type = path.pop(0)
-    resources = [entry['resource'] for entry in resource['entry']
-                 if entry['resource']['resourceType'] == filter_type]
+    resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
         found = traverse(res, path)
@@ -86,12 +135,9 @@ def step_impl(context, field_name, value_set_url):
 
 @then(u'there exists a fixed {field_name}={value}')
 def step_impl(context, field_name, value):
-    resource = context.response.json()
-
     path = field_name.split('.')
     filter_type = path.pop(0)
-    resources = [entry['resource'] for entry in resource['entry']
-                 if entry['resource']['resourceType'] == filter_type]
+    resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
         found = traverse(res, path)

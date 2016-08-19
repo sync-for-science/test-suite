@@ -14,6 +14,11 @@
                 {{#each elements}}
                     <div id="{{dashify location}}">
                         <h3>Scenario: {{ name }}</h3>
+                        <p>
+                            {{#each tags}}
+                                <span class="label label-info">{{ this }}</span>
+                            {{/each}}
+                        </p>
                         <div class="steps">
                             {{#each steps}}
                                 <span class="{{ result.status }}">{{ keyword }} {{ name }} {{result result.status}}</span>

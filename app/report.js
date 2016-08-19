@@ -6,11 +6,15 @@ function scenarioGroup(scenario) {
   }
 
   return _.reduce(scenario.steps, function (memo, step) {
-    if (memo === 'failed') {
-      return 'failed';
+    if (['failed', 'warning'].indexOf(memo) !== -1) {
+      return memo;
     }
     if (step.result && step.result.status === 'failed') {
-      return 'failed';
+      if (scenario.tags.indexOf('warning') !== -1) {
+        return 'warning';
+      } else {
+        return 'failed';
+      }
     }
     if (typeof step.result === 'undefined') {
       return 'skipped';
@@ -30,7 +34,7 @@ module.exports = function (features) {
 
   return {
     features: _.defaults(_.groupBy(features, 'status'), defaults),
-    scenarios: _.defaults(_.groupBy(scenarios, scenarioGroup), defaults),
+    scenarios: _.defaults(_.groupBy(scenarios, scenarioGroup), defaults, {warning: []}),
     steps: _.defaults(_.groupBy(steps, stepGroup), defaults)
   };
 };

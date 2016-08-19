@@ -25,3 +25,12 @@ Feature: Medication orders
     Scenario: All the codes are valid
         Given I have a Medication orders response
         Then all the codes will be valid
+
+    @warning
+    Scenario: Resources fulfill the Argonaut Medication profile
+        Given I have a Medication orders response
+        Then there exists one medication in MedicationOrder.medicationCodeableConcept or MedicationOrder.medicationReference
+        Then there exists one date in MedicationOrder.dateWritten
+        Then there exists one status in MedicationOrder.status
+        Then there exists one patient reference in MedicationOrder.patient
+        Then there exists one practitioner in MedicationOrder.prescriber

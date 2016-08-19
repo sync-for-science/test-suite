@@ -26,6 +26,7 @@ Feature: Smoking status
         Given I have a Smoking status response
         Then all the codes will be valid
 
+    @warning
     Scenario: Resources fulfill the Argonaut Smoking Status profile
         Given I have a Smoking status response
         Then there exists one status in Observation.status

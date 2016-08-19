@@ -9,7 +9,7 @@ Feature: Patient demographics
         Given I have a Patient demographics response
         Then the resource parses as valid FHIR DSTU2 content
 
-     Scenario: Patients have ids
+    Scenario: Patients have ids
         Given I have a Patient demographics response
         Then all resources will have a id field
 
@@ -20,3 +20,14 @@ Feature: Patient demographics
     Scenario: All the codes are valid
         Given I have a Patient demographics response
         Then all the codes will be valid
+
+    @warning
+    Scenario: Resources fulfill the Argonaut Patient profile
+        Given I have a Patient demographics response
+        Then there exists one or more medical record numbers in Patient.identifier
+        And each Patient.identifier must have a identifier.system
+        And each Patient.identifier must have a identifier.value
+        Then there exists one or more names in Patient.name
+        And each Patient.name must have a name.family
+        And each Patient.name must have a name.given
+        Then there exists one administrative gender in Patient.gender

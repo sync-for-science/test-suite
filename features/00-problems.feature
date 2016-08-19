@@ -25,3 +25,11 @@ Feature: Problems
     Scenario: All the codes are valid
         Given I have a Problems response
         Then all the codes will be valid
+
+    @warning
+    Scenario: Resources fulfill the Argonaut Problems and Health Concerns profile
+        Given I have a Problems response
+        Then there exists one Identification of the the problem or concern in Condition.code
+        Then there exists one patient reference in Condition.patient
+        Then there exists one code in Condition.verificationStatus
+        And Condition.verificationStatus is bound to http://hl7.org/fhir/ValueSet/condition-ver-status

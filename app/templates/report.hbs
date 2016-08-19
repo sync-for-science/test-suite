@@ -14,14 +14,10 @@
 
             <div class="modal-body">
                 <p>
-                    {{ report.features.passed.length }} features passed,
-                    {{ report.features.failed.length }} failed,
-                    {{ report.features.skipped.length }} skipped
-                </p>
-                <p>
                     {{ report.scenarios.passed.length }} scenarios passed,
                     {{ report.scenarios.failed.length }} failed,
-                    {{ report.scenarios.skipped.length }} skipped
+                    {{ report.scenarios.skipped.length }} skipped,
+                    {{ report.scenarios.warning.length }} warnings
                 </p>
                 <p>
                     {{ report.steps.passed.length }} steps passed,
@@ -29,21 +25,30 @@
                     {{ report.steps.skipped.length }} skipped
                 </p>
                 <h4>Coding systems</h4>
-                <ul>
-                    {{#each systems}}
-                        <li>
-                            {{#if system}}
-                                {{ system }}
-                            {{else}}
-                                <span class="text-muted">system not specified</span>
-                            {{/if}}
-                            - count {{ count }}
-                            {{~#if recognized~}}
-                                , valid {{ valid }}.
-                            {{/if}}
-                        </li>
-                    {{/each}}
-                </ul>
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>System</th>
+                            <th>Count</th>
+                            <th>Errors</th>
+                        </tr>
+                    </thead>
+                    <tbody class="small">
+                        {{#each systems}}
+                            <tr>
+                                <td>
+                                    {{#if system}}
+                                        {{ system }}
+                                    {{else}}
+                                        <span class="text-muted">system not specified</span>
+                                    {{/if}}
+                                </td>
+                                <td>{{ count }}</td>
+                                <td>{{math count "-" valid}}</td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
             </div>
 
             <div class="modal-footer">

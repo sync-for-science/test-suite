@@ -25,3 +25,11 @@ Feature: Medication statements
     Scenario: All the codes are valid
         Given I have a Medication statements response
         Then all the codes will be valid
+
+    @warning
+    Scenario: Resources fulfull the Argonaut Medications profile
+        Given I have a Medication statements response
+        Then there exists one medication in MedicationStatement.medicationCodeableConcept or MedicationStatement.medicationReference
+        Then there exists one patient reference in MedicationStatement.patient
+        Then there exists one status in MedicationStatement.status
+        Then there exists one date or period in MedicationStatement.effectiveDateTime or MedicationStatement.effectivePeriod
