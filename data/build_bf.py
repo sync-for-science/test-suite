@@ -124,6 +124,8 @@ def import_fhir(bf):
 def import_daf(bf):
     value_set_definition_urls = [
         'http://hl7.org/fhir/daf/valueset-daf-observation-ccdasmokingstatus.json',
+        'http://hl7.org/fhir/daf/valueset-daf-observation-CCDAVitalSignResult.json',
+        'http://hl7.org/fhir/daf/valueset-daf-cvx.json',
     ]
 
     daf_systems = []

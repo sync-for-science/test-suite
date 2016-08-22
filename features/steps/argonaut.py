@@ -56,9 +56,10 @@ def step_impl(context, field_name, sub_field):
         found = traverse(res, path)
         for item in found:
             match = traverse(item, sub_path)
-            assert match, utils.bad_response_assert(context.response,
-                                                    ERROR_REQUIRED,
-                                                    name=sub_type)
+            assert match is not None, \
+                utils.bad_response_assert(context.response,
+                                          ERROR_REQUIRED,
+                                          name=sub_type)
 
 
 @then(u'there exists one reference to a {resource_type} in {field_name}')
@@ -68,7 +69,10 @@ def step_impl(context, resource_type, field_name):
     resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
-        reference = traverse(res, path).get('reference')
+        try:
+            reference = traverse(res, path).get('reference')
+        except AttributeError:
+            reference = ''
         assert reference.startswith(resource_type), \
             utils.bad_response_assert(context.response,
                                       ERROR_REFERENCE_MATCH,
@@ -90,7 +94,7 @@ def step_impl(context, name, field_one_name, field_two_name):
         found_one = traverse(res, path_one)
         found_two = traverse(res, path_two)
 
-        assert found_one or found_two, \
+        assert (found_one is not None) or (found_two is not None), \
             utils.bad_response_assert(context.response,
                                       ERROR_REQUIRED,
                                       name=name)
@@ -104,9 +108,9 @@ def step_impl(context, name, field_name):
 
     for res in resources:
         found = traverse(res, path)
-        assert found, utils.bad_response_assert(context.response,
-                                                ERROR_REQUIRED,
-                                                name=name)
+        assert found is not None, utils.bad_response_assert(context.response,
+                                                            ERROR_REQUIRED,
+                                                            name=name)
 
 
 @then(u'{field_name} is bound to {value_set_url}')

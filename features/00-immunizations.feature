@@ -25,3 +25,17 @@ Feature: Immunizations
     Scenario: All the codes are valid
         Given I have a Immunizations response
         Then all the codes will be valid
+
+    @warning
+    Scenario: Resources fulfill the Argonaut Immunizations profile
+        Given I have a Immunizations response
+        Then there exists one status in Immunization.status
+        # And Immunization.status is bound to http://argonautwiki.hl7.org/index.php?title=Argonaut_Immunization_Status_Valueset
+        Then there exists one dateTime in Immunization.date
+        Then there exists one vaccine code in Immunization.vaccineCode
+        # And Immunization.vaccineCode is bound to http://hl7.org/fhir/ValueSet/daf-cvx
+        # daf-cvx is empty except for including the fhir cvx set...
+        And Immunization.vaccineCode is bound to http://hl7.org/fhir/sid/cvx
+        Then there exists one patient in Immunization.patient
+        Then there exists one boolean value in Immunization.wasNotGiven
+        Then there exists one boolean value in Immunization.reported
