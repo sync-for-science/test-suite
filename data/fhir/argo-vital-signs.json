@@ -1,0 +1,65 @@
+{
+  "resourceType": "ValueSet",
+  "id": "argo-vital-signs",
+  "url": "http://argonautwiki.hl7.org/ValueSet/argo-vital-signs",
+  "name": "Argonaut Vital Signs",
+  "publisher": "Argonaut Project",
+  "date": "2016-05-26",
+  "description": "This value set includes most codes from the  http://hl7.org/fhir/ValueSet/daf-observation-CCDAVitalSignResult valueset and updates the O2 saturation and body weight codes  and removes the BSA  for use in the the Argonaut Project and MU2015 certification.",
+  "compose": {
+    "include": [
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "9279-1"
+          },
+          {
+            "code": "8867-4"
+          },
+          {
+            "code": "2710-2"
+          },
+          {
+            "code": "55284-4"
+          },
+          {
+            "code": "8480-6"
+          },
+          {
+            "code": "8462-4"
+          },
+          {
+            "code": "8310-5"
+          },
+          {
+            "code": "8302-2"
+          },
+          {
+            "code": "8306-3"
+          },
+          {
+            "code": "8287-5"
+          },
+          {
+            "code": "39156-5"
+          },
+          {
+            "code": "59408-5"
+          },
+          {
+            "code": "8478-0"
+          },
+          {
+            "code": "29463-7",
+            "display": "Body weight"
+          },
+          {
+            "code": "59408-5",
+            "display": "Oxygen saturation"
+          }
+        ]
+      }
+    ]
+  }
+}

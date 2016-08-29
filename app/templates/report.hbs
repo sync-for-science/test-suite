@@ -31,6 +31,7 @@
                             <th>System</th>
                             <th>Count</th>
                             <th>Errors</th>
+                            <th>Recognized</th>
                         </tr>
                     </thead>
                     <tbody class="small">
@@ -45,6 +46,13 @@
                                 </td>
                                 <td>{{ count }}</td>
                                 <td>{{math count "-" valid}}</td>
+                                <td>
+                                    {{#if recognized}}
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    {{else}}
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    {{/if}}
+                                </td>
                             </tr>
                         {{/each}}
                     </tbody>

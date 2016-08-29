@@ -16,20 +16,25 @@ Feature: Problems
 
     Scenario: Resources have ids
         Given I have a Problems response
+        And there is at least 1 entry
         Then all resources will have a id field
 
     Scenario: All references will resolve
         Given I have a Problems response
+        And there is at least 1 entry
         Then all references will resolve
 
     Scenario: All the codes are valid
         Given I have a Problems response
+        And there is at least 1 entry
         Then all the codes will be valid
 
     @warning
     Scenario: Resources fulfill the Argonaut Problems and Health Concerns profile
         Given I have a Problems response
+        And there is at least 1 entry
         Then there exists one Identification of the the problem or concern in Condition.code
+        And Condition.code is bound to http://hl7.org/fhir/ValueSet/daf-problem
         Then there exists one patient reference in Condition.patient
         Then there exists one code in Condition.verificationStatus
         And Condition.verificationStatus is bound to http://hl7.org/fhir/ValueSet/condition-ver-status

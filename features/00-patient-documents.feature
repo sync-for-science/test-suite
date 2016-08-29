@@ -16,19 +16,23 @@ Feature: Patient documents
 
     Scenario: Resources have ids
         Given I have a Patient documents response
+        And there is at least 1 entry
         Then all resources will have a id field
 
     Scenario: All references will resolve
         Given I have a Patient documents response
+        And there is at least 1 entry
         Then all references will resolve
 
     Scenario: All the codes are valid
         Given I have a Patient documents response
+        And there is at least 1 entry
         Then all the codes will be valid
 
     @warning
     Scenario: Resources fulfill the Argonaut Document Access profile
         Given I have a Patient documents response
+        And there is at least 1 entry
         Then there exists one reference to a Patient in DocumentReference.subject
         Then there exists one document type code in DocumentReference.type
         And DocumentReference.type is bound to http://hl7.org/fhir/ValueSet/c80-doc-typecodes
@@ -37,7 +41,7 @@ Feature: Patient documents
         # And DocumentReference.content.attachment.contentType is bound to http://www.rfc-editor.org/bcp/bcp13.txt
         And there exists one url of the document in DocumentReference.content.attachment.url
         Then there exists one format code in DocumentReference.content.format
-        # And DocumentReference.content.format with an extensible binding to http://hl7.org/fhir/ValueSet/formatcodes
+        And DocumentReference.content.format is bound to http://hl7.org/fhir/ValueSet/formatcodes
         Then there exists one dateTime value in DocumentReference.indexed
         Then there exists one status in DocumentReference.status
         And DocumentReference.status is bound to http://hl7.org/fhir/document-reference-status

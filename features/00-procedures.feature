@@ -16,19 +16,23 @@ Feature: Procedures
 
     Scenario: Resources have ids
         Given I have a Procedures response
+        And there is at least 1 entry
         Then all resources will have a id field
 
     Scenario: All references will resolve
         Given I have a Procedures response
+        And there is at least 1 entry
         Then all references will resolve
 
     Scenario: All the codes are valid
         Given I have a Procedures response
+        And there is at least 1 entry
         Then all the codes will be valid
 
     @warning
     Scenario: Resources fulfill the Argonaut Procedures profile
         Given I have a Procedures response
+        And there is at least 1 entry
         Then there exists one reference to a Patient in Procedure.subject
         Then there exists one Identification of the procedure in Procedure.code
         # Or http://argonautwiki.hl7.org/index.php?title=CPT-4/HCPC_for_procedures

@@ -16,27 +16,30 @@ Feature: Vital signs
 
     Scenario: Resources have ids
         Given I have a Vital signs response
+        And there is at least 1 entry
         Then all resources will have a id field
 
     Scenario: All references will resolve
         Given I have a Vital signs response
+        And there is at least 1 entry
         Then all references will resolve
 
     Scenario: All the codes are valid
         Given I have a Vital signs response
+        And there is at least 1 entry
         Then all the codes will be valid
 
     @warning
     Scenario: Resources fulfill the Argonaut Vital Signs profile
         Given I have a Vital signs response
+        And there is at least 1 entry
         Then there exists one status in Observation.status
         Then there exists one category in Observation.category
         And there exists a fixed Observation.category.coding.system=http://hl7.org/fhir/observation-category
         And there exists a fixed Observation.category.coding.code=vital-signs
         Then there exists one code in Observation.code
         And there exists a fixed Observation.code.coding.system=http://loinc.org
-        # Should be http://argonautwiki.hl7.org/index.php?title=Argonaut_Vital_Signs but I don't have an import for compose and argonaut doesn't have a JSON version
-        And Observation.code.coding.code is bound to http://hl7.org/fhir/ValueSet/daf-observation-CCDAVitalSignResult
+        And Observation.code.coding.code is bound to http://argonautwiki.hl7.org/ValueSet/argo-vital-signs
         # Then Either one Observation.valueQuantity or, if there is no value, one code in Observation.DataAbsentReason
         # Then when using a panel code...
         Then there exists one patient in Observation.subject

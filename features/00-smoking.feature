@@ -16,19 +16,23 @@ Feature: Smoking status
 
     Scenario: Resources have ids
         Given I have a Smoking status response
+        And there is at least 1 entry
         Then all resources will have a id field
 
     Scenario: All references will resolve
         Given I have a Smoking status response
+        And there is at least 1 entry
         Then all references will resolve
 
     Scenario: All the codes are valid
         Given I have a Smoking status response
+        And there is at least 1 entry
         Then all the codes will be valid
 
     @warning
     Scenario: Resources fulfill the Argonaut Smoking Status profile
         Given I have a Smoking status response
+        And there is at least 1 entry
         Then there exists one status in Observation.status
         Then Observation.status is bound to http://hl7.org/fhir/observation-status
         Then there exists one code in Observation.code

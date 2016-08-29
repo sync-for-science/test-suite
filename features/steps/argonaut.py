@@ -125,11 +125,10 @@ def step_impl(context, field_name, value_set_url):
             found = [found]
 
         for code in found:
-            coding = {
-                'system': value_set_url,
-                'code': code,
-            }
-            valid = systems.validate_coding(coding)
+            try:
+                valid = systems.validate_code(code, value_set_url)
+            except systems.SystemNotRecognized:
+                valid = False
 
             assert valid, utils.bad_response_assert(context.response,
                                                     ERROR_INVALID_BINDING,

@@ -60,13 +60,18 @@ def step_impl(context):
         found = utils.find_named_key(entry, 'coding')
         for codings in found:
             for coding in codings:
-                valid = systems.validate_coding(coding)
+                try:
+                    valid = systems.validate_coding(coding)
+                    recognized = True
+                except systems.SystemNotRecognized:
+                    valid = True
+                    recognized = False
 
                 context.scenario.systems.append({
                     'system': coding.get('system'),
                     'code': coding.get('code'),
                     'valid': valid,
-                    'recognized': coding.get('system') in systems.RECOGNIZED,
+                    'recognized': recognized,
                 })
 
                 if not valid:
@@ -128,6 +133,15 @@ def step_impl(context):
         utils.bad_response_assert(context.response,
                                   ERROR_ENTRY_COUNT,
                                   count=len(entries))
+
+
+@given('there is at least 1 entry')
+def step_impl(context):
+    resource = context.response.json()
+    entries = resource.get('entry', [])
+
+    if len(entries) < 1:
+        context.scenario.skip(reason=ERROR_ENTRY_COUNT.format(count=0))
 
 
 @then('all resources will have a {field_name} field')

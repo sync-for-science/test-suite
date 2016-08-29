@@ -16,19 +16,23 @@ Feature: Medication statements
 
      Scenario: Resources have ids
         Given I have a Medication statements response
+        And there is at least 1 entry
         Then all resources will have a id field
 
     Scenario: All references will resolve
         Given I have a Medication statements response
+        And there is at least 1 entry
         Then all references will resolve
 
     Scenario: All the codes are valid
         Given I have a Medication statements response
+        And there is at least 1 entry
         Then all the codes will be valid
 
     @warning
     Scenario: Resources fulfull the Argonaut Medications profile
         Given I have a Medication statements response
+        And there is at least 1 entry
         Then there exists one medication in MedicationStatement.medicationCodeableConcept or MedicationStatement.medicationReference
         Then there exists one patient reference in MedicationStatement.patient
         Then there exists one status in MedicationStatement.status

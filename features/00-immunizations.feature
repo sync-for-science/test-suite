@@ -16,19 +16,23 @@ Feature: Immunizations
 
     Scenario: Resources have ids
         Given I have a Immunizations response
+        And there is at least 1 entry
         Then all resources will have a id field
 
     Scenario: All references will resolve
         Given I have a Immunizations response
+        And there is at least 1 entry
         Then all references will resolve
 
     Scenario: All the codes are valid
         Given I have a Immunizations response
+        And there is at least 1 entry
         Then all the codes will be valid
 
     @warning
     Scenario: Resources fulfill the Argonaut Immunizations profile
         Given I have a Immunizations response
+        And there is at least 1 entry
         Then there exists one status in Immunization.status
         # And Immunization.status is bound to http://argonautwiki.hl7.org/index.php?title=Argonaut_Immunization_Status_Valueset
         Then there exists one dateTime in Immunization.date
