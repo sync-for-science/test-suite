@@ -113,6 +113,31 @@ def step_impl(context, name, field_name):
                                                             name=name)
 
 
+@then(u'{field_name} is bound to {value_set_url_one} or {value_set_url_two}')
+def step_impl(context, field_name, value_set_url_one, value_set_url_two):
+    path = field_name.split('.')
+    filter_type = path.pop(0)
+    resources = get_resources(context.response.json(), filter_type)
+
+    for res in resources:
+        found = traverse(res, path)
+        if isinstance(found, str):
+            found = [found]
+
+        for code in found:
+            try:
+                valid = systems.validate_code(code, value_set_url_one) or \
+                        systems.validate_code(code, value_set_url_two)
+            except systems.SystemNotRecognized:
+                valid = False
+
+            system_names = '{0} or {1}'.format(value_set_url_one, value_set_url_two)
+            assert valid, utils.bad_response_assert(context.response,
+                                                    ERROR_INVALID_BINDING,
+                                                    code=code,
+                                                    system=system_names)
+
+
 @then(u'{field_name} is bound to {value_set_url}')
 def step_impl(context, field_name, value_set_url):
     path = field_name.split('.')

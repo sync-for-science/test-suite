@@ -35,8 +35,7 @@ Feature: Procedures
         And there is at least 1 entry
         Then there exists one reference to a Patient in Procedure.subject
         Then there exists one Identification of the procedure in Procedure.code
-        # Or http://argonautwiki.hl7.org/index.php?title=CPT-4/HCPC_for_procedures
-        And Procedure.code is bound to http://hl7.org/fhir/ValueSet/procedure-code
+        And Procedure.code is bound to http://hl7.org/fhir/ValueSet/procedure-code or http://www.ama-assn.org/go/cpt
         Then there exists one date or a time period in Procedure.performedDateTime or Procedure.performedPeriod
         Then there exists one status code in Procedure.status
         And Procedure.status is bound to http://hl7.org/fhir/procedure-status
