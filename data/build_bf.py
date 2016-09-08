@@ -16,6 +16,7 @@ LOINC = 'http://loinc.org'
 SNOMED = 'http://snomed.info/sct'
 RXNORM = 'http://www.nlm.nih.gov/research/umls/rxnorm'
 ICD10 = 'http://hl7.org/fhir/sid/icd-10'
+CPT = 'http://www.ama-assn.org/go/cpt'
 
 # SOURCES
 LOINC_PATH = './loinc/loinc.csv'
@@ -23,6 +24,7 @@ SNOMED_PATH = './snomed/SnomedCT_RF2Release_INT_20160131/Full/Terminology/sct2_C
 RXNORM_PATH = './rxnorm/rrf/RXNCONSO.RRF'
 RXNORM_DEPRECATED_PATH = './rxnorm/rrf/RXNCUI.RRF'
 ICD10_PATH = './icd10/icd10cm_tabular_2017.xml'
+CPT_PATH = './cpt/MRCONSO.RRF'
 
 
 def import_loinc(bf):
@@ -75,6 +77,17 @@ def import_icd10(bf):
 
     for code in unique:
         bf.add(ICD10 + '|' + code)
+
+
+def import_cpt(bf):
+    with open(CPT_PATH) as handle:
+        reader = csv.DictReader(handle, delimiter='|')
+
+        rows = list(reader)
+        unique = set([row['CODE'] for row in rows])
+
+        for code in unique:
+            bf.add(CPT + '|' + code)
 
 
 def get_codes_from_concept(code_system):
@@ -193,6 +206,7 @@ import_loinc(bf)
 import_snomed(bf)
 import_rxnorm(bf)
 import_icd10(bf)
+import_cpt(bf)
 import_fhir(bf)
 import_daf(bf)
 import_argo(bf)

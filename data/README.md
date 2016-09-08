@@ -19,3 +19,7 @@
 ## ICD10
 
 * Source: [ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/Publications/ICD10CM/2017/ICD10CM_FY2017_Full_XML.zip]
+
+## CPT
+
+* Source: [https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html]

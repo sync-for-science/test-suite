@@ -9,14 +9,15 @@ LOINC = 'http://loinc.org'
 SNOMED = 'http://snomed.info/sct'
 RXNORM = 'http://www.nlm.nih.gov/research/umls/rxnorm'
 ICD10 = 'http://hl7.org/fhir/sid/icd-10'
+CPT = 'http://www.ama-assn.org/go/cpt'
 
-RECOGNIZED = [LOINC, SNOMED, RXNORM, ICD10]
+RECOGNIZED = [LOINC, SNOMED, RXNORM, ICD10, CPT]
 
 # Enumerating all the FHIR systems here would be a waste of time,
 # so load them from the constructed json file.
 VALUE_SETS = []
 with open('./data/fhir/systems.json') as fhir_handle:
-    VALUE_SETS += json.load(fhir_handle)
+    RECOGNIZED += json.load(fhir_handle)
 with open('./data/fhir/daf.json') as daf_handle:
     VALUE_SETS += json.load(daf_handle)
 with open('./data/fhir/argo.json') as argo_handle:
