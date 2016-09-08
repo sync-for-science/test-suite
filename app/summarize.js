@@ -21,6 +21,7 @@ module.exports = function(event) {
         }
         if (j < event.snapshot[fkey].elements.length) {
           s.status = 'passed';
+          s.tags = event.snapshot[fkey].elements[j].tags;
           event.snapshot[fkey].elements[j].steps.forEach(function(r) {
             if (r.result && r.result.status === 'failed') {
               s.status = 'failed';

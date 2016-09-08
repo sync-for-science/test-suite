@@ -16,12 +16,24 @@ Feature: Allergies and intolerances
 
     Scenario: Resources have ids
         Given I have a Allergies and intolerances response
+        And there is at least 1 entry
         Then all resources will have a id field
 
     Scenario: All references will resolve
         Given I have a Allergies and intolerances response
+        And there is at least 1 entry
         Then all references will resolve
 
     Scenario: All the codes are valid
         Given I have a Allergies and intolerances response
+        And there is at least 1 entry
         Then all the codes will be valid
+
+    @warning
+    Scenario: Resources fulfill the Argonaut Allergies profile
+        Given I have a Allergies and intolerances response
+        And there is at least 1 entry
+        Then there exists one Identification of a substance, or a class of substances, that is considered to be responsible for the adverse reaction risk in AllergyIntolerance.substance
+        Then there exists one reference to a Patient in AllergyIntolerance.patient
+        Then there exists one status in AllergyIntolerance.status
+        And AllergyIntolerance.status is bound to http://hl7.org/fhir/allergy-intolerance-status

@@ -25,6 +25,7 @@ class ChunkedJsonFormatter(PrettyJSONFormatter):
 
         # Skip reasons must be checked after the tests have run
         for element in current_feature['elements']:
+            element['tags'] = [str(tag) for tag in element['tags']]
             if 'skip_reason' in element:
                 element['skip_reason'] = element['skip_reason']()
             if 'systems' in element:
