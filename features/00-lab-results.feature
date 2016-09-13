@@ -45,7 +45,7 @@ Feature: Lab results
         And there exists a fixed Observation.category.coding.code=laboratory
         Then there exists one code in Observation.code
         And there exists a fixed Observation.code.coding.system=http://loinc.org
-        And Observation.code.coding.code is bound to http://loinc.org
+        And Observation.code is bound to http://loinc.org
         # Then Either one Observation.value[x] or one code in Observation.DataAbsentReason
         Then there exists one reference to a Patient in Observation.subject
         Then there exists one date and time in Observation.effectiveDateTime or Observation.effectivePeriod

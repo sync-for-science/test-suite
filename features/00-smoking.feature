@@ -41,4 +41,4 @@ Feature: Smoking status
         Then there exists one reference to a Patient in Observation.subject
         Then there exists one instant in Observation.issued
         Then there exists one value in Observation.valueCodeableConcept
-        Then Observation.valueCodeableConcept.coding.code is bound to http://hl7.org/fhir/ValueSet/daf-observation-ccdasmokingstatus
+        Then Observation.valueCodeableConcept is bound to http://hl7.org/fhir/ValueSet/daf-observation-ccdasmokingstatus

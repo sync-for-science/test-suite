@@ -10,8 +10,9 @@ SNOMED = 'http://snomed.info/sct'
 RXNORM = 'http://www.nlm.nih.gov/research/umls/rxnorm'
 ICD10 = 'http://hl7.org/fhir/sid/icd-10'
 CPT = 'http://www.ama-assn.org/go/cpt'
+CVX = 'http://hl7.org/fhir/sid/cvx'
 
-RECOGNIZED = [LOINC, SNOMED, RXNORM, ICD10, CPT]
+RECOGNIZED = [LOINC, SNOMED, RXNORM, ICD10, CPT, CVX]
 
 # Enumerating all the FHIR systems here would be a waste of time,
 # so load them from the constructed json file.
