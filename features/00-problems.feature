@@ -34,7 +34,9 @@ Feature: Problems
         Given I have a Problems response
         And there is at least 1 entry
         Then there exists one Identification of the the problem or concern in Condition.code
-        And Condition.code is bound to http://hl7.org/fhir/ValueSet/daf-problem
+        # Problem Value Set is a subset of SNOMED CT
+        # http://hl7.org/fhir/ValueSet/daf-problem
+        And Condition.code is bound to http://snomed.info/sct
         Then there exists one patient reference in Condition.patient
         Then there exists one code in Condition.verificationStatus
         And Condition.verificationStatus is bound to http://hl7.org/fhir/ValueSet/condition-ver-status
