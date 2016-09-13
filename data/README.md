@@ -23,3 +23,7 @@
 ## CPT
 
 * Source: [https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html]
+
+## CVX
+
+* Source: [http://www2a.cdc.gov/vaccines/iis/iisstandards/vaccines.asp?rpt=cvx] (NB: "notes" column for code 132 is a multiline field and needs to be quoted)

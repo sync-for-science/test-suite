@@ -17,6 +17,7 @@ SNOMED = 'http://snomed.info/sct'
 RXNORM = 'http://www.nlm.nih.gov/research/umls/rxnorm'
 ICD10 = 'http://hl7.org/fhir/sid/icd-10'
 CPT = 'http://www.ama-assn.org/go/cpt'
+CVX = 'http://hl7.org/fhir/sid/cvx'
 
 # SOURCES
 LOINC_PATH = './loinc/loinc.csv'
@@ -25,6 +26,7 @@ RXNORM_PATH = './rxnorm/rrf/RXNCONSO.RRF'
 RXNORM_DEPRECATED_PATH = './rxnorm/rrf/RXNCUI.RRF'
 ICD10_PATH = './icd10/icd10cm_tabular_2017.xml'
 CPT_PATH = './cpt/MRCONSO.RRF'
+CVX_PATH = './cvx/cvx.txt'
 
 
 def import_loinc(bf):
@@ -192,6 +194,23 @@ def import_argo(bf):
         json.dump(argo_systems, handle)
 
 
+def import_cvx(bf):
+    fieldnames = [
+        'cvx code',
+        'short description',
+        'full vaccines name',
+        'notes',
+        'vaccine status',
+        'nonvaccine',
+        'last updated date',
+    ]
+    with open(CVX_PATH, encoding='utf-16') as handle:
+        reader = csv.DictReader(handle, delimiter='|', fieldnames=fieldnames)
+
+        for row in reader:
+            bf.add(CVX + '|' + row['cvx code'].strip())
+
+
 try:
     # If the bloom filter already exists, we're probably just appending to it
     with open('./codes.bf', 'rb') as handle:
@@ -210,6 +229,7 @@ import_cpt(bf)
 import_fhir(bf)
 import_daf(bf)
 import_argo(bf)
+import_cvx(bf)
 
 if __name__ == '__main__':
     with open('./codes.bf', 'wb') as handle:

@@ -39,7 +39,7 @@ Feature: Vital signs
         And there exists a fixed Observation.category.coding.code=vital-signs
         Then there exists one code in Observation.code
         And there exists a fixed Observation.code.coding.system=http://loinc.org
-        And Observation.code.coding.code is bound to http://argonautwiki.hl7.org/ValueSet/argo-vital-signs
+        And Observation.code is bound to http://argonautwiki.hl7.org/ValueSet/argo-vital-signs
         # Then Either one Observation.valueQuantity or, if there is no value, one code in Observation.DataAbsentReason
         # Then when using a panel code...
         Then there exists one patient in Observation.subject
