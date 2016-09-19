@@ -11,6 +11,10 @@ ERROR_CODING_MISSING = '''
 {field_name} is missing field "coding".
 {json}
 '''
+ERROR_FIELD_NOT_PRESENT = '''
+{field} is not set.
+{json}
+'''
 ERROR_INVALID_BINDING = '{code} is not found in {system}.'
 ERROR_REFERENCE_MATCH = '{reference} is not a {resource_type}.'
 ERROR_REQUIRED = '{name} not found.'
@@ -188,6 +192,10 @@ def step_impl(context, field_name, value):
 
     for res in resources:
         found = traverse(res, path)
+        assert found, utils.bad_response_assert(context.response,
+                                                ERROR_FIELD_NOT_PRESENT,
+                                                field=field_name,
+                                                json=json.dumps(res, indent=2))
         assert value in found, utils.bad_response_assert(context.response,
                                                          ERROR_WRONG_FIXED,
                                                          values=found,
