@@ -1,6 +1,6 @@
 ---
 api:
-  url: https://api.athenahealth.com/preview1/195900/1/fhir/dstu2/
+  url: https://apitest.athenahealth.com/preview1/195900/1/fhir/dstu2/
   patient: 1050
 
 auth:
