@@ -2,6 +2,7 @@
 # pylint: disable=missing-docstring,invalid-name,redefined-outer-name
 import csv
 import json
+import re
 
 from bs4 import BeautifulSoup
 from pybloom import ScalableBloomFilter
@@ -15,6 +16,7 @@ ERROR_RATE = 0.001
 LOINC = 'http://loinc.org'
 SNOMED = 'http://snomed.info/sct'
 RXNORM = 'http://www.nlm.nih.gov/research/umls/rxnorm'
+ICD9 = 'http://hl7.org/fhir/sid/icd-9-cm'
 ICD10 = 'http://hl7.org/fhir/sid/icd-10'
 CPT = 'http://www.ama-assn.org/go/cpt'
 CVX = 'http://hl7.org/fhir/sid/cvx'
@@ -24,6 +26,7 @@ LOINC_PATH = './loinc/loinc.csv'
 SNOMED_PATH = './snomed/SnomedCT_RF2Release_INT_20160131/Full/Terminology/sct2_Concept_Full_INT_20160131.txt'
 RXNORM_PATH = './rxnorm/rrf/RXNCONSO.RRF'
 RXNORM_DEPRECATED_PATH = './rxnorm/rrf/RXNCUI.RRF'
+ICD9_PATH = './icd9/CMS32_DESC_LONG_DX.txt'
 ICD10_PATH = './icd10/icd10cm_tabular_2017.xml'
 CPT_PATH = './cpt/MRCONSO.RRF'
 CVX_PATH = './cvx/cvx.txt'
@@ -79,6 +82,13 @@ def import_icd10(bf):
 
     for code in unique:
         bf.add(ICD10 + '|' + code)
+
+
+def import_icd9(bf):
+    with open(ICD9_PATH, encoding='cp1252') as handle:
+        for line in handle.readlines():
+            code, desc = re.split(r'\s+', line, maxsplit=1)
+            bf.add(ICD9 + '|' + code)
 
 
 def import_cpt(bf):
@@ -224,6 +234,7 @@ except FileNotFoundError:
 import_loinc(bf)
 import_snomed(bf)
 import_rxnorm(bf)
+import_icd9(bf)
 import_icd10(bf)
 import_cpt(bf)
 import_fhir(bf)
