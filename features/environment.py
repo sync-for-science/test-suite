@@ -64,10 +64,12 @@ def before_all(context):
             context.vendor_config['api']['patient'] = context.oauth.patient
     except AssertionError as error:
         logging.error(utils.bad_response_assert(error.args[0], ''))
+        raise Exception(utils.bad_response_assert(error.args[0], ''))
     except authorize.AuthorizationException as err:
         error = oauth.ERROR_SELENIUM_SCREENSHOT.format(
             err.args[0],
             err.args[1],
+            err.args[2],
             context.vendor_config['host'],
         )
         raise Exception(error)

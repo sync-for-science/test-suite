@@ -99,7 +99,12 @@ class StepRunner(object):
         """
         RemoteConnection.set_timeout(CONNECTION_TIMEOUT)
 
-        return webdriver.Firefox()
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference('general.useragent.override', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36')
+        driver = webdriver.Firefox(profile)
+        driver.implicitly_wait(1)
+
+        return driver
 
 
 class Authorizer(object):
@@ -184,10 +189,12 @@ class Authorizer(object):
 
         steps = itertools.chain(self.config.get('sign_in_steps', []),
                                 self.config.get('authorize_steps', []))
+
         for step in steps:
             self.runner.execute_step(step)
 
-        query = self.runner.get_query(base_url=self.config['redirect_uri'])
+        base_url = self.config['redirect_uri'].replace('http://', '')
+        query = self.runner.get_query(base_url=base_url)
         self.log.info('REDIRECT URI: %s', self.runner.current_url)
 
         if 'error' in query:
@@ -299,7 +306,9 @@ class AuthorizationException(Exception):
         path = 'testsuite/static/screenshots/{0}.png'.format(uuid.uuid4())
         browser.save_screenshot(path)
 
-        super().__init__(message, path.replace('testsuite', ''))
+        super().__init__(message,
+                         path.replace('testsuite', ''),
+                         browser.current_url)
 
 
 class ValidationErrorException(AuthorizationException):

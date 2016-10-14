@@ -17,8 +17,10 @@ ERROR_OAUTH_DISABLED = 'OAuth is not enabled on this server.'
 ERROR_SELENIUM_SCREENSHOT = '''
 An authorization error occurred: {0}
 
+Current URL: {2}
+
 For more information, see:
-    {2}{1}
+    {3}{1}
 '''
 
 
