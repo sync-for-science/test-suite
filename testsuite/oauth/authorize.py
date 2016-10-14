@@ -100,7 +100,7 @@ class StepRunner(object):
         RemoteConnection.set_timeout(CONNECTION_TIMEOUT)
 
         profile = webdriver.FirefoxProfile()
-        profile.set_preference('general.useragent.override', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36')
+        profile.set_preference('general.useragent.override', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36')  # noqa
         driver = webdriver.Firefox(profile)
         driver.implicitly_wait(1)
 
