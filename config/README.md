@@ -21,6 +21,8 @@ auth:
   sign_in_steps: []
   authorize_steps: []
   revoke_steps: []
+  browser:
+    preferences:  # Preferences passed directly to the FireFox webdriver
 ```
 
 ## Steps

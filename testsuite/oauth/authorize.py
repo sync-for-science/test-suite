@@ -20,8 +20,12 @@ VISIBILITY_TIMEOUT = 10
 class StepRunner(object):
     """ I know how to run steps!
     """
-    def __init__(self):
+    def __init__(self, config=None):
         self.browser = None
+        self.config = config
+
+        if not self.config:
+            self.config = {}
 
     def open(self):
         """ Connect to the selenium webdriver.
@@ -92,6 +96,8 @@ class StepRunner(object):
 
     @property
     def current_url(self):
+        """ Return the browser's current URL.
+        """
         return self.browser.current_url
 
     def _browser(self):
@@ -99,7 +105,16 @@ class StepRunner(object):
         """
         RemoteConnection.set_timeout(CONNECTION_TIMEOUT)
 
-        return webdriver.Firefox()
+        profile = webdriver.FirefoxProfile()
+        preferences = self.config.get('preferences', {})
+        for key, value in preferences.items():
+            profile.set_preference(key, value)
+
+        driver = webdriver.Firefox(profile)
+        # Wait for UI events to complete before failing to find an element.
+        driver.implicitly_wait(1)
+
+        return driver
 
 
 class Authorizer(object):
@@ -137,7 +152,7 @@ class Authorizer(object):
         self.log = logging.getLogger(__name__)
 
         if not self.runner:
-            self.runner = StepRunner()
+            self.runner = StepRunner(self.config.get('browser', {}))
 
     def authorize(self):
         """ The actual authorization method.
@@ -184,10 +199,15 @@ class Authorizer(object):
 
         steps = itertools.chain(self.config.get('sign_in_steps', []),
                                 self.config.get('authorize_steps', []))
+
         for step in steps:
             self.runner.execute_step(step)
 
-        query = self.runner.get_query(base_url=self.config['redirect_uri'])
+        # HTTPS is the recommended protocol, but in development we don't have
+        # a certificate installed. If we get redirected to an https URL
+        # instead of an http URL, just accept it.
+        base_url = self.config['redirect_uri'].replace('http://', '')
+        query = self.runner.get_query(base_url=base_url)
         self.log.info('REDIRECT URI: %s', self.runner.current_url)
 
         if 'error' in query:
@@ -253,7 +273,7 @@ class AuthorizationRevoker(object):
         self.runner = step_runner
 
         if not self.runner:
-            self.runner = StepRunner()
+            self.runner = StepRunner(self.config.get('browser', {}))
 
     def revoke_authorization(self):
         """ The actual revoke authorization method.
@@ -299,7 +319,9 @@ class AuthorizationException(Exception):
         path = 'testsuite/static/screenshots/{0}.png'.format(uuid.uuid4())
         browser.save_screenshot(path)
 
-        super().__init__(message, path.replace('testsuite', ''))
+        super().__init__(message,
+                         path.replace('testsuite', ''),
+                         browser.current_url)
 
 
 class ValidationErrorException(AuthorizationException):

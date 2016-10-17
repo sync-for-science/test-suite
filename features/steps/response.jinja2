@@ -14,9 +14,9 @@ Request
 
 Response
 --------
-{% for key, value in response.headers.items() %}
-{{ key }}: {{ value -}}
-{% endfor %}
+{% for key, value in response.headers.items() -%}
+{{ key }}: {{ value }}
+{% endfor -%}
+Status Code: {{ response.status_code }}
 
 {{ response.text }}
-

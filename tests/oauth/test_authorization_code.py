@@ -110,7 +110,7 @@ class NoneAuthorizer(authorize.Authorizer):
     """ No-op implementation of Authorizer.
     """
     def __init__(self):
-        super().__init__(None, None)
+        super().__init__({}, None)
 
     def authorize(self):
         return None
