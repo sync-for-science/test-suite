@@ -1,12 +1,29 @@
 ---
 api:
-  url: https://api.athenahealth.com/preview1/195900/1/fhir/dstu2/
-  patient: 22536
+  url: https://apitest.athenahealth.com/preview1/1959900/1/fhir/dstu2/
+  patient: 4406
 
 auth:
-  strategy: client_credentials
-  client_id: 957rwjcctmu339me9ps9tzwq
+  strategy: authorization_code
+  client_id: 57udstyz8cwp9r4gbyw24s88
   # client_secret intentionally included
-  client_secret: C9ZzFBDWW5U7J3s
+  client_secret: 8uqYqYTWTYbWJvz
   scope: launch/patient patient/*.read offline_access
-  token_url: https://api.athenahealth.com/oauthpreview/token
+  confidential_client: True
+  sign_in_steps:
+    - element: "#USERNAME"
+      send_keys: "ewiffin"
+    - element: "#PASSWORD"
+      send_keys: "29NMfRhyygoG7iC9"
+    - element: "#loginbutton"
+      click: True
+    - element: '#DEPARTMENTID option[value="165"]'
+      click: True
+    - element: '#loginbutton'
+      click: True
+  authorize_steps:
+    - element: '#loginbutton[name="AUTHORIZE"]'
+      click: True
+  browser:
+    preferences:
+      general.useragent.override: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36
