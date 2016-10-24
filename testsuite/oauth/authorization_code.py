@@ -110,8 +110,13 @@ class AuthorizationCodeStrategy(authorization_grant.AuthorizationGrant):
                 self._config['client_secret']
             )
 
+        headers = {
+            'Accept-Encoding': 'deflate,sdch',
+        }
+
         response = requests.post(self._urls['token'],
                                  auth=auth,
+                                 headers=headers,
                                  data=post_data)
 
         assert int(response.status_code) == 200, response
