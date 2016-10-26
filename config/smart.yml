@@ -25,4 +25,6 @@ auth:
       click: True
     - element: '.modal form button'
       click: True
-
+  cancel_steps:
+    - element: '#consent-carousel .btn-default'
+      click: True

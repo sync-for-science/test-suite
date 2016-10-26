@@ -15,5 +15,9 @@ auth:
       send_keys: "ARGONAUT"
     - element: "#txtPassword"
       send_keys: "ARGONAUT"
+  authorize_steps:
     - element: "#cmdLogin"
+      click: True
+  cancel_steps:
+    - element: "#cmdCancel"
       click: True

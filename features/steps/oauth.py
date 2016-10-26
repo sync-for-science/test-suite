@@ -12,6 +12,7 @@ from testsuite import fhir
 AUTHORIZATION_ACTIONS = ['allow', 'deny']
 ERROR_AUTHORIZATION_FAILED = 'Authorization failed.'
 ERROR_BAD_CONFORMANCE = 'Could not parse conformance statement.'
+ERROR_NO_CANCEL = 'Aborting authorizations is not enabled.'
 ERROR_NO_REVOKE = 'Revoking authorizations is not enabled.'
 ERROR_OAUTH_DISABLED = 'OAuth is not enabled on this server.'
 ERROR_SELENIUM_SCREENSHOT = '''
@@ -67,6 +68,7 @@ def step_impl(context):
         error = ERROR_SELENIUM_SCREENSHOT.format(
             err.args[0],
             err.args[1],
+            err.args[2],
             context.vendor_config['host'],
         )
         assert False, error
@@ -83,6 +85,7 @@ def step_impl(context):
         error = ERROR_SELENIUM_SCREENSHOT.format(
             err.args[0],
             err.args[1],
+            err.args[2],
             context.vendor_config['host'],
         )
         assert False, error
@@ -154,6 +157,7 @@ def step_impl(context):
             error = ERROR_SELENIUM_SCREENSHOT.format(
                 err.args[0],
                 err.args[1],
+                err.args[2],
                 context.vendor_config['host'],
             )
             assert False, error
@@ -171,9 +175,44 @@ def step_impl(context):
         error = ERROR_SELENIUM_SCREENSHOT.format(
             err.args[0],
             err.args[1],
+            err.args[2],
             context.vendor_config['host'],
         )
         assert False, error
+
+
+@when('I abort an authorization request')
+def step_impl(context):
+    config = context.vendor_config['auth']
+    if 'cancel_steps' not in config:
+        context.scenario.skip(reason=ERROR_NO_CANCEL)
+        return
+
+    config['authorize_steps'] = config['cancel_steps']
+    urls = fhir.get_oauth_uris(context.conformance)
+    authorizer = authorize.Authorizer(config=context.vendor_config['auth'],
+                                      authorize_url=urls['authorize'])
+    with authorizer:
+        parameters = authorizer.launch_params
+
+        try:
+            authorizer.ask_for_authorization(parameters)
+            response = authorizer.provide_user_input()
+        except authorize.ReturnedErrorException as err:
+            # This is actually what we want to happen
+            response = authorizer.runner.get_query()
+        except authorize.AuthorizationException as err:
+            error = ERROR_SELENIUM_SCREENSHOT.format(
+                err.args[0],
+                err.args[1],
+                err.args[2],
+                context.vendor_config['host'],
+            )
+            assert False, error
+
+    context.authorizer = authorizer
+    context.authorization_sent = parameters
+    context.authorization_received = response
 
 
 @when('I authorize the app {action}ing access to {resource_type}')
@@ -202,6 +241,7 @@ def step_impl(context, action, resource_type):
         error = ERROR_SELENIUM_SCREENSHOT.format(
             err.args[0],
             err.args[1],
+            err.args[2],
             context.vendor_config['host'],
         )
         assert False, error
@@ -265,6 +305,19 @@ def step_impl(context):
         response = context.authorization_received
         context.authorizer._validate_state(response)  # pylint: disable=protected-access
         context.authorizer._validate_code(response)  # pylint: disable=protected-access
+    except AssertionError as err:
+        assert False, utils.bad_redirect_assert(err,
+                                                context.authorization_sent,
+                                                response)
+
+
+@then('the authorization error response error code should be "{error}"')
+def step_impl(context, error):
+    try:
+        response = context.authorization_received
+        assert 'error' in response, 'Response should contain "error".'
+        assert len(response['error']) == 1, 'Too many errors.'
+        assert response['error'][0] == error, 'Error code does not match.'
     except AssertionError as err:
         assert False, utils.bad_redirect_assert(err,
                                                 context.authorization_sent,
