@@ -24,3 +24,9 @@ Feature: EHR evaluates authorization request
             | key | value |
             | state | ‘’“”✓☃èÉéÊ¿¡Ææ汉语 |
         Then the authorization response redirect should validate
+
+    Scenario: Authorization request is aborted
+        Given OAuth is enabled
+        And I am not logged in
+        When I abort an authorization request
+        Then the authorization error response error code should be "access_denied"

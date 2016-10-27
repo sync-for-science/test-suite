@@ -212,7 +212,7 @@ class Authorizer(object):
 
         if 'error' in query:
             raise ReturnedErrorException(query['error'],
-                                         query.get('error_descriptoin'),
+                                         query.get('error_description'),
                                          self.runner.browser)
 
         return query

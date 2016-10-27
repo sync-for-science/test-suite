@@ -13,7 +13,11 @@ auth:
       send_keys: "ARGONAUT"
     - element: "#j_password"
       send_keys: "sprinttest"
+  authorize_steps:
     - element: "#loginButton"
+      click: True
+  cancel_steps:
+    - element: "#cancelButton"
       click: True
   extra_launch_params:
     launch: 8de5dad5-4e22-4b06-bde5-60f6a5781fd0

@@ -20,3 +20,6 @@ auth:
   authorize_steps:
     - element: '#grant_clicked'
       click: True
+  cancel_steps:
+    - element: '#cancel_clicked'
+      click: True
