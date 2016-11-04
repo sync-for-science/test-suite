@@ -16,3 +16,7 @@ auth:
       send_keys: "X6mx5AYmT7rUdVv44sZP"
     - element: "button[type='submit']"
       click: True
+  authorize_steps:
+    - element: "#authorizationForm [value='Authorize']"
+      click: True
+      optional: True
