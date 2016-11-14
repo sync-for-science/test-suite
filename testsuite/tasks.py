@@ -1,44 +1,53 @@
 # pylint: disable=missing-docstring
+''' Tasks module.
+'''
 import io
 
 from behave.configuration import Configuration
 from behave.formatter.base import StreamOpener
 from behave.runner import Runner
 from celery import Celery
-import flask_socketio
+
+from testsuite.application import create_app
+from testsuite.extensions import db, socketio
+from testsuite.models.testrun import TestRun
 
 
+# Create and configure celery task runner
 celery = Celery()
 celery.config_from_object('testsuite.celeryconfig')
-socketio = flask_socketio.SocketIO(message_queue='redis://')
 
 
 @celery.task
 def run_tests(room, vendor, tags, override):
+    app = create_app()
+    with app.app_context():
+        test_run = TestRun()
+        db.session.add(test_run)
+        db.session.commit()
 
-    def on_snapshot(snapshot, plan):
-        event = {
-            'snapshot': snapshot,
-            'plan': plan,
-        }
-        socketio.emit('snapshot', event, room=room)
+        def on_snapshot(snapshot, plan):
+            test_run.save_snapshot(snapshot, plan)
+            socketio.emit('snapshot', test_run.event, room=room)
 
-    try:
-        output = io.StringIO()
-        output_stream = StreamOpener(stream=output)
-        config = Configuration(
-            outputs=[output_stream],
-            format=['json.chunked'],
-            on_snapshot=on_snapshot,
-            vendor=vendor,
-            override=override,
-            command_args=[],
-            tags=[','.join(tags)],
-        )
-        runner = Runner(config)
+            db.session.commit()
 
-        runner.run()
-    except Exception as err:  # pylint: disable=broad-except
-        socketio.emit('global_error', str(err), room=room)
-    finally:
-        socketio.emit('tests_complete', room=room)
+        try:
+            output = io.StringIO()
+            output_stream = StreamOpener(stream=output)
+            config = Configuration(
+                outputs=[output_stream],
+                format=['json.chunked'],
+                on_snapshot=on_snapshot,
+                vendor=vendor,
+                override=override,
+                command_args=[],
+                tags=[','.join(tags)],
+            )
+            runner = Runner(config)
+
+            runner.run()
+        except Exception as err:  # pylint: disable=broad-except
+            socketio.emit('global_error', str(err), room=room)
+        finally:
+            socketio.emit('tests_complete', room=room)

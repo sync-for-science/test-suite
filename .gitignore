@@ -6,6 +6,7 @@ build
 *.egg-info
 ghostdriver.log
 dump.rdb
+*.sqlite3
 
 # Built validator directory
 validator
