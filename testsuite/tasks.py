@@ -8,12 +8,12 @@ from celery import Celery
 import flask_socketio
 
 
-app = Celery()
-app.config_from_object('testsuite.celeryconfig')
+celery = Celery()
+celery.config_from_object('testsuite.celeryconfig')
 socketio = flask_socketio.SocketIO(message_queue='redis://')
 
 
-@app.task
+@celery.task
 def run_tests(room, vendor, tags, override):
 
     def on_snapshot(snapshot, plan):

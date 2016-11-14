@@ -2,7 +2,7 @@ var webpack = require('webpack')
 var path = require('path')
 
 var buildPath = path.resolve(__dirname, 'testsuite', 'static', 'build');
-var mainPath = path.resolve(__dirname, 'app', 'main.js');
+var mainPath = path.resolve(__dirname, 'assets', 'main.js');
 
 module.exports = {
   devtool: 'eval',

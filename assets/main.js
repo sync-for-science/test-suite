@@ -23,7 +23,7 @@ $(function () {
   var room = uuid.v4();
 
   socket.on('connect', function () {
-    console.log('connected');
+    console.log('connected', room);
     socket.emit('join', room);
   });
   socket.on('message', function (message) {

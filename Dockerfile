@@ -34,4 +34,8 @@ COPY requirements.txt /usr/src/app/
 RUN  pip install --no-cache-dir -r requirements.txt
 COPY . /usr/src/app
 
+ENV FLASK_APP "/usr/src/app/app.py"
+ENV FLASK_SECRET_KEY "ssssssssssh"
+ENV FLASK_DEBUG "1"
+
 CMD supervisord -c supervisord.conf
