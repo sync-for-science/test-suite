@@ -9,6 +9,10 @@ build
 ghostdriver.log
 dump.rdb
 
+# data directory
+data/**/*
+!data/codes.bf
+
 # py.test coverage
 .coverage
 testsuite/static/coverage

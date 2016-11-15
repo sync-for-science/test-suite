@@ -23,8 +23,14 @@ $(function () {
   var room = uuid.v4();
 
   socket.on('connect', function () {
-    console.log('connected');
+    console.log('connected', room);
     socket.emit('join', room);
+
+    // If we're retrieving an old report, start that process
+    stateManager.getReport(function (report_id) {
+      errorNavigation.reset();
+      $.post('/load-report/' + report_id, {room: room});
+    });
   });
   socket.on('message', function (message) {
     console.log('message', message);
@@ -37,6 +43,8 @@ $(function () {
       length: event.plan.length
     }
     var summaryResult = summarize(event);
+
+    stateManager.setReport(event.report_id);
 
     errorNavigation.register(summaryResult.errors);
 
@@ -53,7 +61,8 @@ $(function () {
 
     var reportResult = {
       report: report(event.snapshot),
-      systems: summaryResult.systems
+      systems: summaryResult.systems,
+      url: window.location.href,
     };
 
     $('#report').html(report_tmpl(reportResult));
