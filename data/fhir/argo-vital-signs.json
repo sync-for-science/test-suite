@@ -1,7 +1,7 @@
 {
   "resourceType": "ValueSet",
   "id": "argo-vital-signs",
-  "url": "http://argonautwiki.hl7.org/ValueSet/argo-vital-signs",
+  "url": "http://hl7.org/fhir/us/argonaut/ValueSet/argo-vital-signs",
   "name": "Argonaut Vital Signs",
   "publisher": "Argonaut Project",
   "date": "2016-05-26",

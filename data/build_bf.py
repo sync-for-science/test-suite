@@ -180,6 +180,7 @@ def import_daf(bf):
 def import_argo(bf):
     paths = [
         './fhir/argo-vital-signs.json',
+        './fhir/argo-extension-codes.json',
     ]
 
     argo_systems = []
