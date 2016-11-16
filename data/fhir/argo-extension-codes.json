@@ -1,0 +1,30 @@
+{
+  "resourceType": "ValueSet",
+  "id": "argo-extension-codes",
+  "url": "http://hl7.org/fhir/us/argonaut/ValueSet/extension-codes",
+  "name": "Argonaut Extension Codes",
+  "publisher": "Argonaut Project",
+  "date": "2016-05-26",
+  "description": "Set of codes that are needed for implementation of the Argonaut Project IGs.  These codes are used as extensions to the FHIR and DAF value sets.",
+  "compose": {
+    "include": [
+      {
+        "system": "http://argonaut.hl7.org",
+        "concept": [
+          {
+            "code": "problem"
+          },
+          {
+            "code": "health-concern"
+          },
+          {
+            "code": "careteam"
+          },
+          {
+            "code": "assess-plan"
+          }
+        ]
+      }
+    ]
+  }
+}

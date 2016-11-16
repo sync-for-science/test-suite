@@ -12,3 +12,4 @@
 !fhir/daf.json
 !fhir/argo.json
 !fhir/argo-vital-signs.json
+!fhir/argo-extension-codes.json
