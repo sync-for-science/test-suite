@@ -1,6 +1,6 @@
 ---
 api:
-  url: https://fhir-sandbox.healow.com/apps/api/v1/fhir/
+  url: http://52.22.98.192:8080/FHIRServer/fhir/HEFBCA
   patient: 9128
 
 auth:
