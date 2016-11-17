@@ -11,6 +11,9 @@ dump.rdb
 
 # data directory
 data/**/*
+!data/fhir/systems.json
+!data/fhir/daf.json
+!data/fhir/argo.json
 !data/codes.bf
 
 # py.test coverage

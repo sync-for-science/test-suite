@@ -36,6 +36,6 @@ COPY . /usr/src/app
 
 ENV FLASK_APP "/usr/src/app/app.py"
 ENV FLASK_SECRET_KEY "ssssssssssh"
-ENV FLASK_DEBUG "1"
+ENV SQLALCHEMY_DATABASE_URI "sqlite:///db/db.sqlite3"
 
 CMD supervisord -c supervisord.conf
