@@ -18,11 +18,17 @@ def index():
 def report(test_run_id):
     room = request.form['room']
     run = TestRun.query.get(test_run_id)
-    event = run.event
 
-    socketio.emit('snapshot', event, room=room)
+    try:
+        event = run.event
+        socketio.emit('snapshot', event, room=room)
 
-    return jsonify(event)
+        return jsonify(event)
+    except AttributeError:
+        resp = jsonify({'error': 'Test run {} not found.'.format(test_run_id)})
+        resp.status_code = 404
+
+        return resp
 
 
 @app.route('/authorized/')
