@@ -40,6 +40,9 @@ module.exports = {
 
   resolve: {
     extensions: ['', '.webpack.js', '.js'],
+    alias: {
+      'handlebars': 'handlebars/dist/handlebars.js',
+    },
   },
 
   node: {
