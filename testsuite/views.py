@@ -14,7 +14,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/load-report/<int:test_run_id>', methods=['POST'])
+@app.route('/load-report/<test_run_id>', methods=['POST'])
 def report(test_run_id):
     room = request.form['room']
     run = TestRun.query.get(test_run_id)

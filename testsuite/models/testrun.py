@@ -1,6 +1,7 @@
 ''' Test run module.
 '''
 import json
+import uuid
 
 from testsuite.extensions import db
 
@@ -8,13 +9,16 @@ from testsuite.extensions import db
 class TestRun(db.Model):
     ''' The results of a single test run.
     '''
-    _id = db.Column('id', db.Integer, primary_key=True)
+    _id = db.Column('id', db.String, primary_key=True)
     snapshot = db.relationship('Snapshot',
                                uselist=False,
                                cascade='all, delete, delete-orphan')
     plan = db.relationship('Plan',
                            uselist=False,
                            cascade='all, delete, delete-orphan')
+
+    def __init__(self):
+        self._id = str(uuid.uuid4())
 
     @property
     def event(self):
