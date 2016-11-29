@@ -1,4 +1,6 @@
 """ FHIR Adapter """
+import json
+
 import requests
 
 
@@ -41,9 +43,28 @@ def get_oauth_uris(conformance):
             authorize (str): The OAuth "authorize" endpoint.
             token (str): The OAuth "token" endpoint.
     """
-    rest = [rest for rest in conformance['rest']][0]
-    extensions = [ext for ext in rest['security']['extension']
-                  if ext.get('url') == OAUTH_URIS_DEFINITION]
-    extension = extensions[0]
+    try:
+        rest = [rest for rest in conformance['rest']][0]
+        extensions = [ext for ext in rest['security']['extension']
+                      if ext.get('url') == OAUTH_URIS_DEFINITION]
+        extension = extensions[0]
 
-    return {ext['url']: ext['valueUri'] for ext in extension['extension']}
+        return {ext['url']: ext['valueUri'] for ext in extension['extension']}
+    except KeyError as err:
+        raise ConformanceException(str(err), conformance)
+
+
+class ConformanceException(Exception):
+    ''' Invalid conformance statement.
+    '''
+    tmpl = '''
+Invalid conformance statement. Key {} not found.
+See: {}.
+
+{}
+'''
+
+    def __init__(self, key, statement):
+        url = 'http://docs.smarthealthit.org/authorization/conformance-statement/'
+        statement_json = json.dumps(statement)
+        super().__init__(self.tmpl.format(key, url, statement_json))
