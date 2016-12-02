@@ -1,7 +1,7 @@
 ---
 api:
   url: https://fhir-sandbox.healow.com/apps/api/v1/fhir/
-  patient: 9128
+  patient: 9118
 
 auth:
   strategy: authorization_code
@@ -12,7 +12,7 @@ auth:
   confidential_client: True
   sign_in_steps:
     - element: '#uname'
-      send_keys: 'user1'
+      send_keys: 'user2'
     - element: '#password'
       send_keys: 'Password2'
     - element: '#btnSubmit'
