@@ -3,6 +3,7 @@ require('expose?$!expose?jQuery!jquery');
 var _ = require('underscore');
 var uuid = require('uuid');
 var socketio = require('socket.io-client');
+var yaml = require('js-yaml');
 
 var stateManager = require('./state-manager.js');
 var summary_tmpl = require('./templates/summary.hbs');
@@ -145,6 +146,28 @@ $(function () {
     }
   });
 
+  /**
+   * Add YAML validation.
+   */
+  $('#config-override').on('change keypress keyup', function (event) {
+    var $el = $(event.currentTarget);
+    var $runBtn = $('#run-tests');
+    var $alert = $el.siblings('.alert-danger');
+    var config;
+
+    try {
+      config = yaml.safeLoad($el.val());
+      $alert.addClass('hide');
+      $runBtn.prop('disabled', false);
+    } catch (err) {
+      $alert.removeClass('hide').text(err);
+      $runBtn.prop('disabled', true);
+
+      // This can be triggered on page-load with options still hidden
+      $el.closest('#more-options').collapse('show');
+    }
+  });
+
   $('#toggle-all-tags').on('click', function (event) {
     $('#tags').find('.label-empty').click();
   });
@@ -155,7 +178,7 @@ $(function () {
   var state = stateManager.load();
   if (state) {
     $('#vendor').val(state.vendor)
-    $('#config-override').text(state.override);
+    $('#config-override').text(state.override).trigger('change');
     $('#tags').find('.label-info').click();
     state.tags.forEach(function(tag){
       $('#tags').find('.label-empty input[value="'+tag+'"]').click();

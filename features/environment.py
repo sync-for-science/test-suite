@@ -57,8 +57,8 @@ def before_all(context):
     context.config.es_url = os.getenv('ES_URL')
 
     # Authorize against the vendor FHIR server.
-    context.oauth = factory(vendor_config)
     try:
+        context.oauth = factory(vendor_config)
         context.oauth.authorize()
         if getattr(context.oauth, 'patient', None) is not None:
             context.vendor_config['api']['patient'] = context.oauth.patient
@@ -73,6 +73,9 @@ def before_all(context):
             context.vendor_config['host'],
         )
         raise Exception(error)
+    except ValueError as error:
+        logging.error(utils.bad_response_assert(error.response, ''))
+        raise Exception(utils.bad_response_assert(error.response, ''))
 
     # Get the test plan so that we can show a progress meter.
     context.config.plan = []
