@@ -2,34 +2,46 @@
 # pylint: disable=missing-docstring,invalid-name,redefined-outer-name
 import csv
 import json
+from os import path
 import re
 
 from bs4 import BeautifulSoup
 from pybloom import ScalableBloomFilter
 import requests
 
+# Systems
+from testsuite.systems import (
+    LOINC,
+    SNOMED,
+    RXNORM,
+    ICD9,
+    ICD10,
+    CPT,
+    CVX,
+)
+
 # Settings
 INITIAL_CAPACITY = 2000000
 ERROR_RATE = 0.001
-
-# Systems
-LOINC = 'http://loinc.org'
-SNOMED = 'http://snomed.info/sct'
-RXNORM = 'http://www.nlm.nih.gov/research/umls/rxnorm'
-ICD9 = 'http://hl7.org/fhir/sid/icd-9-cm'
-ICD10 = 'http://hl7.org/fhir/sid/icd-10'
-CPT = 'http://www.ama-assn.org/go/cpt'
-CVX = 'http://hl7.org/fhir/sid/cvx'
+DATA_DIR = path.dirname(__file__)
 
 # SOURCES
-LOINC_PATH = './loinc/loinc.csv'
-SNOMED_PATH = './snomed/SnomedCT_RF2Release_INT_20160131/Full/Terminology/sct2_Concept_Full_INT_20160131.txt'
-RXNORM_PATH = './rxnorm/rrf/RXNCONSO.RRF'
-RXNORM_DEPRECATED_PATH = './rxnorm/rrf/RXNCUI.RRF'
-ICD9_PATH = './icd9/CMS32_DESC_LONG_DX.txt'
-ICD10_PATH = './icd10/icd10cm_tabular_2017.xml'
-CPT_PATH = './cpt/MRCONSO.RRF'
-CVX_PATH = './cvx/cvx.txt'
+LOINC_PATH = path.join(DATA_DIR, 'loinc', 'loinc.csv')
+SNOMED_PATH = path.join(DATA_DIR, 'snomed', 'SnomedCT_RF2Release_INT_20160131', 'Full', 'Terminology', 'sct2_Concept_Full_INT_20160131.txt')
+RXNORM_PATH = path.join(DATA_DIR, 'rxnorm', 'rrf', 'RXNCONSO.RRF')
+RXNORM_DEPRECATED_PATH = path.join(DATA_DIR, 'rxnorm', 'rrf', 'RXNCUI.RRF')
+ICD9_PATH = path.join(DATA_DIR, 'icd9', 'CMS32_DESC_LONG_DX.txt')
+ICD10_PATH = path.join(DATA_DIR, 'icd10', 'icd10cm_tabular_2017.xml')
+CPT_PATH = path.join(DATA_DIR, 'cpt', 'MRCONSO.RRF')
+CVX_PATH = path.join(DATA_DIR, 'cvx', 'cvx.txt')
+ARGO_VITAL_SIGNS_PATH = path.join(DATA_DIR, 'fhir', 'argo-vital-signs.json')
+ARGO_EXTENSIONS_PATH = path.join(DATA_DIR, 'fhir', 'argo-extension-codes.json')
+
+# DESTINATIONS
+ARGO_SYSTEMS_PATH = path.join(DATA_DIR, 'fhir', 'argo.json')
+DAF_SYSTEMS_PATH = path.join(DATA_DIR, 'fhir', 'daf.json')
+FHIR_SYSTEMS_PATH = path.join(DATA_DIR, 'fhir', 'systems.json')
+BF_PATH = path.join(DATA_DIR, 'codes.bf')
 
 
 def import_loinc(bf):
@@ -143,7 +155,7 @@ def import_fhir(bf):
 
             fhir_systems.append(url)
 
-    with open('./fhir/systems.json', 'w') as handle:
+    with open(FHIR_SYSTEMS_PATH, 'w') as handle:
         json.dump(fhir_systems, handle)
 
 
@@ -173,15 +185,12 @@ def import_daf(bf):
 
         daf_systems.append(url)
 
-    with open('./fhir/daf.json', 'w') as handle:
+    with open(DAF_SYSTEMS_PATH, 'w') as handle:
         json.dump(daf_systems, handle)
 
 
 def import_argo(bf):
-    paths = [
-        './fhir/argo-vital-signs.json',
-        './fhir/argo-extension-codes.json',
-    ]
+    paths = ARGO_VITAL_SIGNS_PATH, ARGO_EXTENSIONS_PATH
 
     argo_systems = []
 
@@ -201,7 +210,7 @@ def import_argo(bf):
 
         argo_systems.append(url)
 
-    with open('./fhir/argo.json', 'w') as handle:
+    with open(ARGO_SYSTEMS_PATH, 'w') as handle:
         json.dump(argo_systems, handle)
 
 
@@ -224,7 +233,7 @@ def import_cvx(bf):
 
 try:
     # If the bloom filter already exists, we're probably just appending to it
-    with open('./codes.bf', 'rb') as handle:
+    with open(BF_PATH, 'rb') as handle:
         bf = ScalableBloomFilter.fromfile(handle)
 except FileNotFoundError:
     # If it doesn't, we need to make one
@@ -244,5 +253,5 @@ import_argo(bf)
 import_cvx(bf)
 
 if __name__ == '__main__':
-    with open('./codes.bf', 'wb') as handle:
+    with open(BF_PATH, 'wb') as handle:
         bf.tofile(handle)

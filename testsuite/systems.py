@@ -8,11 +8,12 @@ from pybloom import ScalableBloomFilter
 LOINC = 'http://loinc.org'
 SNOMED = 'http://snomed.info/sct'
 RXNORM = 'http://www.nlm.nih.gov/research/umls/rxnorm'
+ICD9 = 'http://hl7.org/fhir/sid/icd-9-cm'
 ICD10 = 'http://hl7.org/fhir/sid/icd-10'
 CPT = 'http://www.ama-assn.org/go/cpt'
 CVX = 'http://hl7.org/fhir/sid/cvx'
 
-RECOGNIZED = [LOINC, SNOMED, RXNORM, ICD10, CPT, CVX]
+RECOGNIZED = [LOINC, SNOMED, RXNORM, ICD9, ICD10, CPT, CVX]
 
 # Enumerating all the FHIR systems here would be a waste of time,
 # so load them from the constructed json file.
@@ -25,8 +26,12 @@ with open('./data/fhir/argo.json') as argo_handle:
     VALUE_SETS += json.load(argo_handle)
 
 # Instantiate the bloom filter.
-with open('./data/codes.bf', 'rb') as handle:
-    BLOOM = ScalableBloomFilter.fromfile(handle)
+try:
+    with open('./data/codes.bf', 'rb') as handle:
+        BLOOM = ScalableBloomFilter.fromfile(handle)
+except FileNotFoundError:
+    # Generated filter not found, just instantiate an empty one.
+    BLOOM = ScalableBloomFilter()
 
 
 def validate_coding(coding):
