@@ -16,14 +16,14 @@ auth:
     - element: '#consent-carousel'
       execute_script: |
         $('#consent-carousel')
-          .carousel(5);
+          .carousel(2);
     - element: '#authorize'
       click: True
   revoke_url: http://portal.dev.syncfor.science:9000/apps
   revoke_steps:
     - element: '[rel="test-suite"] button'
       click: True
-    - element: '.modal form button'
+    - element: '.modal.in form button'
       click: True
   cancel_steps:
     - element: '#consent-carousel .btn-default'
