@@ -40,7 +40,7 @@ def step_impl(context):
 def step_impl(context):
     auth_config = context.vendor_config['auth']
 
-    if not 'revoke_steps' in auth_config:
+    if 'revoke_steps' not in auth_config:
         context.scenario.skip(reason=ERROR_NO_REVOKE)
 
 
