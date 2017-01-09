@@ -22,7 +22,8 @@ auth:
     - element: "#cmdCancel"
       click: True
   revoke_url: https://open-ic.epic.com/mychart/
-  revoke_steps:
+  # Temporarily disabled
+  _revoke_steps:
     - element: '#menu'
       execute_script: |
         $$WP.Utilities.TryRedirect('/MyChart/Authentication/OAuth/Review')
