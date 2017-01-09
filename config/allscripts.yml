@@ -1,6 +1,6 @@
 ---
 api:
-  url: https://uat-fhir.followmyhealth.com/api/
+  url: https://apis-dev.followmyhealth.com/fhir-mu-certification/api/
   patient: c5f9d7f2-9927-4904-aab2-a62d0157b807
 
 auth:
