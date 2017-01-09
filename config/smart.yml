@@ -19,7 +19,6 @@ auth:
           .carousel(2);
     - element: '#authorize'
       click: True
-  revoke_url: http://portal.dev.syncfor.science:9000/apps
   revoke_steps:
     - element: '[rel="test-suite"] button'
       click: True

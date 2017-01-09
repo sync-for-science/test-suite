@@ -2,11 +2,16 @@
 """
 import itertools
 import logging
+import time
 from urllib import parse
 import uuid
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+    TimeoutException,
+)
 from selenium.webdriver.remote.remote_connection import RemoteConnection
 from selenium.webdriver.support.expected_conditions import visibility_of
 from selenium.webdriver.support.ui import WebDriverWait
@@ -49,17 +54,19 @@ class StepRunner(object):
     def execute_step(self, step):
         """ Execute a provided step.
         """
+        if 'wait' in step:
+            time.sleep(step['wait'])
+
         try:
             elem = self.browser.find_element_by_css_selector(step['element'])
-        except NoSuchElementException as err:
+
+            # Make sure the element is visible before we continue
+            wait = WebDriverWait(self.browser, VISIBILITY_TIMEOUT)
+            wait.until(visibility_of(elem))
+        except (NoSuchElementException, StaleElementReferenceException) as err:
             if step.get('optional'):
                 return
             raise ElementNotFoundException(str(err), self.browser)
-
-        # Make sure the element exists before we continue
-        try:
-            wait = WebDriverWait(self.browser, VISIBILITY_TIMEOUT)
-            wait.until(visibility_of(elem))
         except TimeoutException:
             if not elem.is_displayed() and step.get('optional'):
                 return
@@ -260,6 +267,7 @@ class AuthorizationRevoker(object):
 
     Attributes:
         config (dict): The oauth config for this vendor.
+        revoke_url (str): The vendor's "manage" endpoint.
 
     Example:
         Implements the context manager methods.
@@ -268,8 +276,9 @@ class AuthorizationRevoker(object):
             with revoker:
                 token = revoker.revoke_authorization()
     """
-    def __init__(self, config, step_runner=None):
+    def __init__(self, config, revoke_url, step_runner=None):
         self.config = config
+        self.revoke_url = revoke_url
         self.runner = step_runner
 
         if not self.runner:
@@ -281,7 +290,7 @@ class AuthorizationRevoker(object):
         if not self.runner.browser:
             raise Exception('Webdriver must be connected first.')
 
-        self.runner.get(self.config.get('revoke_url'))
+        self.runner.get(self.revoke_url)
 
         steps = itertools.chain(self.config.get('sign_in_steps', []),
                                 self.config.get('revoke_steps', []))

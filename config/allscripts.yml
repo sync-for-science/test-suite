@@ -20,3 +20,13 @@ auth:
       send_keys: "s4s!2345"
     - element: "[translate='Login_LogIn']"
       click: True
+  authorize_steps:
+    - element: "span:nth-child(1) button"
+      click: True
+      optional: True
+      wait: 1
+  revoke_url: https://fmhmuauthcertification.azurewebsites.net/api/Removal
+  revoke_steps:
+    - element: "table tr:nth-child(3) button"
+      click: True
+      wait: 5
