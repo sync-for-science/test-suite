@@ -20,3 +20,19 @@ auth:
       send_keys: "s4s!2345"
     - element: "[translate='Login_LogIn']"
       click: True
+  authorize_steps:
+    - element: "#permission-component"
+      wait: 10
+      optional: True
+      execute_script: |
+        document
+          .querySelectorAll('span > label > input[type="checkbox"]')
+          .forEach(function(el) { el.checked = true; });
+    - element: "span:nth-child(1) button"
+      optional: True
+      click: True
+  revoke_url: https://fmhmuauthcertification.azurewebsites.net/api/Removal
+  revoke_steps:
+    - element: 'button.removal-button[data-client-id="0c9cc532-9ac5-48cf-998e-3b9da5394b55"]'
+      click: True
+      wait: 10

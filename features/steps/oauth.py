@@ -39,11 +39,9 @@ def step_impl(context):
 @given('revoking authorizations is enabled')
 def step_impl(context):
     auth_config = context.vendor_config['auth']
-    keys = ('revoke_steps', 'revoke_url')
 
-    if not all(key in auth_config for key in keys):
+    if 'revoke_steps' not in auth_config:
         context.scenario.skip(reason=ERROR_NO_REVOKE)
-        return
 
 
 @given('I am logged in')
@@ -76,7 +74,11 @@ def step_impl(context):
 
 @when('I revoke my authorization')
 def step_impl(context):
-    revoker = authorize.AuthorizationRevoker(context.vendor_config['auth'])
+    uris = fhir.get_oauth_uris(context.conformance)
+    revoke_url = uris.get('manage',
+                          context.vendor_config['auth'].get('revoke_url'))
+    revoker = authorize.AuthorizationRevoker(context.vendor_config['auth'],
+                                             revoke_url)
 
     try:
         with revoker:
