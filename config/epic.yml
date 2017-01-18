@@ -5,28 +5,25 @@ api:
 
 auth:
   strategy: authorization_code
-  client_id: ad3fe986-cbad-4fcc-a487-3e9ee1ef3a4d
+  client_id: 94bdc785-64af-4e7e-87be-b7a285e9c1d6
   # client_secret intentionally included
   client_secret: argonaut
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
   sign_in_steps:
-    - element: "#txtUsername"
-      send_keys: "ARGONAUT"
-    - element: "#txtPassword"
-      send_keys: "ARGONAUT"
+    - element: "#Login"
+      send_keys: "fhirjason"
+    - element: "#Password"
+      send_keys: "epicepic1"
+    - element: "#submit"
+      click: True
   authorize_steps:
-    - element: "#cmdLogin"
+    - element: "[name=allowDataSharing]"
       click: True
   cancel_steps:
-    - element: "#cmdCancel"
+    - element: "[name=denyDataSharing]"
       click: True
-  revoke_url: https://open-ic.epic.com/mychart/
-  # Temporarily disabled
-  _revoke_steps:
-    - element: '#menu'
-      execute_script: |
-        $$WP.Utilities.TryRedirect('/MyChart/Authentication/OAuth/Review')
-    - element: |
-        [value="ad3fe986-cbad-4fcc-a487-3e9ee1ef3a4d"] + [type="submit"]
+  revoke_url: https://open-ic.epic.com/MyChart/inside.asp?mode=oauthreview
+  revoke_steps:
+    - element: "[title~=Sync4Science][value~=Remove]"
       click: True
