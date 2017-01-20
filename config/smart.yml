@@ -13,6 +13,8 @@ auth:
     - element: '#sign-in'
       click: True
   authorize_steps:
+    - element: '[data-patient-id]:first-child'
+      click: True
     - element: '#consent-carousel'
       execute_script: |
         $('#consent-carousel')
