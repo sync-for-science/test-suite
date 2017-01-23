@@ -11,6 +11,7 @@ from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
     TimeoutException,
+    UnexpectedAlertPresentException,
 )
 from selenium.webdriver.remote.remote_connection import RemoteConnection
 from selenium.webdriver.support.expected_conditions import visibility_of
@@ -95,6 +96,10 @@ class StepRunner(object):
             try:
                 wait = WebDriverWait(self.browser, AUTHORIZE_TIMEOUT)
                 wait.until(CurrentUrlContains(base_url))
+            except UnexpectedAlertPresentException as err:
+                alert = self.browser.switch_to_alert()
+                alert.accept()
+                raise AuthorizationException(str(err), self.browser)
             except TimeoutException:
                 raise AuthorizationException('Authorization timed out.', self.browser)
 
