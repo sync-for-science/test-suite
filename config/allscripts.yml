@@ -25,10 +25,13 @@ auth:
       wait: 10
       optional: True
       execute_script: |
-        document
-          .querySelectorAll('span > label > input[type="checkbox"]')
-          .forEach(function(el) { el.checked = true; });
-    - element: "span:nth-child(1) button"
+        Array.from(document
+          .querySelectorAll('span > label > input[type="checkbox"]'))
+          .forEach(function(el) { el.click(); });
+    - element: "span:first-child button"
+      optional: True
+      click: True
+    - element: "span:first-child button"
       optional: True
       click: True
   revoke_url: https://fmhmuauthcertification.azurewebsites.net/api/Removal
