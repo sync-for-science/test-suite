@@ -13,6 +13,7 @@ auth:
   sign_in_steps:
     - element: "#Login"
       send_keys: "fhirjason"
+      wait: 5
     - element: "#Password"
       send_keys: "epicepic1"
     - element: "#submit"
