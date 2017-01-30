@@ -48,7 +48,8 @@ def run_tests(room, vendor, tags, override):
 
             runner.run()
         except Exception as err:  # pylint: disable=broad-except
-            import traceback; traceback.print_exc()
+            import traceback
+            traceback.print_exc()
             socketio.emit('global_error', str(err), room=room)
         finally:
             socketio.emit('tests_complete', room=room)
