@@ -20,6 +20,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 AUTHORIZE_TIMEOUT = 15
 CONNECTION_TIMEOUT = 60
+IMPLICIT_TIMEOUT = 10
 VISIBILITY_TIMEOUT = 10
 
 
@@ -124,7 +125,7 @@ class StepRunner(object):
 
         driver = webdriver.Firefox(profile)
         # Wait for UI events to complete before failing to find an element.
-        driver.implicitly_wait(1)
+        driver.implicitly_wait(IMPLICIT_TIMEOUT)
 
         return driver
 
