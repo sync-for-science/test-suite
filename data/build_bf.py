@@ -101,6 +101,9 @@ def import_icd9(bf):
         for line in handle.readlines():
             code, desc = re.split(r'\s+', line, maxsplit=1)
             bf.add(ICD9 + '|' + code)
+            # Splice a "." into the code at position 3
+            dot_code = '.'.join((code[:3], code[3:]))
+            bf.add(ICD9 + '|' + dot_code)
 
 
 def import_cpt(bf):
