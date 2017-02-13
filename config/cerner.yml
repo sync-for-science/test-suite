@@ -1,23 +1,24 @@
 ---
 api:
-  url: https://fhir-ehr.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/
-  patient: 1316024
+  url: https://fhir-myrecord.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/
+  patient: 4478007
 
 auth:
   strategy: authorization_code
-  client_id: 0e00e6a7-dc4c-45a5-b36c-974cb8f9cb5e
-  client_secret:
-  scope: launch patient/Patient.read patient/Encounter.read patient/Observation.read patient/Condition.read patient/MedicationOrder.read patient/MedicationStatement.read patient/MedicationDispense.read patient/MedicationAdministration.read patient/AllergyIntolerance.read patient/Procedure.read patient/Immunization.read patient/DocumentReference.read online_access
+  client_id: 27208b74-adbb-4341-a72a-1bb6790d40e8
+  client_secret: D86P1st45vg1xy2lccLqUHkw_k8X8idG
+  scope: launch/patient patient/Patient.read patient/Encounter.read patient/Observation.read patient/Condition.read patient/MedicationOrder.read patient/MedicationStatement.read patient/MedicationDispense.read patient/MedicationAdministration.read patient/AllergyIntolerance.read patient/Procedure.read patient/Immunization.read patient/DocumentReference.read user/Practitioner.read offline_access
+  revoke_url: https://authorization.sandboxcerner.com/tenants/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/personas/patient/my-authorizations
   sign_in_steps:
-    - element: "#j_username"
-      send_keys: "portal"
-    - element: "#j_password"
-      send_keys: "portal"
+    - element: "#id_login_username"
+      send_keys: "fredrick_smart"
+    - element: "#id_login_password"
+      send_keys: "Cerner01"
+    - element: "#signin"
+      click: True
   authorize_steps:
-    - element: "#loginButton"
+    - element: "#allow"
       click: True
   cancel_steps:
-    - element: "#cancelButton"
+    - element: "#deny"
       click: True
-  extra_launch_params:
-    launch: df66fbf6-1056-4b42-9ac9-a47765e74afd
