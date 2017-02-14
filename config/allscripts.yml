@@ -1,13 +1,13 @@
 ---
 api:
-  url: https://uat-fhir.followmyhealth.com/api/
-  patient: c5f9d7f2-9927-4904-aab2-a62d0157b807
+  url: https://apis-test.followmyhealth.com/fhir-uat/api/
+  patient: 3dcfa065-5a1e-4577-aa04-a719013f736b
 
 auth:
   strategy: authorization_code
-  client_id: 0c9cc532-9ac5-48cf-998e-3b9da5394b55
+  client_id: 90d4ed27-4790-4a3e-80c2-436d1942d680
   # client_secret intentionally included
-  client_secret: D9rE+xExGY7ZhW6aJJFloDjIoaBZVwguHXSIlUzcX/MEVBGU8S+eUCk44YHWYDTQuL4Gt9P/wlfPsHSM+dVoKA==
+  client_secret: Ym0ZYTtSjrQM7ZqLfkMKuj1exRmuIKbBCQR+HDoDQgtEb4ZiDhyE1dDk9S3h2vfMRdxvzV18KMhv7Fz0dPiP6w==
   scope: launch/patient patient/*.read offline_access
   confidential_client: True
   sign_in_steps:
@@ -15,9 +15,9 @@ auth:
       click: True
       optional: True
     - element: "#UserName"
-      send_keys: "s4s_6-22-16"
+      send_keys: "floppyrobot10"
     - element: "#Password"
-      send_keys: "s4s!2345"
+      send_keys: "s4s_pilot!"
     - element: "[translate='Login_LogIn']"
       click: True
   authorize_steps:
@@ -34,8 +34,8 @@ auth:
     - element: "span:first-child button"
       optional: True
       click: True
-  revoke_url: https://fmhmuauthcertification.azurewebsites.net/api/Removal
+  revoke_url: https://mutestcertification.azurewebsites.net/api/Removal
   revoke_steps:
-    - element: 'button.removal-button[data-client-id="0c9cc532-9ac5-48cf-998e-3b9da5394b55"]'
+    - element: 'button.removal-button[data-client-id="90d4ed27-4790-4a3e-80c2-436d1942d680"]'
       click: True
       wait: 10
