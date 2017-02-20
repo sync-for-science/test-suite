@@ -22,7 +22,6 @@ auth:
       click: True
   authorize_steps:
     - element: "#permission-component"
-      wait: 10
       optional: True
       execute_script: |
         Array.from(document
@@ -31,11 +30,12 @@ auth:
     - element: "span:first-child button"
       optional: True
       click: True
+      wait: 2
     - element: "span:first-child button"
       optional: True
       click: True
+      wait: 2
   revoke_url: https://mutestcertification.azurewebsites.net/api/Removal
   revoke_steps:
     - element: 'button.removal-button[data-client-id="90d4ed27-4790-4a3e-80c2-436d1942d680"]'
       click: True
-      wait: 10

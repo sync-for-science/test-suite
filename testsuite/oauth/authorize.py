@@ -8,6 +8,7 @@ import uuid
 
 from selenium import webdriver
 from selenium.common.exceptions import (
+    NoAlertPresentException,
     NoSuchElementException,
     StaleElementReferenceException,
     TimeoutException,
@@ -53,11 +54,23 @@ class StepRunner(object):
         """
         self.browser.get(url)
 
+    def accept_alerts(self):
+        """ Accept any alerts that pop up.
+        """
+        while True:
+            try:
+                alert = self.browser.switch_to_alert()
+                alert.accept()
+            except NoAlertPresentException:
+                break
+
     def execute_step(self, step):
         """ Execute a provided step.
         """
         if 'wait' in step:
             time.sleep(step['wait'])
+
+        self.accept_alerts()
 
         try:
             elem = self.browser.find_element_by_css_selector(step['element'])
@@ -75,6 +88,17 @@ class StepRunner(object):
             elif not elem.is_displayed():
                 msg = 'Element is hidden: {0}'.format(step['element'])
                 raise ElementNotFoundException(msg, self.browser)
+        except UnexpectedAlertPresentException as err:
+            alert = self.browser.switch_to_alert()
+            alert.accept()
+            raise AuthorizationException(str(err), self.browser)
+        except AttributeError:
+            # This happens when an alert pops up during `wait.until`.
+            # For some reason, `elem` gets returned as a string containing
+            # error message instead of an element. Since we have a block of
+            # accepting error messages at the top of this function, just
+            # recursively call it until those alerts stop happening.
+            return self.execute_step(step)
 
         # Apply the action to the matched element.
         # Only one action can be applied per step.
@@ -95,6 +119,7 @@ class StepRunner(object):
         if base_url:
             # Only return the query if the base_url is what we expect it to be.
             try:
+                self.accept_alerts()
                 wait = WebDriverWait(self.browser, AUTHORIZE_TIMEOUT)
                 wait.until(CurrentUrlContains(base_url))
             except UnexpectedAlertPresentException as err:
