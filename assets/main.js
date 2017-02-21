@@ -100,6 +100,7 @@ $(function () {
     }).get();
     var override = $('#config-override').val();
 
+    stateManager.clear();
     stateManager.save({
       vendor: vendor,
       tags: tags,

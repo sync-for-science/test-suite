@@ -13,6 +13,10 @@ module.exports = {
     window.history.pushState(null, '', url);
   },
 
+  clear: function () {
+    window.history.pushState(null, '', '');
+  },
+
   save: function(state){
     window.location.hash = JSON.stringify(state);
   },

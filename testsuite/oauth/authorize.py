@@ -8,6 +8,7 @@ import uuid
 
 from selenium import webdriver
 from selenium.common.exceptions import (
+    NoAlertPresentException,
     NoSuchElementException,
     StaleElementReferenceException,
     TimeoutException,
@@ -53,6 +54,16 @@ class StepRunner(object):
         """
         self.browser.get(url)
 
+    def accept_alerts(self):
+        """ Accept any alerts that pop up.
+        """
+        while True:
+            try:
+                alert = self.browser.switch_to_alert()
+                alert.accept()
+            except NoAlertPresentException:
+                break
+
     def execute_step(self, step):
         """ Execute a provided step.
         """
@@ -75,6 +86,12 @@ class StepRunner(object):
             elif not elem.is_displayed():
                 msg = 'Element is hidden: {0}'.format(step['element'])
                 raise ElementNotFoundException(msg, self.browser)
+        except AttributeError as err:
+            # This happens when an alert pops up during `wait.until`.
+            # For some reason, `elem` gets returned as a string containing
+            # error message instead of an element.
+            self.accept_alerts()
+            raise AuthorizationException(str(err), self.browser)
 
         # Apply the action to the matched element.
         # Only one action can be applied per step.
@@ -98,8 +115,7 @@ class StepRunner(object):
                 wait = WebDriverWait(self.browser, AUTHORIZE_TIMEOUT)
                 wait.until(CurrentUrlContains(base_url))
             except UnexpectedAlertPresentException as err:
-                alert = self.browser.switch_to_alert()
-                alert.accept()
+                self.accept_alerts()
                 raise AuthorizationException(str(err), self.browser)
             except TimeoutException:
                 raise AuthorizationException('Authorization timed out.', self.browser)
