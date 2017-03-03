@@ -38,4 +38,6 @@ ENV FLASK_APP "/usr/src/app/app.py"
 ENV FLASK_SECRET_KEY "ssssssssssh"
 ENV SQLALCHEMY_DATABASE_URI "sqlite:///db/db.sqlite3"
 
+RUN mkdir /usr/src/app/testsuite/db
+
 CMD supervisord -c supervisord.conf
