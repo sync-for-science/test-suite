@@ -27,7 +27,7 @@ def get_config(vendor, override=''):
     if override:
         config = deep_merge(config, yaml.safe_load(override))
 
-    host = os.getenv('BASE_URL', 'http://localhost:9003')
+    config['host'] = os.getenv('BASE_URL', 'http://localhost:9003')
     config['auth']['redirect_uri'] = config['host'] + '/authorized/'
 
     return config
