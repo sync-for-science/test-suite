@@ -28,14 +28,6 @@ def get_config(vendor, override=''):
         config = deep_merge(config, yaml.safe_load(override))
 
     host = os.getenv('BASE_URL')
-    if host is None:
-        host = os.getenv('LETSENCRYPT_HOST')
-        if host is not None:
-            config['host'] = 'https://' + host
-        else:
-            host = os.getenv('VIRTUAL_HOST', 'localhost:9003')
-            config['host'] = 'http://' + host
-
     config['auth']['redirect_uri'] = config['host'] + '/authorized/'
 
     return config
