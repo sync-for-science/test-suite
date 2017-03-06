@@ -10,6 +10,7 @@ Feature: App exchanges authorization code for access token
         And the JSON response will contain access_token
         And the JSON response will contain token_type
         And the JSON response will contain scope
+        And the JSON response will contain patient
 
     Scenario: Missing "grant_type"
         Given OAuth is enabled
