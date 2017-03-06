@@ -11,6 +11,7 @@ ERROR_CODING_MISSING = '''
 {field_name} is missing field "coding".
 {json}
 '''
+ERROR_MISSING_SYSTEM_CODING = 'No codings in {field_name} match {system}.'
 ERROR_FIELD_NOT_PRESENT = '''
 {field} is not set.
 {json}
@@ -127,6 +128,7 @@ def step_impl(context, field_name, value_set_url_one, value_set_url_two):
     path = field_name.split('.')
     filter_type = path.pop(0)
     resources = get_resources(context.response.json(), filter_type)
+    system_names = '{0} or {1}'.format(value_set_url_one, value_set_url_two)
 
     for res in resources:
         found = traverse(res, path)
@@ -138,7 +140,14 @@ def step_impl(context, field_name, value_set_url_one, value_set_url_two):
                                           ERROR_CODING_MISSING,
                                           field_name=field_name,
                                           json=json.dumps(found, indent=2))
-            found = [coding.get('code') for coding in found.get('coding')]
+            found = [coding.get('code') for coding in found.get('coding')
+                     if coding.get('system') in (value_set_url_one, value_set_url_two)]
+
+        assert found, \
+            utils.bad_response_assert(context.response,
+                                      ERROR_MISSING_SYSTEM_CODING,
+                                      field_name=field_name,
+                                      system=system_names)
 
         for code in found:
             try:
@@ -147,7 +156,6 @@ def step_impl(context, field_name, value_set_url_one, value_set_url_two):
             except systems.SystemNotRecognized:
                 valid = False
 
-            system_names = '{0} or {1}'.format(value_set_url_one, value_set_url_two)
             assert valid, utils.bad_response_assert(context.response,
                                                     ERROR_INVALID_BINDING,
                                                     code=code,
@@ -170,7 +178,14 @@ def step_impl(context, field_name, value_set_url):
                                           ERROR_CODING_MISSING,
                                           field_name=field_name,
                                           json=json.dumps(found, indent=2))
-            found = [coding.get('code') for coding in found.get('coding')]
+            found = [coding.get('code') for coding in found.get('coding')
+                     if coding.get('system') == value_set_url]
+
+        assert found, \
+            utils.bad_response_assert(context.response,
+                                      ERROR_MISSING_SYSTEM_CODING,
+                                      field_name=field_name,
+                                      system=value_set_url)
 
         for code in found:
             try:
