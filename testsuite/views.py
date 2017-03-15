@@ -18,9 +18,13 @@ def index():
     names = []
     for config in configs:
         name, ext = os.path.splitext(os.path.basename(config))
-        names.append(name.capitalize())
+        if name == 'Other':
+            continue
+        names.append(name)
 
-    return render_template('index.html', names=sorted(names))
+    names.sort(key=lambda x: x.lower())
+
+    return render_template('index.html', names=names)
 
 
 @app.route('/load-report/<test_run_id>', methods=['POST'])
