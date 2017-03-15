@@ -1,4 +1,7 @@
 # pylint: disable=missing-docstring,unused-variable
+import glob
+import os
+
 from flask import jsonify, render_template, request, session
 from werkzeug import exceptions
 import flask_socketio
@@ -11,7 +14,13 @@ from testsuite import tasks
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    configs = glob.glob('./config/*.yml')
+    names = []
+    for config in configs:
+        name, ext = os.path.splitext(os.path.basename(config))
+        names.append(name.capitalize())
+
+    return render_template('index.html', names=sorted(names))
 
 
 @app.route('/load-report/<test_run_id>', methods=['POST'])
