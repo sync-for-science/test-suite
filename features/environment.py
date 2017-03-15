@@ -44,7 +44,7 @@ def before_all(context):
     # Get the vendor config and attach it to the context.
     vendor = getattr(context.config, 'vendor', os.getenv('VENDOR'))
     override = getattr(context.config, 'override', os.getenv('CONFIG_OVERRIDE', ''))
-    vendor_config = get_config(vendor.lower(), override)
+    vendor_config = get_config(vendor, override)
     vendor_config['auth']['aud'] = vendor_config['api']['url']
     context.vendor_config = copy.deepcopy(vendor_config)
 
