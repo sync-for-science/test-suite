@@ -68,6 +68,11 @@ def get_resource(context, resource):
     response = requests.get(url, headers=headers)
     context.cache[url] = response
 
+    try:
+        context.config.on_payload(url, bad_response_assert(response, ''))
+    except AttributeError:
+        pass
+
     if context.config.es_url:
         log_requests_response(context.config.es_url, response)
 

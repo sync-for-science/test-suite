@@ -1,5 +1,4 @@
-require('expose?$!expose?jQuery!jquery');
-
+var $ = require('jquery');
 var _ = require('underscore');
 var uuid = require('uuid');
 var socketio = require('socket.io-client');
@@ -11,6 +10,7 @@ var features_tmpl = require('./templates/features.hbs');
 var loading_tmpl = require('./templates/loading.hbs');
 var report_tmpl = require('./templates/report.hbs');
 var error_tmpl = require('./templates/error.hbs');
+var payloads_tmpl = require('./templates/payloads.hbs');
 var errorNavigation = require('./error-navigation.js');
 var summarize = require('./summarize.js');
 var report = require('./report.js');
@@ -22,6 +22,7 @@ require('bootstrap/dist/js/npm');
 $(function () {
   var socket = socketio.connect(document.location.origin);
   var room = uuid.v4();
+  var payloads = [];
 
   socket.on('connect', function () {
     console.log('connected', room);
@@ -41,7 +42,7 @@ $(function () {
 
     var tmpl_data = {
       features: event.snapshot,
-      length: event.plan.length
+      length: event.plan.length,
     }
     var summaryResult = summarize(event);
 
@@ -60,6 +61,10 @@ $(function () {
       .html(summary_tmpl({summary: summaryResult.summary}))
       .find('[data-toggle="tooltip"]').tooltip();
 
+    $('#payloads')
+      .html(payloads_tmpl({payloads: payloads}))
+      .find('[data-toggle="tooltip"]').tooltip();
+
     var reportResult = {
       report: report(event.snapshot),
       systems: summaryResult.systems,
@@ -67,6 +72,10 @@ $(function () {
     };
 
     $('#report').html(report_tmpl(reportResult));
+  });
+
+  socket.on('payload', function (payload) {
+    payloads.push(payload);
   });
 
   socket.on('global_error', function (error) {
@@ -108,6 +117,8 @@ $(function () {
     });
 
     errorNavigation.reset();
+
+    payloads = [];
 
     $(event.currentTarget).prop('disabled', true);
     socket.emit('begin_tests', {

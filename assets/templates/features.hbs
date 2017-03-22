@@ -41,7 +41,7 @@
                                 {{#if result.error_message}}
                                     <blockquote><small>
                                         {{~#each (lines result.error_message) ~}}
-                                            {{~ this ~}}<br>
+                                            {{~ truncate this ~}}<br>
                                         {{~/each~}}
                                     </small></blockquote>
                                 {{else}}

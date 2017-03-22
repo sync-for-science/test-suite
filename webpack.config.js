@@ -5,47 +5,65 @@ var buildPath = path.resolve(__dirname, 'testsuite', 'static', 'build');
 var mainPath = path.resolve(__dirname, 'assets', 'main.js');
 
 module.exports = {
-  devtool: 'eval',
+  devtool: 'cheap-module-source-map',
   entry: {
     app: [mainPath],
+    vendor: [
+      'bootstrap',
+      'handlebars',
+      'jquery',
+      'js-yaml',
+      'socket.io-client',
+      'underscore',
+      'uuid',
+    ],
   },
   output: {
     path: buildPath,
-    filename: '[name].js',
+    filename: '[name].bundle.js',
     publicPath: '/static/build/',
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.less$/,
-        loaders: ['style', 'css', 'less'],
+        use: ['style-loader', 'css-loader', 'less-loader'],
       },
       {
         test: /\.css$/,
-        loaders: ['style', 'css'],
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.hbs$/,
-        loaders: ['handlebars-loader'],
+        use: ['handlebars-loader'],
       },
       // the url-loader uses DataUrls.
       // the file-loader emits files.
-      {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
-      {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream'},
-      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file'},
-      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml'},
+      {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, use: 'url-loader?limit=10000&mimetype=application/font-woff'},
+      {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, use: 'url-loader?limit=10000&mimetype=application/octet-stream'},
+      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, use: 'file-loader'},
+      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, use: 'url-loader?limit=10000&mimetype=image/svg+xml'},
 
     ],
   },
 
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      filename: 'vendor.bundle.js',
+      minChunks: Infinity,
+      chunks: ['app'],
+    }),
+  ],
+
   resolve: {
-    extensions: ['', '.webpack.js', '.js'],
+    extensions: ['.js'],
     alias: {
       'handlebars': 'handlebars/dist/handlebars.js',
     },
-  },
-
-  node: {
-    fs: 'empty' // avoids error messages
   },
 };

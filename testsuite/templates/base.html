@@ -11,7 +11,9 @@
             {% block body %}{% endblock %}
         </div>
 
-        <script src="/static/build/app.js"></script>
-        {% block javascript %}{% endblock %}
+        {% block javascript %}
+            <script src="/static/build/vendor.bundle.js"></script>
+            <script src="/static/build/app.bundle.js"></script>
+        {% endblock %}
     </body>
 </html>
