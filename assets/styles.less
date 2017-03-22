@@ -30,33 +30,39 @@ h2[data-toggle] {
     cursor: pointer;
 }
 
-.steps {
-    > span {
-        color: @gray-light;
-    }
-
-    blockquote {
-        color: @gray-light;
-        white-space: pre;
-        font-family: monospace;
-        overflow-x: auto;
-
-        small:before {
-            content: '';
-        }
-    }
-
-    .passed {
-        color: @brand-success;
-    }
-    .failed {
-        color: @brand-danger;
-    }
-
+#canvas {
     table {
         color: @gray-light;
-        font-size: @font-size-small;
-        margin: 0 @padding-base-horizontal;
+        font-size: @font-size-base;
+    }
+
+    .steps {
+        > span {
+            color: @gray-light;
+        }
+
+        blockquote {
+            color: @gray-light;
+            white-space: pre;
+            font-family: monospace;
+            overflow-x: auto;
+
+            small:before {
+                content: '';
+            }
+        }
+
+        .passed {
+            color: @brand-success;
+        }
+        .failed {
+            color: @brand-danger;
+        }
+
+        table {
+            font-size: @font-size-small;
+            margin: 0 @padding-base-horizontal;
+        }
     }
 }
 

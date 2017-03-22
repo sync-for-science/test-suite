@@ -32,12 +32,8 @@ def run_tests(room, vendor, tags, override):
 
             db.session.commit()
 
-        def on_payload(url, payload):
-            message = {
-                'url': url,
-                'payload': payload,
-            }
-            socketio.emit('payload', message, room=room)
+        def on_payload(payload):
+            socketio.emit('payload', payload, room=room)
 
         try:
             output = io.StringIO()

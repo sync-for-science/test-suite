@@ -10,7 +10,6 @@ var features_tmpl = require('./templates/features.hbs');
 var loading_tmpl = require('./templates/loading.hbs');
 var report_tmpl = require('./templates/report.hbs');
 var error_tmpl = require('./templates/error.hbs');
-var payloads_tmpl = require('./templates/payloads.hbs');
 var errorNavigation = require('./error-navigation.js');
 var summarize = require('./summarize.js');
 var report = require('./report.js');
@@ -22,7 +21,7 @@ require('bootstrap/dist/js/npm');
 $(function () {
   var socket = socketio.connect(document.location.origin);
   var room = uuid.v4();
-  var payloads = [];
+  var payloads = {};
 
   socket.on('connect', function () {
     console.log('connected', room);
@@ -46,6 +45,10 @@ $(function () {
     }
     var summaryResult = summarize(event);
 
+    _.each(tmpl_data.features, function (feature) {
+      feature.payloads = payloads[feature.name] || [];
+    });
+
     stateManager.setReport(event.report_id);
 
     errorNavigation.register(summaryResult.errors);
@@ -61,10 +64,6 @@ $(function () {
       .html(summary_tmpl({summary: summaryResult.summary}))
       .find('[data-toggle="tooltip"]').tooltip();
 
-    $('#payloads')
-      .html(payloads_tmpl({payloads: payloads}))
-      .find('[data-toggle="tooltip"]').tooltip();
-
     var reportResult = {
       report: report(event.snapshot),
       systems: summaryResult.systems,
@@ -75,7 +74,11 @@ $(function () {
   });
 
   socket.on('payload', function (payload) {
-    payloads.push(payload);
+    if (typeof payloads[payload.feature] === 'undefined') {
+      payloads[payload.feature] = [];
+    }
+
+    payloads[payload.feature].push(payload);
   });
 
   socket.on('global_error', function (error) {
@@ -118,7 +121,7 @@ $(function () {
 
     errorNavigation.reset();
 
-    payloads = [];
+    payloads = {};
 
     $(event.currentTarget).prop('disabled', true);
     socket.emit('begin_tests', {

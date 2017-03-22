@@ -3,6 +3,7 @@
         data-toggle="collapse"
         data-target="#scenarios-{{dashify location}}"
         >Feature: {{ name }} {{result status}}</h2>
+
     <p>
         {{#each tags}}
             <span class="label label-info">{{ this }}</span>
@@ -11,6 +12,32 @@
             <span class="label label-default">skipped</span>
         {{else}}
             <div class="collapse {{#featureFailed}}in{{/featureFailed}}" id="scenarios-{{dashify location}}">
+                {{#if payloads.length}}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>URL</th>
+                                <th>Status code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each payloads}}
+                                <tr>
+                                    <td>{{ method }}</td>
+                                    <td>
+                                        <a
+                                            href="data:text/plain;base64,{{ base64 response }}"
+                                            target="_blank">
+                                            {{ url }}
+                                        </a>
+                                    </td>
+                                    <td>{{ status_code }}</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                {{/if}}
                 {{#each elements}}
                     <div id="{{dashify location}}">
                         <h3>Scenario: {{ name }}</h3>
@@ -39,11 +66,20 @@
                                     </table>
                                 {{/if}}
                                 {{#if result.error_message}}
+                                    <!--
                                     <blockquote><small>
-                                        {{~#each (lines result.error_message) ~}}
-                                            {{~ truncate this ~}}<br>
+                                        {{~#each (lines result.error_message 10) ~}}
+                                            {{~ this ~}}<br>
                                         {{~/each~}}
                                     </small></blockquote>
+                                    -->
+                                    <br>
+                                    <a
+                                        href="data:text/plain;base64,{{ base64 (join result.error_message) }}"
+                                        target="_blank">
+                                        See failure details <span class="glyphicon glyphicon-new-window"></span>
+                                    </a>
+                                    <br>
                                 {{else}}
                                     <br>
                                 {{/if}}

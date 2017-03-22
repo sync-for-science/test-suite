@@ -69,7 +69,14 @@ def get_resource(context, resource):
     context.cache[url] = response
 
     try:
-        context.config.on_payload(url, bad_response_assert(response, ''))
+        payload = {
+            'url': url,
+            'method': 'GET',
+            'status_code': response.status_code,
+            'response': bad_response_assert(response, ''),
+            'feature': context.feature.name,
+        }
+        context.config.on_payload(payload)
     except AttributeError:
         pass
 
