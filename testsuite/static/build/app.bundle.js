@@ -1170,7 +1170,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 
   return "    <a href=\"data:text/plain;base64,"
     + alias1(__default(__webpack_require__(51)).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.payload : depth0),{"name":"base64","hash":{},"data":data}))
-    + "\">"
+    + "\" target=\"_blank\">"
     + alias1(container.lambda((depth0 != null ? depth0.url : depth0), depth0))
     + "</a>\n    <br />\n";
 },"3":function(container,depth0,helpers,partials,data) {
