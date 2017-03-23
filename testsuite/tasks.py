@@ -32,6 +32,9 @@ def run_tests(room, vendor, tags, override):
 
             db.session.commit()
 
+        def on_payload(payload):
+            socketio.emit('payload', payload, room=room)
+
         try:
             output = io.StringIO()
             output_stream = StreamOpener(stream=output)
@@ -39,6 +42,7 @@ def run_tests(room, vendor, tags, override):
                 outputs=[output_stream],
                 format=['json.chunked'],
                 on_snapshot=on_snapshot,
+                on_payload=on_payload,
                 vendor=vendor,
                 override=override,
                 command_args=[],

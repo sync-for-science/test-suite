@@ -1,7 +1,6 @@
 ENV
 *.pyc
 node_modules
-build
 .cache
 *.egg-info
 ghostdriver.log

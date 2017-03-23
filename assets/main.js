@@ -1,5 +1,4 @@
-require('expose?$!expose?jQuery!jquery');
-
+var $ = require('jquery');
 var _ = require('underscore');
 var uuid = require('uuid');
 var socketio = require('socket.io-client');
@@ -22,6 +21,7 @@ require('bootstrap/dist/js/npm');
 $(function () {
   var socket = socketio.connect(document.location.origin);
   var room = uuid.v4();
+  var payloads = {};
 
   socket.on('connect', function () {
     console.log('connected', room);
@@ -41,9 +41,13 @@ $(function () {
 
     var tmpl_data = {
       features: event.snapshot,
-      length: event.plan.length
+      length: event.plan.length,
     }
     var summaryResult = summarize(event);
+
+    _.each(tmpl_data.features, function (feature) {
+      feature.payloads = payloads[feature.name] || [];
+    });
 
     stateManager.setReport(event.report_id);
 
@@ -67,6 +71,14 @@ $(function () {
     };
 
     $('#report').html(report_tmpl(reportResult));
+  });
+
+  socket.on('payload', function (payload) {
+    if (typeof payloads[payload.feature] === 'undefined') {
+      payloads[payload.feature] = [];
+    }
+
+    payloads[payload.feature].push(payload);
   });
 
   socket.on('global_error', function (error) {
@@ -108,6 +120,8 @@ $(function () {
     });
 
     errorNavigation.reset();
+
+    payloads = {};
 
     $(event.currentTarget).prop('disabled', true);
     socket.emit('begin_tests', {
