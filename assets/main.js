@@ -86,7 +86,7 @@ $(function () {
     $('#canvas .loading').remove();
     // Alert the user to the global error
     $('#canvas').prepend(error_tmpl({
-      'responseText': error.replace(/\n/g, '<br>\n')
+      'responseText': _.escape(error).replace(/\n/g, '<br>\n')
     }));
   });
 
