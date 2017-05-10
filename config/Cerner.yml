@@ -9,6 +9,7 @@ auth:
   client_secret: D86P1st45vg1xy2lccLqUHkw_k8X8idG
   scope: launch/patient patient/Patient.read patient/Encounter.read patient/Observation.read patient/Condition.read patient/MedicationOrder.read patient/MedicationStatement.read patient/MedicationDispense.read patient/MedicationAdministration.read patient/AllergyIntolerance.read patient/Procedure.read patient/Immunization.read patient/DocumentReference.read user/Practitioner.read offline_access
   revoke_url: https://authorization.sandboxcerner.com/tenants/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/personas/patient/my-authorizations
+  confidential_client: True
   sign_in_steps:
     - element: "#id_login_username"
       send_keys: "fredrick_smart"
