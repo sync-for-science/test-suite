@@ -151,8 +151,8 @@ def step_impl(context, field_name, value_set_url_one, value_set_url_two):
                                           field_name=field_name,
                                           json=json.dumps(found, indent=2))
             found = [coding.get('code') for coding in found.get('coding')
-                     if in_value_set(coding, value_set_url_one)
-                     or in_value_set(coding, value_set_url_two)]
+                     if in_value_set(coding, value_set_url_one) or
+                     in_value_set(coding, value_set_url_two)]
 
         assert found, \
             utils.bad_response_assert(context.response,
