@@ -16,7 +16,10 @@ ERROR_FIELD_NOT_PRESENT = '''
 {field} is not set.
 {json}
 '''
-ERROR_INVALID_BINDING = '{code} is not found in {system}.'
+ERROR_INVALID_BINDING = '''
+{code} is not found in {system}.
+{json}
+'''
 ERROR_REFERENCE_MATCH = '{reference} is not a {resource_type}.'
 ERROR_REQUIRED = '{name} not found.'
 ERROR_WRONG_FIXED = 'None of {values} match {value}.'
@@ -39,6 +42,13 @@ def get_resources(resource, filter_type):
                 if entry['resource']['resourceType'] == filter_type]
     else:
         return [resource]
+
+
+def in_value_set(coding, value_set_url):
+    try:
+        return systems.validate_code(coding.get('code'), value_set_url)
+    except systems.SystemNotRecognized:
+        return False
 
 
 @then(u'there exists one or more {name} in {field_name}')
@@ -141,7 +151,8 @@ def step_impl(context, field_name, value_set_url_one, value_set_url_two):
                                           field_name=field_name,
                                           json=json.dumps(found, indent=2))
             found = [coding.get('code') for coding in found.get('coding')
-                     if coding.get('system') in (value_set_url_one, value_set_url_two)]
+                     if in_value_set(coding, value_set_url_one) or
+                     in_value_set(coding, value_set_url_two)]
 
         assert found, \
             utils.bad_response_assert(context.response,
@@ -159,7 +170,8 @@ def step_impl(context, field_name, value_set_url_one, value_set_url_two):
             assert valid, utils.bad_response_assert(context.response,
                                                     ERROR_INVALID_BINDING,
                                                     code=code,
-                                                    system=system_names)
+                                                    system=system_names,
+                                                    json=json.dumps(res, indent=2))
 
 
 @then(u'{field_name} is bound to {value_set_url}')
@@ -179,7 +191,7 @@ def step_impl(context, field_name, value_set_url):
                                           field_name=field_name,
                                           json=json.dumps(found, indent=2))
             found = [coding.get('code') for coding in found.get('coding')
-                     if coding.get('system') == value_set_url]
+                     if in_value_set(coding, value_set_url)]
 
         assert found, \
             utils.bad_response_assert(context.response,
@@ -196,7 +208,8 @@ def step_impl(context, field_name, value_set_url):
             assert valid, utils.bad_response_assert(context.response,
                                                     ERROR_INVALID_BINDING,
                                                     code=code,
-                                                    system=value_set_url)
+                                                    system=value_set_url,
+                                                    json=json.dumps(res, indent=2))
 
 
 @then(u'there exists a fixed {field_name}={value}')
