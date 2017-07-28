@@ -6,9 +6,9 @@
 
 * Source: [http://loinc.org/downloads/files/loinc-table-csv-text-format/loinc-table-file-csv-text-format/download]
 
-## SNOMED CT
+## SNOMED CT (US Edition)
 
-* Source: [http://download.nlm.nih.gov/umls/kss/IHTSDO20160131/SnomedCT_RF2Release_INT_20160131.zip]
+* Source: [https://download.nlm.nih.gov/mlb/utsauth/USExt/SnomedCT_USEditionRF2_Production_20170301T120000.zip]
 
 ## RxNorm
 

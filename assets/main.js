@@ -88,6 +88,7 @@ $(function () {
     $('#canvas').prepend(error_tmpl({
       'responseText': _.escape(error).replace(/\n/g, '<br>\n')
     }));
+    $('#report-modal').remove();
   });
 
   socket.on('tests_complete', function () {
