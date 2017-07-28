@@ -177,6 +177,8 @@ def find_named_key(resource, named_key, found=None):
         pass
     elif isinstance(resource, float):
         pass
+    elif resource is None:
+        pass
     else:
         raise ValueError("I've missed something.", resource)
 

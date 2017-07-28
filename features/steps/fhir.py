@@ -49,7 +49,8 @@ def step_impl(context):
     resource = context.response.json()
 
     if resource['resourceType'] == 'Bundle':
-        entries = [entry['resource'] for entry in resource.get('entry', [])]
+        entries = [entry['resource'] for entry in resource.get('entry', [])
+                   if entry.get('search', {}).get('mode', 'match') == 'match']
     else:
         entries = [resource]
 
@@ -60,6 +61,10 @@ def step_impl(context):
         found = utils.find_named_key(entry, 'coding')
         for codings in found:
             for coding in codings:
+                if not coding:
+                    bad_codings.append(coding)
+                    continue
+
                 try:
                     valid = systems.validate_coding(coding)
                     recognized = True
@@ -114,7 +119,8 @@ def step_impl(context):
     resource = context.response.json()
 
     if resource['resourceType'] == 'Bundle':
-        entries = [entry['resource'] for entry in resource.get('entry', [])]
+        entries = [entry['resource'] for entry in resource.get('entry', [])
+                   if entry.get('search', {}).get('mode', 'match') == 'match']
     else:
         entries = [resource]
 
@@ -149,7 +155,8 @@ def step_impl(context, field_name):
     resource = context.response.json()
 
     if resource['resourceType'] == 'Bundle':
-        entries = [entry['resource'] for entry in resource.get('entry', [])]
+        entries = [entry['resource'] for entry in resource.get('entry', [])
+                   if entry.get('search', {}).get('mode', 'match') == 'match']
     else:
         entries = [resource]
 

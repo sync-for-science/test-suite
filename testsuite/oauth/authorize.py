@@ -13,6 +13,7 @@ from selenium.common.exceptions import (
     StaleElementReferenceException,
     TimeoutException,
     UnexpectedAlertPresentException,
+    WebDriverException,
 )
 from selenium.webdriver.remote.remote_connection import RemoteConnection
 from selenium.webdriver.support.expected_conditions import visibility_of
@@ -98,7 +99,10 @@ class StepRunner(object):
         if 'send_keys' in step:
             elem.send_keys(step['send_keys'])
         elif 'click' in step:
-            elem.click()
+            try:
+                elem.click()
+            except WebDriverException as err:
+                raise AuthorizationException(str(err), self.browser)
         elif 'execute_script' in step:
             self.browser.execute_script(step['execute_script'])
         else:

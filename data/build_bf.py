@@ -2,6 +2,7 @@
 # pylint: disable=missing-docstring,invalid-name,redefined-outer-name
 import csv
 import json
+import logging
 from os import path
 import re
 
@@ -27,7 +28,7 @@ DATA_DIR = path.dirname(__file__)
 
 # SOURCES
 LOINC_PATH = path.join(DATA_DIR, 'loinc', 'loinc.csv')
-SNOMED_PATH = path.join(DATA_DIR, 'snomed', 'SnomedCT_RF2Release_INT_20160131', 'Full', 'Terminology', 'sct2_Concept_Full_INT_20160131.txt')
+SNOMED_PATH = path.join(DATA_DIR, 'snomed', 'SnomedCT_USEditionRF2_Production_20170301T120000', 'Full', 'Terminology', 'sct2_Concept_Full_US1000124_20170301.txt')
 RXNORM_PATH = path.join(DATA_DIR, 'rxnorm', 'rrf', 'RXNCONSO.RRF')
 RXNORM_DEPRECATED_PATH = path.join(DATA_DIR, 'rxnorm', 'rrf', 'RXNCUI.RRF')
 ICD9_PATH = path.join(DATA_DIR, 'icd9', 'CMS32_DESC_LONG_DX.txt')
@@ -164,9 +165,9 @@ def import_fhir(bf):
 
 def import_daf(bf):
     value_set_definition_urls = [
-        'http://hl7.org/fhir/daf/valueset-daf-observation-ccdasmokingstatus.json',
-        'http://hl7.org/fhir/daf/valueset-daf-observation-CCDAVitalSignResult.json',
-        'http://hl7.org/fhir/daf/valueset-daf-cvx.json',
+        'http://hl7.org/fhir/DSTU2/daf/valueset-daf-observation-ccdasmokingstatus.json',
+        'http://hl7.org/fhir/DSTU2/daf/valueset-daf-observation-CCDAVitalSignResult.json',
+        'http://hl7.org/fhir/DSTU2/daf/valueset-daf-cvx.json',
         'http://hl7.org/fhir/DSTU2/daf/valueset-daf-problem.json',
     ]
 
@@ -174,7 +175,11 @@ def import_daf(bf):
 
     def get_value_set(url):
         res = requests.get(url)
-        return res.json()
+        try:
+            return res.json()
+        except ValueError:
+            logging.error(url)
+            raise
 
     for value_set_url in value_set_definition_urls:
         value_set = get_value_set(value_set_url)
