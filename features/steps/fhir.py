@@ -133,7 +133,8 @@ def step_impl(context):
 @then('there should be at least 1 entry')
 def step_impl(context):
     resource = context.response.json()
-    entries = resource.get('entry', [])
+    entries = [entry['resource'] for entry in resource.get('entry', [])
+               if entry.get('search', {}).get('mode', 'match') == 'match']
 
     assert len(entries) >= 1, \
         utils.bad_response_assert(context.response,
@@ -144,7 +145,8 @@ def step_impl(context):
 @given('there is at least 1 entry')
 def step_impl(context):
     resource = context.response.json()
-    entries = resource.get('entry', [])
+    entries = [entry['resource'] for entry in resource.get('entry', [])
+               if entry.get('search', {}).get('mode', 'match') == 'match']
 
     if len(entries) < 1:
         context.scenario.skip(reason=ERROR_ENTRY_COUNT.format(count=0))
