@@ -12,27 +12,27 @@ Feature: Patient documents
 
     Scenario: Results exist
         Given I have a Patient documents response
-        Then there should be at least 1 entry
+        Then there should be at least 1 DocumentReference entry
 
     Scenario: Resources have ids
         Given I have a Patient documents response
-        And there is at least 1 entry
+        And there is at least 1 DocumentReference entry
         Then all resources will have a id field
 
     Scenario: All references will resolve
         Given I have a Patient documents response
-        And there is at least 1 entry
+        And there is at least 1 DocumentReference entry
         Then all references will resolve
 
     Scenario: All the codes are valid
         Given I have a Patient documents response
-        And there is at least 1 entry
+        And there is at least 1 DocumentReference entry
         Then all the codes will be valid
 
     @warning
     Scenario: Resources fulfill the Argonaut Document Access profile
         Given I have a Patient documents response
-        And there is at least 1 entry
+        And there is at least 1 DocumentReference entry
         Then there exists one reference to a Patient in DocumentReference.subject
         Then there exists one document type code in DocumentReference.type
         And DocumentReference.type is bound to http://hl7.org/fhir/ValueSet/c80-doc-typecodes
