@@ -134,8 +134,8 @@ def step_impl(context):
 def step_impl(context, resource_type):
     resource = context.response.json()
     entries = [entry['resource'] for entry in resource.get('entry', [])
-               if entry.get('search', {}).get('mode', 'match') == 'match'
-               and entry.get('resource', {}).get('resourceType') == resource_type]
+               if entry.get('search', {}).get('mode', 'match') == 'match' and
+               entry.get('resource', {}).get('resourceType') == resource_type]
 
     assert len(entries) >= 1, \
         utils.bad_response_assert(context.response,
@@ -147,8 +147,8 @@ def step_impl(context, resource_type):
 def step_impl(context, resource_type):
     resource = context.response.json()
     entries = [entry['resource'] for entry in resource.get('entry', [])
-               if entry.get('search', {}).get('mode', 'match') == 'match'
-               and entry.get('resource', {}).get('resourceType') == resource_type]
+               if entry.get('search', {}).get('mode', 'match') == 'match' and
+               entry.get('resource', {}).get('resourceType') == resource_type]
 
     if len(entries) < 1:
         context.scenario.skip(reason=ERROR_ENTRY_COUNT.format(count=0))
