@@ -54,8 +54,14 @@ def headless_begin():
         print("Testing %s" % vendor)
         tasks.run_tests.delay(room='headless-room',
                               vendor=vendor,
-                              tags=["allergies-and-intolerances", "immunizations", "lab-results", "medication-administrations", "medication-dispensations", "medication-orders", "medication-statements", "patient-documents",
-                                    "patient-demographics", "problems", "procedures", "smoking-status", "vital-signs", "s4s", "smart", "ask-authorization", "evaluate-request", "exchange-code", "use-refresh-token", "revoke-authorization"],
+                              tags=["allergies-and-intolerances", "immunizations",
+                                    "lab-results", "medication-administrations",
+                                    "medication-dispensations", "medication-orders",
+                                    "medication-statements", "patient-documents",
+                                    "patient-demographics", "problems", "procedures",
+                                    "smoking-status", "vital-signs", "s4s", "smart",
+                                    "ask-authorization", "evaluate-request", "exchange-code",
+                                    "use-refresh-token", "revoke-authorization"],
                               override='')
 
     return jsonify({
