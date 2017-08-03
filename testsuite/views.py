@@ -11,6 +11,7 @@ from testsuite.extensions import db, socketio
 from testsuite.models.testrun import TestRun
 from testsuite import tasks
 
+
 def get_names():
     configs = glob.glob('./config/*.yml')
     names = []
@@ -22,6 +23,7 @@ def get_names():
 
     names.sort(key=lambda x: x.lower())
     return names
+
 
 @app.route('/')
 def index():
@@ -44,19 +46,21 @@ def report(test_run_id):
 
         return resp
 
+
 @app.route('/begin-tests')
 def headless_begin():
     vendors = get_names()
     for vendor in vendors:
-        print("Testing %s"%vendor)
+        print("Testing %s" % vendor)
         tasks.run_tests.delay(room='headless-room',
-                          vendor=vendor,
-                          tags=["allergies-and-intolerances","immunizations","lab-results","medication-administrations","medication-dispensations","medication-orders","medication-statements","patient-documents","patient-demographics","problems","procedures","smoking-status","vital-signs","s4s","smart","ask-authorization","evaluate-request","exchange-code","use-refresh-token","revoke-authorization"],
-                          override='')
+                              vendor=vendor,
+                              tags=["allergies-and-intolerances", "immunizations", "lab-results", "medication-administrations", "medication-dispensations", "medication-orders", "medication-statements", "patient-documents",
+                                    "patient-demographics", "problems", "procedures", "smoking-status", "vital-signs", "s4s", "smart", "ask-authorization", "evaluate-request", "exchange-code", "use-refresh-token", "revoke-authorization"],
+                              override='')
 
     return jsonify({
-      'testing': True,
-      'targets': vendors
+        'testing': True,
+        'targets': vendors
     })
 
 
