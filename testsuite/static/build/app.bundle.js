@@ -224,7 +224,11 @@ module.exports = __webpack_require__(93)['default'];
 var Handlebars = __webpack_require__(9);
 
 module.exports = function (message) {
-  return btoa(message);
+  try {
+    return btoa(message);
+  } catch (e) {
+    return btoa(unescape(encodeURIComponent(message)));
+  }
 };
 
 
