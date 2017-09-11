@@ -17,7 +17,7 @@ Feature: Implements all the S4S requirements
         Given I have a valid conformance statement
         And this server supports at least one of
             | type                       |
-            | Medication orders          |
+            | Medication requests        |
             | Medication statements      |
             | Medication dispensations   |
             | Medication administrations |
