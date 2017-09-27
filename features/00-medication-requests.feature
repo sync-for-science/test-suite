@@ -36,5 +36,5 @@ Feature: Medication requests
         Then there exists one medication in MedicationRequest.medicationCodeableConcept or MedicationRequest.medicationReference
         Then there exists one date in MedicationRequest.dateWritten
         Then there exists one status in MedicationRequest.status
-        Then there exists one patient reference in MedicationRequest.patient
+        Then there exists one patient reference in MedicationRequest.subject
         Then there exists one practitioner in MedicationRequest.prescriber
