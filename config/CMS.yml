@@ -1,0 +1,29 @@
+---
+api:
+  url: https://dev.bluebutton.cms.fhirservice.net/bluebutton/fhir/v1/
+  patient: Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
+
+auth:
+  strategy: authorization_code
+  client_id: CyoUBUTARbvicAujJjeNwPF6bKeKMywUrJSbfnp8
+  # client_secret intentionally included
+  client_secret: hiD2RapR14bkdPERUnyPXEUoWA1fKLitoacHvmyI3igAmXuMbV8JenQjo6LI1lQwuEeToHzbameF8dIth2QxZ0KVswAXzGKe3yWMwbhGcri4pXAVAeAe5zmaQPWgyJYP
+  scope: launch/patient patient/*.read offline_access
+  confidential_client: True
+  sign_in_steps:
+    - element: "#id_username"
+      send_keys: "s4s-test-suite"
+    - element: "#id_password"
+      send_keys: "sync4science!"
+    - element: "input[type='submit']"
+      click: True
+  authorize_steps:
+    - element: "button.approve"
+      click: True
+  cancel_steps:
+    - element: "button.deny"
+      click: True
+  revoke_url: https://dev.bluebutton.cms.fhirservice.net/o/authorized_tokens/
+  revoke_steps:
+    - element: "[title~=test][value~=Remove]"
+      click: True
