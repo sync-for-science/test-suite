@@ -3,8 +3,12 @@
 import os
 
 from flask import Flask
+import grequests
+import requests
 
-ASYNC_MODE = 'threading'
+
+
+ASYNC_MODE = 'gevent'
 PING_INTERVAL = 59
 
 
