@@ -15,6 +15,7 @@ import requests
 
 from functools import reduce
 
+
 def bad_response_assert(response, message, **kwargs):
     with open('features/steps/response.jinja2') as handle:
         template = jinja2.Template(handle.read())
@@ -152,8 +153,8 @@ def traverse(resource, path):
 
 def is_field_in_resource(resource, fields):
     """
-    Explores a dictionary looking for the existence of fields, can take "." separated hierarchical representation of 
-    individual fields.
+    Explores a dictionary looking for the existence of fields, can take "."
+     separated hierarchical representation of individual fields.
     :param resource: dict
             The resource to search for fields in.
     :param fields: iterable
