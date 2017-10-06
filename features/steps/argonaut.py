@@ -1,10 +1,11 @@
 # pylint: disable=missing-docstring,function-redefined
-from functools import reduce
+
 import json
 
 from behave import then
 
 from features.steps import utils
+
 from testsuite import systems
 
 ERROR_CODING_MISSING = '''
@@ -22,18 +23,10 @@ ERROR_INVALID_BINDING = '''
 '''
 ERROR_REFERENCE_MATCH = '{reference} is not a {resource_type}.'
 ERROR_REQUIRED = '{name} not found.'
+ERROR_MISSING_FIELD = ('The resources identified by ids ({resource_ids}) were absent'
+                       ' all of the following fields: {field_list}')
+
 ERROR_WRONG_FIXED = 'None of {values} match {value}.'
-
-
-def traverse(resource, path):
-    def walk(data, k):
-        if isinstance(data, dict):
-            return data.get(k)
-        elif isinstance(data, list):
-            return [reduce(walk, [k], el) for el in data]
-        return None
-
-    return reduce(walk, path, resource)
 
 
 def get_resources(resource, filter_type):
@@ -58,7 +51,7 @@ def step_impl(context, name, field_name):
     resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
-        found = traverse(res, path)
+        found = utils.traverse(res, path)
         assert len(found) > 0, utils.bad_response_assert(context.response,
                                                          ERROR_REQUIRED,
                                                          name=name)
@@ -73,9 +66,9 @@ def step_impl(context, field_name, sub_field):
     resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
-        found = traverse(res, path)
+        found = utils.traverse(res, path)
         for item in found:
-            match = traverse(item, sub_path)
+            match = utils.traverse(item, sub_path)
             assert match is not None, \
                 utils.bad_response_assert(context.response,
                                           ERROR_REQUIRED,
@@ -90,7 +83,7 @@ def step_impl(context, resource_type, field_name):
 
     for res in resources:
         try:
-            reference = traverse(res, path).get('reference')
+            reference = utils.traverse(res, path).get('reference')
         except AttributeError:
             reference = ''
         assert reference.startswith(resource_type), \
@@ -100,23 +93,26 @@ def step_impl(context, resource_type, field_name):
                                       resource_type=resource_type)
 
 
-@then(u'one of the following paths exist {field_string} in {resource}')
+@then(u'one of the following paths exist: {field_string} in {resource}')
 def step_impl(context, field_string, resource):
 
     fields_to_find = field_string.split(",")
 
     resources = get_resources(context.response.json(), resource)
 
-    found = False
+    valid_resource_ids = set([
+        res.get("id") for res in resources
+        if utils.is_field_in_resource(res, fields_to_find)])
 
-    for res in resources:
-        for field in fields_to_find:
-            found = found or traverse(res, field.split("."))
+    all_resource_ids = set([res.get("id") for res in resources])
 
-        assert found is not None, \
-            utils.bad_response_assert(context.response,
-                                      ERROR_REQUIRED,
-                                      name=field_string)
+    invalid_resource_ids = all_resource_ids - valid_resource_ids
+
+    assert len(invalid_resource_ids) == 0, \
+        utils.bad_response_assert(context.response,
+                                  ERROR_MISSING_FIELD,
+                                  resource_ids=', '.join(invalid_resource_ids),
+                                  field_list=field_string)
 
 
 @then(u'there exists one {name} in {field_one_name} or {field_two_name}')
@@ -130,8 +126,8 @@ def step_impl(context, name, field_one_name, field_two_name):
     resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
-        found_one = traverse(res, path_one)
-        found_two = traverse(res, path_two)
+        found_one = utils.traverse(res, path_one)
+        found_two = utils.traverse(res, path_two)
 
         assert (found_one is not None) or (found_two is not None), \
             utils.bad_response_assert(context.response,
@@ -146,7 +142,7 @@ def step_impl(context, name, field_name):
     resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
-        found = traverse(res, path)
+        found = utils.traverse(res, path)
         assert found is not None, utils.bad_response_assert(context.response,
                                                             ERROR_REQUIRED,
                                                             name=name)
@@ -160,7 +156,7 @@ def step_impl(context, field_name, value_set_url_one, value_set_url_two):
     system_names = '{0} or {1}'.format(value_set_url_one, value_set_url_two)
 
     for res in resources:
-        found = traverse(res, path)
+        found = utils.traverse(res, path)
         if isinstance(found, str):
             found = [found]
         elif isinstance(found, dict):
@@ -200,7 +196,7 @@ def step_impl(context, field_name, value_set_url):
     resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
-        found = traverse(res, path)
+        found = utils.traverse(res, path)
         if isinstance(found, str):
             found = [found]
         elif isinstance(found, dict):
@@ -238,7 +234,7 @@ def step_impl(context, field_name, value):
     resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
-        found = traverse(res, path)
+        found = utils.traverse(res, path)
         assert found, utils.bad_response_assert(context.response,
                                                 ERROR_FIELD_NOT_PRESENT,
                                                 field=field_name,
