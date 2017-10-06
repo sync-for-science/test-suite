@@ -29,6 +29,11 @@ Feature: Vital signs
         And there is at least 1 Observation entry
         Then all the codes will be valid
 
+    Scenario: Observations have a value or DataAbsentReason
+        Given I have a Vital signs response
+        And there is at least 1 Observation entry
+        Then one of the following paths exist valueQuantity.value,component.valueQuantity.value,DataAbsentReason in Observation
+
     @warning
     Scenario: Resources fulfill the Argonaut Vital Signs profile
         Given I have a Vital signs response
@@ -40,7 +45,6 @@ Feature: Vital signs
         Then there exists one code in Observation.code
         And there exists a fixed Observation.code.coding.system=http://loinc.org
         And Observation.code is bound to http://hl7.org/fhir/us/argonaut/ValueSet/argo-vital-signs
-        # Then Either one Observation.valueQuantity or, if there is no value, one code in Observation.DataAbsentReason
         # Then when using a panel code...
         Then there exists one patient in Observation.subject
         Then there exists one date and time in Observation.effectiveDateTime or Observation.effectivePeriod
