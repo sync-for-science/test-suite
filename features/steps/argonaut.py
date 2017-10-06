@@ -99,6 +99,7 @@ def step_impl(context, resource_type, field_name):
                                       reference=reference,
                                       resource_type=resource_type)
 
+
 @then(u'one of the following paths exist {field_string} in {resource}')
 def step_impl(context, field_string, resource):
 
