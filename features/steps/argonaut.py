@@ -110,14 +110,7 @@ def step_impl(context, field_string, resource):
 
     for res in resources:
         for field in fields_to_find:
-
-            print("FIELD")
-            print(field.split("."))
-
-            traverse_results = traverse(res, field.split("."))
-            print(traverse_results)
-
-            found = found or traverse_results
+            found = found or traverse(res, field.split("."))
 
         assert found is not None, \
             utils.bad_response_assert(context.response,
