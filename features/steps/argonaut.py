@@ -99,6 +99,31 @@ def step_impl(context, resource_type, field_name):
                                       reference=reference,
                                       resource_type=resource_type)
 
+@then(u'one of the following paths exist {field_string} in {resource}')
+def step_impl(context, field_string, resource):
+
+    fields_to_find = field_string.split(",")
+
+    resources = get_resources(context.response.json(), resource)
+
+    found = False
+
+    for res in resources:
+        for field in fields_to_find:
+
+            print("FIELD")
+            print(field.split("."))
+
+            traverse_results = traverse(res, field.split("."))
+            print(traverse_results)
+
+            found = found or traverse_results
+
+        assert found is not None, \
+            utils.bad_response_assert(context.response,
+                                      ERROR_REQUIRED,
+                                      name=field_string)
+
 
 @then(u'there exists one {name} in {field_one_name} or {field_two_name}')
 def step_impl(context, name, field_one_name, field_two_name):
