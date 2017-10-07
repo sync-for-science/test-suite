@@ -151,17 +151,17 @@ def traverse(resource, path):
     return reduce(walk, path, resource)
 
 
-def is_field_in_resource(resource, fields):
+def has_one_of(resource, fields):
     """
     Explores a dictionary looking for the existence of fields, can take "."
      separated hierarchical representation of individual fields.
     :param resource: dict
             The resource to search for fields in.
     :param fields: iterable
-            The fields to search for. Hierarchy for fields separated by ".".
+            The fields to search for. Hierarchy for fields separated by "."
+            e.g. ["Observation.component.valueQuantity.value", ..]
     :return: True if any of the fields are found in the resource.
     """
-
     return any([traverse(resource, field.split(".")) for field in fields])
 
 

@@ -102,7 +102,7 @@ def step_impl(context, field_string, resource):
 
     valid_resource_ids = set([
         res.get("id") for res in resources
-        if utils.is_field_in_resource(res, fields_to_find)])
+        if utils.has_one_of(res, fields_to_find)])
 
     all_resource_ids = set([res.get("id") for res in resources])
 
