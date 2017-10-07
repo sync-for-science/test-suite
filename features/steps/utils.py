@@ -13,6 +13,8 @@ import grequests
 import jinja2
 import requests
 
+from functools import reduce
+
 
 def bad_response_assert(response, message, **kwargs):
     with open('features/steps/response.jinja2') as handle:
@@ -137,6 +139,30 @@ def _clean(loggable):
         pass
 
     return data
+
+
+def traverse(resource, path):
+    def walk(data, k):
+        if isinstance(data, dict):
+            return data.get(k)
+        elif isinstance(data, list):
+            return [reduce(walk, [k], el) for el in data]
+        return None
+    return reduce(walk, path, resource)
+
+
+def has_one_of(resource, fields):
+    """
+    Explores a dictionary looking for the existence of fields, can take "."
+     separated hierarchical representation of individual fields.
+    :param resource: dict
+            The resource to search for fields in.
+    :param fields: iterable
+            The fields to search for. Hierarchy for fields separated by "."
+            e.g. ["Observation.component.valueQuantity.value", ..]
+    :return: True if any of the fields are found in the resource.
+    """
+    return any([traverse(resource, field.split(".")) for field in fields])
 
 
 def find_named_key(resource, named_key, found=None):
