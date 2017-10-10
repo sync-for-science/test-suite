@@ -1,5 +1,10 @@
 """ Celery configuration.
 """
+
+
+import grequests
+import requests
+
 # Broker settings
 BROKER_URL = 'redis://localhost:6379/'
 
