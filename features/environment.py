@@ -54,7 +54,7 @@ def before_all(context):
     context.vendor_config = copy.deepcopy(vendor_config)
 
     # Restrict the tests to a version specified in the config file for this vendor.
-    if vendor_config.get('version',{}).get('tags'):
+    if vendor_config.get('version', {}).get('tags'):
         context.config.tags.ands.append([vendor_config['version']['tags']])
 
     # Filter out any tagged vendor config steps
