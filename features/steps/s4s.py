@@ -134,7 +134,7 @@ def step_impl(context, version_name):
     server_config_key = "API_SERVER_{server_version}".format(server_version=version_name)
 
     assert server_config_key in current_app.config, \
-        "No API Server configured for this version ({server_version}).".format(server_version=version_name)
+        "No API Server configured for this version ({v}).".format(v=version_name)
 
     url = "{url}/{resource}/$validate".format(
         url=current_app.config[server_config_key],
