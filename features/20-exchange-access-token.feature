@@ -1,4 +1,4 @@
-@smart @exchange-code
+@smart @exchange-code @DSTU2 @STU3
 Feature: App exchanges authorization code for access token
 
     Scenario: Success response has all required parameters

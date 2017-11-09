@@ -35,6 +35,10 @@ module.exports = function(event) {
             if (r.result && r.result.status === 'skipped') {
               s.status = 'skipped';
             }
+            // If no result, the test was skipped.
+            if(!r.result){
+              s.status = 'skipped';
+            }
           });
           systems = systems.concat(event.snapshot[fkey].elements[j]['systems']);
         }

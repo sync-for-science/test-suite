@@ -1,4 +1,4 @@
-@medication-requests
+@medication-requests @STU3
 Feature: Medication requests
 
     Scenario: Correct resourceType
@@ -6,9 +6,9 @@ Feature: Medication requests
         Then the resourceType field will be Bundle
         Then the type field will be searchset
 
-    Scenario: Resources are valid FHIR content
+    Scenario: Resources are valid FHIR STU3 content
         Given I have a Medication requests response
-        Then the resource parses as valid FHIR DSTU2 content
+        Then the resource parses as valid FHIR STU3 content
 
     Scenario: Results exist
         Given I have a Medication requests response

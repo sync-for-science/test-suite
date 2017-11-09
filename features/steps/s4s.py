@@ -7,7 +7,7 @@ import parse
 import requests
 
 from features.steps import utils
-
+from flask import current_app
 
 ERROR_MISSING_CONFORMANCE_STATEMENT = '''
 Could not load conformance statement.
@@ -35,6 +35,8 @@ MU_CCDS_MAPPINGS = {
     'Procedures': 'Procedure?patient={patientId}',
     'Immunizations': 'Immunization?patient={patientId}',
     'Patient documents': 'DocumentReference?patient={patientId}',
+    'Coverage': 'Coverage?beneficiary={patientId}',
+    'Explanation of benefit': 'ExplanationOfBenefit?patient={patientId}',
 }
 
 
@@ -120,15 +122,21 @@ def step_impl(context, mu_ccds_query):
         'Missing {query}'.format(query=query)
 
 
-@then('the resource parses as valid FHIR DSTU2 content')
-def step_impl(context):
+@then('the resource parses as valid FHIR {version_name} content')
+def step_impl(context, version_name):
+
     resource = context.response.json()
 
     assert "resourceType" in resource, \
-           "Resource has no resourceType: {res}".format(res=resource)
+        "Resource has no resourceType: {res}".format(res=resource)
 
-    url = "{url}{resource}/$validate".format(
-        url='http://api:8080/baseDstu2/',
+    server_config_key = "API_SERVER_{server_version}".format(server_version=version_name)
+
+    assert server_config_key in current_app.config, \
+        "No API Server configured for this version ({server_version}).".format(server_version=version_name)
+
+    url = "{url}/{resource}/$validate".format(
+        url=current_app.config[server_config_key],
         resource=resource['resourceType'],
     )
 

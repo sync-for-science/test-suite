@@ -56,7 +56,7 @@ def headless_begin():
                               vendor=vendor,
                               tags=["allergies-and-intolerances", "immunizations",
                                     "lab-results", "medication-administrations",
-                                    "medication-dispensations", "medication-orders",
+                                    "medication-dispensations", "medication-requests",
                                     "medication-statements", "patient-documents",
                                     "patient-demographics", "problems", "procedures",
                                     "smoking-status", "vital-signs", "s4s", "smart",

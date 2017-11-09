@@ -1,25 +1,25 @@
 ---
 api:
-  url: https://dev.bluebutton.cms.fhirservice.net/bluebutton/fhir/v1/
-  patient: Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
+  url: https://dev.bluebutton.cms.fhirservice.net/protected/bluebutton/fhir/v1/
+  patient: 3979
 
 auth:
   strategy: authorization_code
   client_id: CyoUBUTARbvicAujJjeNwPF6bKeKMywUrJSbfnp8
   # client_secret intentionally included
   client_secret: hiD2RapR14bkdPERUnyPXEUoWA1fKLitoacHvmyI3igAmXuMbV8JenQjo6LI1lQwuEeToHzbameF8dIth2QxZ0KVswAXzGKe3yWMwbhGcri4pXAVAeAe5zmaQPWgyJYP
-  scope: launch/patient patient/*.read offline_access
+  scope: profile patient/Patient.read patient/ExplanationOfBenefit.read patient/Coverage.read
   confidential_client: True
   sign_in_steps:
     - element: "#id_username"
       send_keys: "s4s-test-suite"
     - element: "#id_password"
-      send_keys: "sync4science!"
+      send_keys: "cms-demo"
     - element: "input[type='submit']"
       click: True
   authorize_steps:
-    - element: "button.approve"
-      click: True
+    - element: "input[value='Approve Access']"
+      execute_script: $("input[value='Approve Access']").click()
   cancel_steps:
     - element: "button.deny"
       click: True
@@ -27,3 +27,6 @@ auth:
   revoke_steps:
     - element: "[title~=test][value~=Remove]"
       click: True
+
+version:
+  tags: STU3

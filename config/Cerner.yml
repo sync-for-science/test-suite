@@ -23,3 +23,6 @@ auth:
   cancel_steps:
     - element: "#deny"
       click: True
+
+version:
+  tags: DSTU2

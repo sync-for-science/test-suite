@@ -28,6 +28,8 @@ CCDS_TAGS = {
     'procedures',
     'immunizations',
     'patient-documents',
+    'coverage',
+    'explanation-of-benefit'
 }
 
 
@@ -44,9 +46,15 @@ def before_all(context):
     # Get the vendor config and attach it to the context.
     vendor = getattr(context.config, 'vendor', os.getenv('VENDOR'))
     override = getattr(context.config, 'override', os.getenv('CONFIG_OVERRIDE', ''))
+
     vendor_config = get_config(vendor, override)
     vendor_config['auth']['aud'] = vendor_config['api']['url']
+
     context.vendor_config = copy.deepcopy(vendor_config)
+
+    # Restrict the tests to a version specified in the config file for this vendor.
+    if vendor_config.get('version',{}).get('tags'):
+        context.config.tags.ands.append([vendor_config['version']['tags']])
 
     # Filter out any tagged vendor config steps
     steps = vendor_config['auth'].get('steps', [])

@@ -39,3 +39,6 @@ auth:
   revoke_steps:
     - element: 'button.removal-button[data-client-id="90d4ed27-4790-4a3e-80c2-436d1942d680"]'
       click: True
+
+version:
+  tags: DSTU2
