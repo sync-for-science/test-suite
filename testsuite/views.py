@@ -57,6 +57,7 @@ def headless_begin():
                               tags=["allergies-and-intolerances", "immunizations",
                                     "lab-results", "medication-administrations",
                                     "medication-dispensations", "medication-requests",
+                                    "medication-orders",
                                     "medication-statements", "patient-documents",
                                     "patient-demographics", "problems", "procedures",
                                     "smoking-status", "vital-signs", "s4s", "smart",

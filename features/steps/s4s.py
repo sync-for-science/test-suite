@@ -26,6 +26,7 @@ MU_CCDS_MAPPINGS = {
     'Smoking status': 'Observation?category=social-history&patient={patientId}',
     'Problems': 'Condition?patient={patientId}',
     'Lab results': 'Observation?category=laboratory&patient={patientId}',
+    'Medication orders': 'MedicationOrder?patient={patientId}',
     'Medication requests': 'MedicationRequest?patient={patientId}',
     'Medication statements': 'MedicationStatement?patient={patientId}',
     'Medication dispensations': 'MedicationDispense?patient={patientId}',

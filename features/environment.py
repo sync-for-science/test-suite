@@ -18,6 +18,7 @@ CCDS_TAGS = {
     'patient-demographics',
     'smoking-status',
     'problems',
+    'medication-orders',
     'medication-requests',
     'medication-statements',
     'medication-dispensations',
