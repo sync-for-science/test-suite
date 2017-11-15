@@ -18,7 +18,7 @@ def deep_merge(orig, new):
         return new
 
 
-def get_config(vendor, override=''):
+def get_vendor_config(vendor, override=''):
     vendor_file = os.path.basename(vendor + '.yml')
     vendor_path = os.path.join('config', vendor_file)
     with open(vendor_path) as handle:
@@ -29,5 +29,19 @@ def get_config(vendor, override=''):
 
     config['host'] = os.getenv('BASE_URL', 'http://localhost:9003')
     config['auth']['redirect_uri'] = config['host'] + '/authorized/'
+    config['auth']['redirect_uri'] = "http://referencestackdocker_tests_1:5000" + '/authorized/'
+
+    return config
+
+
+def get_env_config():
+    """
+    Get the environment variables response for which server we validate the FHIR Resources against.    
+    :return: Dictionary with URI.
+    """
+    config = {
+                "API_SERVER_DSTU2": os.getenv('API_SERVER_DSTU2'),
+                "API_SERVER_STU3": os.getenv('API_SERVER_STU3')
+             }
 
     return config

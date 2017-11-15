@@ -28,5 +28,4 @@ auth:
     - element: "[title~=Sync4Science][value~=Remove]"
       click: True
 
-version:
-  tags: DSTU2
+version: DSTU2

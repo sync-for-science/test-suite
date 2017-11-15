@@ -810,6 +810,7 @@ module.exports = function(event) {
             if (r.result && r.result.status === 'skipped') {
               s.status = 'skipped';
             }
+            // If no result, the test was skipped.
             if(!r.result){
               s.status = 'skipped';
             }
@@ -899,7 +900,8 @@ module.exports = function (lvalue, operator, rvalue, options) {
 /***/ (function(module, exports) {
 
 module.exports = function (options) {
-  var skipped = (typeof this.steps[0].result == 'undefined');
+  // If the first step of the scenario doesn't have a result, it means the scenario was skipped.
+  var skipped = (typeof this.steps[0].result === 'undefined');
 
   if (skipped) {
     return options.fn(this);

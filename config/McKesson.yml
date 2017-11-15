@@ -6,5 +6,4 @@ api:
 auth:
   strategy: none
 
-version:
-  tags: DSTU2
+version: DSTU2

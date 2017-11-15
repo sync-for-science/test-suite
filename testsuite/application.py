@@ -14,9 +14,6 @@ app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.config['API_SERVER_DSTU2'] = os.getenv('API_SERVER_DSTU2')
-app.config['API_SERVER_STU3'] = os.getenv('API_SERVER_STU3')
-
 
 def create_app():
     ''' The application factory.

@@ -7,7 +7,6 @@ import parse
 import requests
 
 from features.steps import utils
-from flask import current_app
 
 ERROR_MISSING_CONFORMANCE_STATEMENT = '''
 Could not load conformance statement.
@@ -133,11 +132,11 @@ def step_impl(context, version_name):
 
     server_config_key = "API_SERVER_{server_version}".format(server_version=version_name)
 
-    assert server_config_key in current_app.config, \
+    assert server_config_key in context.env_config, \
         "No API Server configured for this version ({v}).".format(v=version_name)
 
     url = "{url}/{resource}/$validate".format(
-        url=current_app.config[server_config_key],
+        url=context.env_config[server_config_key],
         resource=resource['resourceType'],
     )
 

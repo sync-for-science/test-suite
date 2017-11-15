@@ -24,5 +24,4 @@ auth:
     - element: "#deny"
       click: True
 
-version:
-  tags: DSTU2
+version: DSTU2

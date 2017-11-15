@@ -24,5 +24,4 @@ auth:
     - element: '#cancel_clicked'
       click: True
 
-version:
-  tags: DSTU2
+version: DSTU2
