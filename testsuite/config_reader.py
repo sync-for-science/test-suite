@@ -36,7 +36,7 @@ def get_vendor_config(vendor, override=''):
 
 def get_env_config():
     """
-    Get the environment variables response for which server we validate the FHIR Resources against.    
+    Get the environment variables response for which server we validate the FHIR Resources against.
     :return: Dictionary with URI.
     """
     config = {
