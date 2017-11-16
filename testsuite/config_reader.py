@@ -29,7 +29,6 @@ def get_vendor_config(vendor, override=''):
 
     config['host'] = os.getenv('BASE_URL', 'http://localhost:9003')
     config['auth']['redirect_uri'] = config['host'] + '/authorized/'
-    config['auth']['redirect_uri'] = "http://referencestackdocker_tests_1:5000" + '/authorized/'
 
     return config
 
