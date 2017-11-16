@@ -1,4 +1,4 @@
-@smart @revoke-authorization
+@smart @revoke-authorization @DSTU2 @STU3
 Feature: User revokes authorization
 
     Scenario: User revokes authorization

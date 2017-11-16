@@ -45,6 +45,9 @@
                             {{#each tags}}
                                 <span class="label label-info">{{ this }}</span>
                             {{/each}}
+                            {{#scenarioWasSkipped}}
+                                <span class="label label-default">skipped</span>
+                            {{/scenarioWasSkipped}}
                         </p>
                         <div class="steps">
                             {{#each steps}}

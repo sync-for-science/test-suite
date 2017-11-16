@@ -23,3 +23,5 @@ auth:
   cancel_steps:
     - element: '#cancel_clicked'
       click: True
+
+version: DSTU2

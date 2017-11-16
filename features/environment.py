@@ -9,7 +9,7 @@ import redis
 
 from features.steps import oauth, utils
 from testsuite import fhir
-from testsuite.config_reader import get_config
+from testsuite.config_reader import get_vendor_config, get_env_config
 from testsuite.oauth import authorize, factory
 
 
@@ -19,6 +19,7 @@ CCDS_TAGS = {
     'smoking-status',
     'problems',
     'medication-orders',
+    'medication-requests',
     'medication-statements',
     'medication-dispensations',
     'medication-administrations',
@@ -28,6 +29,8 @@ CCDS_TAGS = {
     'procedures',
     'immunizations',
     'patient-documents',
+    'coverage',
+    'explanation-of-benefit'
 }
 
 
@@ -44,9 +47,20 @@ def before_all(context):
     # Get the vendor config and attach it to the context.
     vendor = getattr(context.config, 'vendor', os.getenv('VENDOR'))
     override = getattr(context.config, 'override', os.getenv('CONFIG_OVERRIDE', ''))
-    vendor_config = get_config(vendor, override)
+
+    vendor_config = get_vendor_config(vendor, override)
+
+    # Get configuration from the test server's environment.
+    env_config = get_env_config()
+
     vendor_config['auth']['aud'] = vendor_config['api']['url']
+
     context.vendor_config = copy.deepcopy(vendor_config)
+    context.env_config = copy.deepcopy(env_config)
+
+    # Restrict the tests to a version specified in the config file for this vendor.
+    if vendor_config.get('version'):
+        context.config.tags.ands.append([vendor_config['version']])
 
     # Filter out any tagged vendor config steps
     steps = vendor_config['auth'].get('steps', [])

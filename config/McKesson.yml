@@ -5,3 +5,5 @@ api:
 
 auth:
   strategy: none
+
+version: DSTU2

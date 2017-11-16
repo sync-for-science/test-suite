@@ -20,3 +20,5 @@ auth:
     - element: "#authorizationForm [value='Authorize']"
       click: True
       optional: True
+
+version: DSTU2

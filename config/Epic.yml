@@ -27,3 +27,5 @@ auth:
   revoke_steps:
     - element: "[title~=Sync4Science][value~=Remove]"
       click: True
+
+version: DSTU2

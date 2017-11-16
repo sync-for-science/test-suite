@@ -1,4 +1,4 @@
-@smart @ask-authorization
+@smart @ask-authorization @DSTU2 @STU3
 Feature: App asks for authorization
 
     Scenario: Missing "response_type"

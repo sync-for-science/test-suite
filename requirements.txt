@@ -13,7 +13,7 @@ cookies==2.2.1
 coverage==4.1
 EasyProcess==0.2.2
 enum34==1.1.6
-fhirclient==1.0.4
+fhirclient==3.0.0
 Flask==0.11.1
 flask-log==0.1.0
 Flask-SocketIO==2.7.2
