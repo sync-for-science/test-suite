@@ -1,4 +1,4 @@
-@medication-orders @DSTU2
+@use.with_use_case=ehr @use.with_version=DSTU2 @medication-orders
 Feature: Medication orders
 
     Scenario: Correct resourceType

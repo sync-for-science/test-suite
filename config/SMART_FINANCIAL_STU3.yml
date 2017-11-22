@@ -1,16 +1,16 @@
 ---
 api:
   versions:
-    DSTU2:
-      url: http://smart:5000/api/fhir/
+    STU3:
+      url: http://smart-stu3:5000/api/fhir/
 
 use_cases:
-  security: DSTU2
-  ehr: DSTU2
+  security: STU3
+  financial: STU3
 
 auth:
   versions:
-    DSTU2:
+    STU3:
       strategy: authorization_code
       client_id: test-suite
       # client_secret intentionally included
@@ -40,4 +40,3 @@ auth:
           optional: True
           click: True
           wait: 2
-
