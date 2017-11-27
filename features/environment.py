@@ -4,6 +4,7 @@ import logging
 import os
 import pickle
 import uuid
+import re
 
 import redis
 
@@ -11,7 +12,6 @@ from features.steps import oauth, utils
 from testsuite import fhir
 from testsuite.config_reader import get_vendor_config, get_env_config
 from testsuite.oauth import authorize, factory
-
 
 CACHE_TTL = 60 * 60  # 1 hour
 CCDS_TAGS = {
@@ -53,14 +53,17 @@ def before_all(context):
     # Get configuration from the test server's environment.
     env_config = get_env_config()
 
-    vendor_config['auth']['aud'] = vendor_config['api']['url']
+    # Attempt to retrieve the security URL for this version.
+    try:
+        vendor_config['auth']['aud'] = vendor_config['api']['url']
+    except KeyError as error:
+        error_message = "Bad Configuration," \
+                "security version in 'use_cases' doesn't match api url version."
+        logging.error(error_message)
+        raise Exception(error_message)
 
     context.vendor_config = copy.deepcopy(vendor_config)
     context.env_config = copy.deepcopy(env_config)
-
-    # Restrict the tests to a version specified in the config file for this vendor.
-    if vendor_config.get('version'):
-        context.config.tags.ands.append([vendor_config['version']])
 
     # Filter out any tagged vendor config steps
     steps = vendor_config['auth'].get('steps', [])
@@ -109,7 +112,7 @@ def before_all(context):
 
     # Download the conformance statement
     try:
-        context.conformance = fhir.get_conformance_statement(vendor_config['api']['url'])
+        context.conformance = fhir.get_conformance_statement(vendor_config['auth']['aud'])
     except ValueError as error:
         context.conformance = None
         logging.error(utils.bad_response_assert(error.response, ''))
@@ -124,6 +127,32 @@ def before_feature(context, feature):
     Some features need feature-level resources so that we don't need to
     make a bunch of API requests and slow things down.
     """
+
+    # We handle the with_use_case tag with this custom functionality.
+    # Extract which use case this feature is part of and determine
+    # if we need to run it. Store use_case in the feature object for use
+    # by child scenarios.
+    feature.use_case = None
+
+    for tag in feature.tags:
+        use_case_matches = re.match("use.with_use_case=(.*)", tag)
+        version_matches = re.match("use.with_version=(.*)", tag)
+
+        if use_case_matches:
+            use_case = use_case_matches.groups()[0]
+
+            if use_case not in context.vendor_config["use_cases"]:
+                feature.skip("Feature (%s) not in use case." % (use_case))
+            else:
+                feature.use_case = use_case
+
+        if version_matches and feature.use_case:
+            version = version_matches.groups()[0]
+
+            if version != context.vendor_config["use_cases"][feature.use_case]:
+                feature.skip("Feature version (%s) not supported in this use case (%s)."
+                             % (version, use_case))
+
     tags = list(CCDS_TAGS.intersection(feature.tags))
 
     if len(tags) > 1:
@@ -140,6 +169,19 @@ def before_feature(context, feature):
             context.execute_steps('\n'.join(steps))
         except AssertionError as error:
             feature.skip(error.args[0])
+
+
+def before_scenario(context, scenario):
+    # The skipping logic here only applies when a use case has been defined on this feature.
+    if scenario.feature.use_case:
+        use_case_version = context.vendor_config["use_cases"][scenario.feature.use_case]
+
+        # Skip the scenario if its version doesn't much the use_case version.
+        for tag in scenario.effective_tags:
+            matches = re.match("use.with_version=(.*)", tag)
+            if matches and matches.groups()[0] != use_case_version:
+                scenario.skip("Scenario's version (%s) not in Use Case (%s)."
+                              % (matches.groups()[0], scenario.feature.use_case))
 
 
 class Cache(object):

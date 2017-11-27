@@ -1,4 +1,4 @@
-@explanation-of-benefit @STU3
+@use.with_use_case=financial @use.with_version=STU3 @explanation-of-benefit
 Feature: Explanation of benefit
 
     Scenario: Correct resourceType
