@@ -32,7 +32,8 @@ def get_vendor_config(vendor, override=''):
     try:
         config['security_version'] = config['use_cases']['security']
     except KeyError as error:
-        raise Exception("Bad Configuration, could not find version for security under 'use_cases'.")
+        raise Exception("Bad Configuration, could not find version" 
+                        "for security under 'use_cases'. (%s)" % error)
 
     # The config file has the auth and api hierarchies under the version key.
     # For ease of use, repoint the top level auth and api to be the relevant version.
