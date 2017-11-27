@@ -27,7 +27,8 @@ def get_vendor_config(vendor, override=''):
     if override:
         config = deep_merge(config, yaml.safe_load(override))
 
-    # We need to figure out which version the security calls needs to use. Interrogate configuration here.
+    # We need to figure out which version the security calls needs to use.
+    # Interrogate configuration here.
     try:
         config['security_version'] = config['use_cases']['security']
     except KeyError as error:

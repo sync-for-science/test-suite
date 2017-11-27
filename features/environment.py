@@ -33,6 +33,7 @@ CCDS_TAGS = {
     'explanation-of-benefit'
 }
 
+
 def before_all(context):
     """ Runs once before all tests.
 
@@ -56,7 +57,8 @@ def before_all(context):
     try:
         vendor_config['auth']['aud'] = vendor_config['api']['url']
     except KeyError as error:
-        error_message = "Bad Configuration, security version in 'use_cases' doesn't match and api url version."
+        error_message = "Bad Configuration," \
+                "security version in 'use_cases' doesn't match api url version."
         logging.error(error_message)
         raise Exception(error_message)
 
@@ -148,7 +150,8 @@ def before_feature(context, feature):
             version = version_matches.groups()[0]
 
             if version != context.vendor_config["use_cases"][feature.use_case]:
-                feature.skip("Feature version (%s) not supported in this use case (%s)." % (version, use_case))
+                feature.skip("Feature version (%s) not supported in this use case (%s)."
+                             % (version, use_case))
 
     tags = list(CCDS_TAGS.intersection(feature.tags))
 
@@ -177,7 +180,8 @@ def before_scenario(context, scenario):
         for tag in scenario.effective_tags:
             matches = re.match("use.with_version=(.*)", tag)
             if matches and matches.groups()[0] != use_case_version:
-                scenario.skip("Scenario's version (%s) not in Use Case (%s)." % (matches.groups()[0], scenario.feature.use_case))
+                scenario.skip("Scenario's version (%s) not in Use Case (%s)."
+                              % (matches.groups()[0], scenario.feature.use_case))
 
 
 class Cache(object):
