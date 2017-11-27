@@ -142,7 +142,7 @@ def before_feature(context, feature):
             use_case = use_case_matches.groups()[0]
 
             if use_case not in context.vendor_config["use_cases"]:
-                feature.skip("Feature (%s) not in use case." % (use_case))
+                feature.skip("Feature (%s) not in use case." % use_case)
             else:
                 feature.use_case = use_case
 
