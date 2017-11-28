@@ -20,7 +20,7 @@ ERROR_UNRESOLVED_REFERENCE = "Reference '{reference}' failed to resolve."
 @given(u'I have access to Patient demographics')
 def step_impl(context):
     query = s4s.MU_CCDS_MAPPINGS['Patient demographics']
-    query = query.format(patientId=context.vendor_config['api'].get('patient'))
+    query = query.format(patientId=context.vendor_config['versioned_api'].get('patient'))
     response = utils.get_resource(context, query)
 
     assert response.status_code == 200, \

@@ -14,7 +14,7 @@ from testsuite.config_reader import get_vendor_config, get_env_config
 from testsuite.oauth import authorize, factory
 
 CACHE_TTL = 60 * 60  # 1 hour
-CCDS_TAGS = {
+FHIR_RESOURCE_TAGS = {
     'patient-demographics',
     'smoking-status',
     'problems',
@@ -54,21 +54,15 @@ def before_all(context):
     env_config = get_env_config()
 
     # Attempt to retrieve the security URL for this version.
-    try:
-        vendor_config['auth']['aud'] = vendor_config['api']['url']
-    except KeyError as error:
-        error_message = "Bad Configuration," \
-                "security version in 'use_cases' doesn't match api url version."
-        logging.error(error_message)
-        raise Exception(error_message)
+    vendor_config['versioned_auth']['aud'] = vendor_config['versioned_api']['url']
 
     context.vendor_config = copy.deepcopy(vendor_config)
     context.env_config = copy.deepcopy(env_config)
 
     # Filter out any tagged vendor config steps
-    steps = vendor_config['auth'].get('steps', [])
+    steps = vendor_config['versioned_auth'].get('steps', [])
     steps = [step for step in steps if 'when' not in step]
-    vendor_config['auth']['steps'] = steps
+    vendor_config['versioned_auth']['steps'] = steps
 
     # Set the ElasticSearch logging endpoint
     context.config.es_url = os.getenv('ES_URL')
@@ -78,7 +72,7 @@ def before_all(context):
         context.oauth = factory(vendor_config)
         context.oauth.authorize()
         if getattr(context.oauth, 'patient', None) is not None:
-            context.vendor_config['api']['patient'] = context.oauth.patient
+            context.vendor_config['versioned_api']['patient'] = context.oauth.patient
     except AssertionError as error:
         logging.error(utils.bad_response_assert(error.args[0], ''))
         raise Exception(utils.bad_response_assert(error.args[0], ''))
@@ -112,7 +106,7 @@ def before_all(context):
 
     # Download the conformance statement
     try:
-        context.conformance = fhir.get_conformance_statement(vendor_config['auth']['aud'])
+        context.conformance = fhir.get_conformance_statement(vendor_config['versioned_auth']['aud'])
     except ValueError as error:
         context.conformance = None
         logging.error(utils.bad_response_assert(error.response, ''))
@@ -138,7 +132,7 @@ def before_feature(context, feature):
         use_case_matches = re.match("use.with_use_case=(.*)", tag)
         version_matches = re.match("use.with_version=(.*)", tag)
 
-        if use_case_matches:
+        if use_case_matches and feature.use_case is None:
             use_case = use_case_matches.groups()[0]
 
             if use_case not in context.vendor_config["use_cases"]:
@@ -153,7 +147,7 @@ def before_feature(context, feature):
                 feature.skip("Feature version (%s) not supported in this use case (%s)."
                              % (version, use_case))
 
-    tags = list(CCDS_TAGS.intersection(feature.tags))
+    tags = list(FHIR_RESOURCE_TAGS.intersection(feature.tags))
 
     if len(tags) > 1:
         raise Exception('Too many CCDS tags', tags)

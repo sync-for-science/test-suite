@@ -27,7 +27,7 @@ For more information, see:
 
 @given('OAuth is enabled')
 def step_impl(context):
-    assert context.vendor_config['auth']['strategy'] != 'none', \
+    assert context.vendor_config['versioned_auth']['strategy'] != 'none', \
         ERROR_OAUTH_DISABLED
 
     if context.conformance is None:
@@ -38,7 +38,7 @@ def step_impl(context):
 
 @given('revoking authorizations is enabled')
 def step_impl(context):
-    auth_config = context.vendor_config['auth']
+    auth_config = context.vendor_config['versioned_auth']
 
     if 'revoke_steps' not in auth_config:
         context.scenario.skip(reason=ERROR_NO_REVOKE)
@@ -76,8 +76,8 @@ def step_impl(context):
 def step_impl(context):
     uris = fhir.get_oauth_uris(context.conformance)
     revoke_url = uris.get('manage',
-                          context.vendor_config['auth'].get('revoke_url'))
-    revoker = authorize.AuthorizationRevoker(context.vendor_config['auth'],
+                          context.vendor_config['versioned_auth'].get('revoke_url'))
+    revoker = authorize.AuthorizationRevoker(context.vendor_config['versioned_auth'],
                                              revoke_url)
 
     try:
@@ -101,9 +101,9 @@ def step_impl(context, field_name):
     """
     fields = {
         'response_type': 'code',
-        'client_id': context.vendor_config['auth']['client_id'],
-        'redirect_uri': context.vendor_config['auth']['redirect_uri'],
-        'scope': context.vendor_config['auth']['scope'],
+        'client_id': context.vendor_config['versioned_auth']['client_id'],
+        'redirect_uri': context.vendor_config['versioned_auth']['redirect_uri'],
+        'scope': context.vendor_config['versioned_auth']['scope'],
         'state': uuid.uuid4(),
     }
 
@@ -125,9 +125,9 @@ def step_impl(context):
     """
     fields = {
         'response_type': 'code',
-        'client_id': context.vendor_config['auth']['client_id'],
-        'redirect_uri': context.vendor_config['auth']['redirect_uri'],
-        'scope': context.vendor_config['auth']['scope'],
+        'client_id': context.vendor_config['versioned_auth']['client_id'],
+        'redirect_uri': context.vendor_config['versioned_auth']['redirect_uri'],
+        'scope': context.vendor_config['versioned_auth']['scope'],
         'state': uuid.uuid4(),
     }
 
@@ -146,7 +146,7 @@ def step_impl(context):
 @when('I ask for authorization with the following override')
 def step_impl(context):
     urls = fhir.get_oauth_uris(context.conformance)
-    authorizer = authorize.Authorizer(config=context.vendor_config['auth'],
+    authorizer = authorize.Authorizer(config=context.vendor_config['versioned_auth'],
                                       authorize_url=urls['authorize'])
     with authorizer:
         parameters = authorizer.launch_params
@@ -185,14 +185,14 @@ def step_impl(context):
 
 @when('I abort an authorization request')
 def step_impl(context):
-    config = context.vendor_config['auth']
+    config = context.vendor_config['versioned_auth']
     if 'cancel_steps' not in config:
         context.scenario.skip(reason=ERROR_NO_CANCEL)
         return
 
     config['authorize_steps'] = config['cancel_steps']
     urls = fhir.get_oauth_uris(context.conformance)
-    authorizer = authorize.Authorizer(config=context.vendor_config['auth'],
+    authorizer = authorize.Authorizer(config=context.vendor_config['versioned_auth'],
                                       authorize_url=urls['authorize'])
     with authorizer:
         parameters = authorizer.launch_params
@@ -225,14 +225,14 @@ def step_impl(context, action, resource_type):
 
     # Filter the steps to only what is required for this authorization
     condition = '{0}.{1}'.format(action, resource_type)
-    steps = context.vendor_config['auth'].get('steps', [])
+    steps = context.vendor_config['versioned_auth'].get('steps', [])
     steps = [step for step in steps
              if 'when' not in step or step['when'] == condition]
-    context.vendor_config['auth']['steps'] = steps
+    context.vendor_config['versioned_auth']['steps'] = steps
 
     # Construct a modified authorizer
     urls = fhir.get_oauth_uris(context.conformance)
-    authorizer = authorize.Authorizer(config=context.vendor_config['auth'],
+    authorizer = authorize.Authorizer(config=context.vendor_config['versioned_auth'],
                                       authorize_url=urls['authorize'])
     context.oauth.authorizer = authorizer
 
@@ -256,12 +256,12 @@ def step_impl(context):
     fields = {
         'grant_type': 'authorization_code',
         'code': context.code,
-        'client_id': context.vendor_config['auth']['client_id'],
-        'redirect_uri': context.vendor_config['auth']['redirect_uri'],
+        'client_id': context.vendor_config['versioned_auth']['client_id'],
+        'redirect_uri': context.vendor_config['versioned_auth']['redirect_uri'],
     }
 
     context.response = token_request(fields,
-                                     context.vendor_config['auth'],
+                                     context.vendor_config['versioned_auth'],
                                      context.conformance)
 
 
@@ -272,14 +272,14 @@ def step_impl(context, field_name):
     fields = {
         'grant_type': 'authorization_code',
         'code': context.code,
-        'client_id': context.vendor_config['auth']['client_id'],
-        'redirect_uri': context.vendor_config['auth']['redirect_uri'],
+        'client_id': context.vendor_config['versioned_auth']['client_id'],
+        'redirect_uri': context.vendor_config['versioned_auth']['redirect_uri'],
     }
 
     del fields[field_name]
 
     context.response = token_request(fields,
-                                     context.vendor_config['auth'],
+                                     context.vendor_config['versioned_auth'],
                                      context.conformance)
 
 
@@ -290,14 +290,14 @@ def step_impl(context):
     fields = {
         'grant_type': 'authorization_code',
         'code': context.code,
-        'client_id': context.vendor_config['auth']['client_id'],
-        'redirect_uri': context.vendor_config['auth']['redirect_uri'],
+        'client_id': context.vendor_config['versioned_auth']['client_id'],
+        'redirect_uri': context.vendor_config['versioned_auth']['redirect_uri'],
     }
 
     fields.update(dict(context.table))
 
     context.response = token_request(fields,
-                                     context.vendor_config['auth'],
+                                     context.vendor_config['versioned_auth'],
                                      context.conformance)
 
 
@@ -333,11 +333,11 @@ def step_impl(context):
     fields = {
         'grant_type': 'refresh_token',
         'refresh_token': context.oauth.refresh_token,
-        'scope': context.vendor_config['auth']['scope'],
+        'scope': context.vendor_config['versioned_auth']['scope'],
     }
 
     context.response = token_request(fields,
-                                     context.vendor_config['auth'],
+                                     context.vendor_config['versioned_auth'],
                                      context.conformance)
 
 
@@ -348,13 +348,13 @@ def step_impl(context, field_name):
     fields = {
         'grant_type': 'refresh_token',
         'refresh_token': context.oauth.refresh_token,
-        'scope': context.vendor_config['auth']['scope'],
+        'scope': context.vendor_config['versioned_auth']['scope'],
     }
 
     del fields[field_name]
 
     context.response = token_request(fields,
-                                     context.vendor_config['auth'],
+                                     context.vendor_config['versioned_auth'],
                                      context.conformance)
 
 

@@ -1,31 +1,37 @@
 ---
 api:
-  url: https://open-ic.epic.com/Argonaut/api/FHIR/Argonaut/
-  patient: Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
+  versions:
+    DSTU2:
+      url: https://open-ic.epic.com/Argonaut/api/FHIR/Argonaut/
+      patient: Tbt3KuCY0B5PSrJvCu2j-PlK.aiHsu2xUjUM8bWpetXoB
+
+use_cases:
+  security: DSTU2
+  ehr: DSTU2
 
 auth:
-  strategy: authorization_code
-  client_id: 94bdc785-64af-4e7e-87be-b7a285e9c1d6
-  # client_secret intentionally included
-  client_secret: argonaut
-  scope: launch/patient patient/*.read offline_access
-  confidential_client: True
-  sign_in_steps:
-    - element: "#Login"
-      send_keys: "fhirjason"
-    - element: "#Password"
-      send_keys: "epicepic1"
-    - element: "#submit"
-      click: True
-  authorize_steps:
-    - element: "[name=allowDataSharing]"
-      click: True
-  cancel_steps:
-    - element: "[name=denyDataSharing]"
-      click: True
-  revoke_url: https://open-ic.epic.com/MyChart/inside.asp?mode=oauthreview
-  revoke_steps:
-    - element: "[title~=Sync4Science][value~=Remove]"
-      click: True
-
-version: DSTU2
+  versions:
+    DSTU2:
+      strategy: authorization_code
+      client_id: 94bdc785-64af-4e7e-87be-b7a285e9c1d6
+      # client_secret intentionally included
+      client_secret: argonaut
+      scope: launch/patient patient/*.read offline_access
+      confidential_client: True
+      sign_in_steps:
+        - element: "#Login"
+          send_keys: "fhirjason"
+        - element: "#Password"
+          send_keys: "epicepic1"
+        - element: "#submit"
+          click: True
+      authorize_steps:
+        - element: "[name=allowDataSharing]"
+          click: True
+      cancel_steps:
+        - element: "[name=denyDataSharing]"
+          click: True
+      revoke_url: https://open-ic.epic.com/MyChart/inside.asp?mode=oauthreview
+      revoke_steps:
+        - element: "[title~=Sync4Science][value~=Remove]"
+          click: True

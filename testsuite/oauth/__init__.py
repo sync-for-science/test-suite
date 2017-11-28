@@ -13,8 +13,8 @@ def authorization_code_factory(config):
     Returns:
         authorization_code.AuthorizationCodeStrategy
     """
-    auth_config = config['auth']
-    conformance = fhir.get_conformance_statement(config['api']['url'])
+    auth_config = config['versioned_auth']
+    conformance = fhir.get_conformance_statement(config['versioned_api']['url'])
     urls = fhir.get_oauth_uris(conformance)
     authorizer = authorize.Authorizer(config=auth_config,
                                       authorize_url=urls['authorize'])
@@ -33,9 +33,9 @@ def client_credentials_factory(config):
         client_credentials.ClientCredentialsStrategy
     """
     return client_credentials.ClientCredentialsStrategy(
-        client_id=config['auth']['client_id'],
-        client_secret=config['auth']['client_secret'],
-        token_url=config['auth']['token_url'],
+        client_id=config['versioned_auth']['client_id'],
+        client_secret=config['versioned_auth']['client_secret'],
+        token_url=config['versioned_auth']['token_url'],
     )
 
 
@@ -48,7 +48,8 @@ def factory(config):
     Returns:
         authorization_grant.AuthorizationGrant
     """
-    strategy = config['auth'].get('strategy')
+
+    strategy = config['versioned_auth'].get('strategy')
 
     if strategy == 'none':
         return none.NoneStrategy()

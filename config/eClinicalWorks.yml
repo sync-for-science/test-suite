@@ -1,27 +1,33 @@
 ---
 api:
-  url: https://fhir-sandbox.healow.com/apps/api/v1/fhir/
-  patient: 9118
+  versions:
+    DSTU2:
+      url: https://fhir-sandbox.healow.com/apps/api/v1/fhir/
+      patient: 9118
+
+use_cases:
+  security: DSTU2
+  ehr: DSTU2
 
 auth:
-  strategy: authorization_code
-  client_id: "c0c7c76d30bd3dcaefc96f40275bdc0a"
-  # client_secret intentionally included
-  client_secret: "f9d08bf18de3ea87603c54ee50fbc495"
-  scope: launch/patient patient/*.read offline_access
-  confidential_client: True
-  sign_in_steps:
-    - element: '#uname'
-      send_keys: 'user2'
-    - element: '#password'
-      send_keys: 'Password2'
-    - element: '#btnSubmit'
-      click: True
-  authorize_steps:
-    - element: '#grant_clicked'
-      click: True
-  cancel_steps:
-    - element: '#cancel_clicked'
-      click: True
-
-version: DSTU2
+  versions:
+    DSTU2:
+      strategy: authorization_code
+      client_id: "c0c7c76d30bd3dcaefc96f40275bdc0a"
+      # client_secret intentionally included
+      client_secret: "f9d08bf18de3ea87603c54ee50fbc495"
+      scope: launch/patient patient/*.read offline_access
+      confidential_client: True
+      sign_in_steps:
+        - element: '#uname'
+          send_keys: 'user2'
+        - element: '#password'
+          send_keys: 'Password2'
+        - element: '#btnSubmit'
+          click: True
+      authorize_steps:
+        - element: '#grant_clicked'
+          click: True
+      cancel_steps:
+        - element: '#cancel_clicked'
+          click: True

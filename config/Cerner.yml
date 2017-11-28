@@ -1,27 +1,33 @@
 ---
 api:
-  url: https://fhir-myrecord.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/
-  patient: 4478007
+  versions:
+    DSTU2:
+      url: https://fhir-myrecord.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/
+      patient: 4478007
+
+use_cases:
+  security: DSTU2
+  ehr: DSTU2
 
 auth:
-  strategy: authorization_code
-  client_id: 27208b74-adbb-4341-a72a-1bb6790d40e8
-  client_secret: D86P1st45vg1xy2lccLqUHkw_k8X8idG
-  scope: launch/patient patient/Patient.read patient/Encounter.read patient/Observation.read patient/Condition.read patient/MedicationOrder.read patient/MedicationStatement.read patient/MedicationDispense.read patient/MedicationAdministration.read patient/AllergyIntolerance.read patient/Procedure.read patient/Immunization.read patient/DocumentReference.read user/Practitioner.read offline_access
-  revoke_url: https://authorization.sandboxcerner.com/tenants/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/personas/patient/my-authorizations
-  confidential_client: True
-  sign_in_steps:
-    - element: "#id_login_username"
-      send_keys: "fredrick_smart"
-    - element: "#id_login_password"
-      send_keys: "Cerner01"
-    - element: "#signin"
-      click: True
-  authorize_steps:
-    - element: "#allow"
-      click: True
-  cancel_steps:
-    - element: "#deny"
-      click: True
-
-version: DSTU2
+  versions:
+    DSTU2:
+      strategy: authorization_code
+      client_id: 27208b74-adbb-4341-a72a-1bb6790d40e8
+      client_secret: D86P1st45vg1xy2lccLqUHkw_k8X8idG
+      scope: launch/patient patient/Patient.read patient/Encounter.read patient/Observation.read patient/Condition.read patient/MedicationOrder.read patient/MedicationStatement.read patient/MedicationDispense.read patient/MedicationAdministration.read patient/AllergyIntolerance.read patient/Procedure.read patient/Immunization.read patient/DocumentReference.read user/Practitioner.read offline_access
+      revoke_url: https://authorization.sandboxcerner.com/tenants/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/personas/patient/my-authorizations
+      confidential_client: True
+      sign_in_steps:
+        - element: "#id_login_username"
+          send_keys: "fredrick_smart"
+        - element: "#id_login_password"
+          send_keys: "Cerner01"
+        - element: "#signin"
+          click: True
+      authorize_steps:
+        - element: "#allow"
+          click: True
+      cancel_steps:
+        - element: "#deny"
+          click: True

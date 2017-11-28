@@ -36,15 +36,13 @@ def get_vendor_config(vendor, override=''):
                         "for security under 'use_cases'. (%s)" % error)
 
     # The config file has the auth and api hierarchies under the version key.
-    # For ease of use, repoint the top level auth and api to be the relevant version.
-    config["auth"] = config["auth"]["versions"][config['security_version']]
-    config["api"] = config["api"]["versions"][config['security_version']]
+    config["versioned_auth"] = config["auth"]["versions"][config['security_version']]
+    config["versioned_api"] = config["api"]["versions"][config['security_version']]
 
     config['host'] = os.getenv('BASE_URL', 'http://localhost:9003')
-    config['auth']['redirect_uri'] = config['host'] + '/authorized/'
+    config['versioned_auth']['redirect_uri'] = config['host'] + '/authorized/'
 
     return config
-
 
 def get_env_config():
     """
