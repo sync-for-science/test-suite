@@ -1,24 +1,30 @@
 ---
 api:
-  url: https://onpatient.com/api/fhir/
+  versions:
+    DSTU2:
+      url: https://onpatient.com/api/fhir/
+
+use_cases:
+  security: DSTU2
+  ehr: DSTU2
 
 auth:
-  strategy: authorization_code
-  client_id: RHGtcAV7qvwrEEVGdoKhDeR6kZkLz6GTi3AzNWKh
-  # client_secret intentionally included
-  client_secret: ncF9lw7Dthg7tfaVxrBd44CQ9uI7Jks0zyNo8Tvxc0HROwAi3t4m8g4LVm3d2yOW231BO2tnGA1KK0I8rPkNMcnDjmh155ACA2Jcb63Kypd3ScOfb3QQ7rw4eAM2AxDZ
-  scope: launch/patient patient/*.read offline_access
-  confidential_client: True
-  sign_in_steps:
-    - element: "#email"
-      send_keys: "api@drchrono.com"
-    - element: "#password"
-      send_keys: "X6mx5AYmT7rUdVv44sZP"
-    - element: "button[type='submit']"
-      click: True
-  authorize_steps:
-    - element: "#authorizationForm [value='Authorize']"
-      click: True
-      optional: True
-
-version: DSTU2
+  versions:
+    DSTU2:
+      strategy: authorization_code
+      client_id: RHGtcAV7qvwrEEVGdoKhDeR6kZkLz6GTi3AzNWKh
+      # client_secret intentionally included
+      client_secret: ncF9lw7Dthg7tfaVxrBd44CQ9uI7Jks0zyNo8Tvxc0HROwAi3t4m8g4LVm3d2yOW231BO2tnGA1KK0I8rPkNMcnDjmh155ACA2Jcb63Kypd3ScOfb3QQ7rw4eAM2AxDZ
+      scope: launch/patient patient/*.read offline_access
+      confidential_client: True
+      sign_in_steps:
+        - element: "#email"
+          send_keys: "api@drchrono.com"
+        - element: "#password"
+          send_keys: "X6mx5AYmT7rUdVv44sZP"
+        - element: "button[type='submit']"
+          click: True
+      authorize_steps:
+        - element: "#authorizationForm [value='Authorize']"
+          click: True
+          optional: True

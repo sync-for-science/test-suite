@@ -1,9 +1,15 @@
 ---
 api:
-  url: http://paragonargonautfhirwebapp.paragondevfhir.p.azurewebsites.net/fhir/2.16.840.1.113883.3.271.4094/DSTU2/
-  patient: 481297
+  versions:
+    DSTU2:
+      url: http://paragonargonautfhirwebapp.paragondevfhir.p.azurewebsites.net/fhir/2.16.840.1.113883.3.271.4094/DSTU2/
+      patient: 481297
+
+use_cases:
+  security: DSTU2
+  ehr: DSTU2
 
 auth:
-  strategy: none
-
-version: DSTU2
+  versions:
+    DSTU2:
+      strategy: none

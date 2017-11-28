@@ -1,4 +1,4 @@
-@coverage @STU3
+@use.with_use_case=financial @use.with_version=STU3 @coverage
 Feature: Coverage
 
     Scenario: Correct resourceType

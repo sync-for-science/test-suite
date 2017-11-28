@@ -1,4 +1,4 @@
-@medication-requests @STU3
+@use.with_use_case=ehr @use.with_version=STU3 @medication-requests
 Feature: Medication requests
 
     Scenario: Correct resourceType

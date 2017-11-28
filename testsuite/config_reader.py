@@ -27,8 +27,20 @@ def get_vendor_config(vendor, override=''):
     if override:
         config = deep_merge(config, yaml.safe_load(override))
 
+    # We need to figure out which version the security calls needs to use.
+    # Interrogate configuration here.
+    try:
+        config['security_version'] = config['use_cases']['security']
+    except KeyError as error:
+        raise Exception("Bad Configuration, could not find version"
+                        "for security under 'use_cases'. (%s)" % error)
+
+    # The config file has the auth and api hierarchies under the version key.
+    config["versioned_auth"] = config["auth"]["versions"][config['security_version']]
+    config["versioned_api"] = config["api"]["versions"][config['security_version']]
+
     config['host'] = os.getenv('BASE_URL', 'http://localhost:9003')
-    config['auth']['redirect_uri'] = config['host'] + '/authorized/'
+    config['versioned_auth']['redirect_uri'] = config['host'] + '/authorized/'
 
     return config
 
