@@ -44,6 +44,7 @@ def get_vendor_config(vendor, override=''):
 
     return config
 
+
 def get_env_config():
     """
     Get the environment variables response for which server we validate the FHIR Resources against.
