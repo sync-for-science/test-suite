@@ -1,4 +1,4 @@
-@smart @ask-authorization @DSTU2 @STU3
+@use.with_use_case=security @smart @ask-authorization
 Feature: App asks for authorization
 
     Scenario: Missing "response_type"

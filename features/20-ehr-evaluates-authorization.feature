@@ -1,4 +1,4 @@
-@smart @evaluate-request @DSTU2 @STU3
+@use.with_use_case=security @smart @evaluate-request
 Feature: EHR evaluates authorization request
 
     Scenario: Very long "state"
