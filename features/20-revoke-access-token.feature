@@ -1,4 +1,4 @@
-@smart @revoke-authorization @DSTU2 @STU3
+@use.with_use_case=security @smart @revoke-authorization
 Feature: User revokes authorization
 
     Scenario: User revokes authorization

@@ -1,4 +1,4 @@
-@use.with_use_case=ehr @patient-demographics
+@use.with_use_case=ehr @use.with_use_case=financial @patient-demographics
 Feature: Patient demographics
 
     Scenario: Correct resourceType

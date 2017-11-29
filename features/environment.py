@@ -127,6 +127,7 @@ def before_feature(context, feature):
     # if we need to run it. Store use_case in the feature object for use
     # by child scenarios.
     feature.use_case = None
+    skip_use_case = True
 
     for tag in feature.tags:
         use_case_matches = re.match("use.with_use_case=(.*)", tag)
@@ -135,10 +136,9 @@ def before_feature(context, feature):
         if use_case_matches and feature.use_case is None:
             use_case = use_case_matches.groups()[0]
 
-            if use_case not in context.vendor_config["use_cases"]:
-                feature.skip("Feature (%s) not in use case." % use_case)
-            else:
+            if use_case in context.vendor_config["use_cases"]:
                 feature.use_case = use_case
+                skip_use_case = False
 
         if version_matches and feature.use_case:
             version = version_matches.groups()[0]
@@ -146,6 +146,9 @@ def before_feature(context, feature):
             if version != context.vendor_config["use_cases"][feature.use_case]:
                 feature.skip("Feature version (%s) not supported in this use case (%s)."
                              % (version, use_case))
+
+    if skip_use_case:
+        feature.skip("Feature (%s) not in any use case." % feature)
 
     tags = list(FHIR_RESOURCE_TAGS.intersection(feature.tags))
 

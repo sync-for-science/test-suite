@@ -1,4 +1,4 @@
-@smart @exchange-code @DSTU2 @STU3
+@use.with_use_case=security @smart @exchange-code
 Feature: App exchanges authorization code for access token
 
     Scenario: Success response has all required parameters
