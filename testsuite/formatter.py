@@ -24,6 +24,7 @@ class ChunkedJsonFormatter(PrettyJSONFormatter):
         current_feature['tags'] = [str(tag) for tag in current_feature['tags']]
 
         # Skip reasons must be checked after the tests have run
+        element = None
         for element in current_feature['elements']:
             element['tags'] = [str(tag) for tag in element['tags']]
             if 'skip_reason' in element:
@@ -32,7 +33,7 @@ class ChunkedJsonFormatter(PrettyJSONFormatter):
                 element['systems'] = element['systems']()
 
         # If the entire feature has been skipped, populate the skip_reason
-        if current_feature['status'] == 'skipped':
+        if current_feature['status'] == 'skipped' and element:
             current_feature['skip_reason'] = element['skip_reason']
 
         self.snapshot.append(current_feature)

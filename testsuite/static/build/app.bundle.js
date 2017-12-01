@@ -1058,7 +1058,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
   return "            <span class=\"label label-default\">skipped</span>\n"
     + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.skip_reason : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"5":function(container,depth0,helpers,partials,data) {
-    return "                <p class=\"alert alert-danger\">"
+    return "                <p class=\"alert alert-danger\" style=\"white-space: pre-line\">"
     + container.escapeExpression(container.lambda((depth0 != null ? depth0.skip_reason : depth0), depth0))
     + "</p>\n";
 },"7":function(container,depth0,helpers,partials,data,blockParams) {
