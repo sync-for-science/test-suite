@@ -94,16 +94,16 @@ def make_request(cache, url, headers):
 
     with requests.get(url, headers=headers, stream=True) as response:
         # Limit response size
-        # First check the content-length header, if present. This will prevent downloading overly large
-        # responses, assuming a well configured server.
+        # First check the content-length header, if present.
+        # This will prevent downloading overly large responses, assuming a well configured server.
         content_length = int(response.headers.get('content-length', 0))
         assert content_length < CONTENT_LENGTH_LIMIT, \
-                ERROR_CONTENT_LENGTH.format(content_length, CONTENT_LENGTH_LIMIT)
+            ERROR_CONTENT_LENGTH.format(content_length, CONTENT_LENGTH_LIMIT)
 
         # Now, complete the download, and check the response size.
         content_length = len(response.content)
         assert content_length < CONTENT_LENGTH_LIMIT, \
-                ERROR_CONTENT_LENGTH.format(content_length, CONTENT_LENGTH_LIMIT)
+            ERROR_CONTENT_LENGTH.format(content_length, CONTENT_LENGTH_LIMIT)
 
     cache[url] = response
 
