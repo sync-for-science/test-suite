@@ -16,6 +16,10 @@ import requests
 from functools import reduce
 
 
+CONTENT_LENGTH_LIMIT = 1024 * 1000  # 1MB
+ERROR_CONTENT_LENGTH = 'Content length "{}" exceeds expected content length limit of {}.'
+
+
 def bad_response_assert(response, message, **kwargs):
     with open('features/steps/response.jinja2') as handle:
         template = jinja2.Template(handle.read())
@@ -64,11 +68,7 @@ def get_resource(context, resource):
         'Accept-Encoding': 'deflate,sdch',
     }
 
-    if url in context.cache:
-        return context.cache[url]
-
-    response = requests.get(url, headers=headers)
-    context.cache[url] = response
+    response = make_request(context.cache, url, headers)
 
     try:
         payload = {
@@ -84,6 +84,28 @@ def get_resource(context, resource):
 
     if context.config.es_url:
         log_requests_response(context.config.es_url, response)
+
+    return response
+
+
+def make_request(cache, url, headers):
+    if url in cache:
+        return cache[url]
+
+    with requests.get(url, headers=headers, stream=True) as response:
+        # Limit response size
+        # First check the content-length header, if present. This will prevent downloading overly large
+        # responses, assuming a well configured server.
+        content_length = int(response.headers.get('content-length', 0))
+        assert content_length < CONTENT_LENGTH_LIMIT, \
+                ERROR_CONTENT_LENGTH.format(content_length, CONTENT_LENGTH_LIMIT)
+
+        # Now, complete the download, and check the response size.
+        content_length = len(response.content)
+        assert content_length < CONTENT_LENGTH_LIMIT, \
+                ERROR_CONTENT_LENGTH.format(content_length, CONTENT_LENGTH_LIMIT)
+
+    cache[url] = response
 
     return response
 

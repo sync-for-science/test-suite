@@ -31,6 +31,10 @@ class ChunkedJsonFormatter(PrettyJSONFormatter):
             if 'systems' in element:
                 element['systems'] = element['systems']()
 
+        # If the entire feature has been skipped, populate the skip_reason
+        if current_feature['status'] == 'skipped':
+            current_feature['skip_reason'] = element['skip_reason']
+
         self.snapshot.append(current_feature)
         self.config.on_snapshot(self.snapshot, self.plan)
 
