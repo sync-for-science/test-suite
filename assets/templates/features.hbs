@@ -10,6 +10,9 @@
         {{/each}}
         {{#testWasSkipped}}
             <span class="label label-default">skipped</span>
+            {{#if skip_reason}}
+                <p class="alert alert-danger" style="white-space: pre-line">{{ skip_reason }}</p>
+            {{/if}}
         {{else}}
             <div class="collapse {{#featureFailed}}in{{/featureFailed}}" id="scenarios-{{dashify location}}">
                 {{#if payloads.length}}
