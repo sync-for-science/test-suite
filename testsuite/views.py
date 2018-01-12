@@ -76,6 +76,14 @@ def authorized():
     exceptions.abort(500)
 
 
+@app.route('/health_summary/')
+def health_summary():
+
+    latest_results = TestRun.query.all()
+    print(latest_results)
+    return render_template('health_summary.html', latest_results=latest_results)
+
+
 @socketio.on('connect')
 def cb_handle_connect():
     flask_socketio.send('connected')

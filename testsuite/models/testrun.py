@@ -2,6 +2,7 @@
 '''
 import json
 import uuid
+import datetime
 
 from testsuite.extensions import db
 
@@ -10,6 +11,10 @@ class TestRun(db.Model):
     ''' The results of a single test run.
     '''
     _id = db.Column('id', db.String, primary_key=True)
+    _date_ran = db.Column('date_ran', db.Text)
+    _vendor = db.Column('vendor', db.Text)
+    _tags = db.Column('tags', db.Text)
+
     snapshot = db.relationship('Snapshot',
                                uselist=False,
                                cascade='all, delete, delete-orphan')
@@ -17,8 +22,11 @@ class TestRun(db.Model):
                            uselist=False,
                            cascade='all, delete, delete-orphan')
 
-    def __init__(self):
+    def __init__(self, vendor, tags):
         self._id = str(uuid.uuid4())
+        self._date_ran = str(datetime.datetime.now())
+        self._vendor = vendor
+        self._tags = ",".join(tags)
 
     @property
     def event(self):
@@ -35,7 +43,6 @@ class TestRun(db.Model):
         '''
         self.snapshot = Snapshot(self, snapshot)
         self.plan = Plan(self, plan)
-
 
 class JsonState():
     ''' Base class for objects with json-serialized state.

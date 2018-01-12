@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-4 fixed">
+            <h1>S4S Test Suite <span class="glyphicon glyphicon-ok"></span></h1>
+
+            <div id="summary">
+                {% for result in latest_results %}
+                    {{ result }}
+                {% endfor %}
+
+            </div>
+        </div>
+        <div class="col-md-8 results">
+            <footer class="footer">
+                <p class="pull-left">
+                    This is the
+                    <a href="http://syncfor.science/" target="_blank">Sync for Science</a>
+                    test suite.
+                    Source code at
+                    <a href="https://github.com/sync-for-science/test-suite" target="_blank">GitHub</a>.
+                </p>
+            </footer>
+        </div>
+    </div>
+{% endblock %}

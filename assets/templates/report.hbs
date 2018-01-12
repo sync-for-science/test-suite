@@ -12,6 +12,9 @@
                 <h4 class="modal-title">Tests complete!</h4>
             </div>
 
+{{#each report.scenarios}}
+    {{ this }}
+{{/each}}
             <div class="modal-body">
                 <p>
                     {{ report.scenarios.passed.length }} scenarios passed,
