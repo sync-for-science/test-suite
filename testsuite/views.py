@@ -85,8 +85,8 @@ def health_summary():
     vendors = get_names()
 
     for vendor in vendors:
-        last_test = TestRun.query.filter_by(_vendor=vendor)\
-            .order_by(desc(TestRun._date_ran)).first()
+        last_test = TestRun.query.filter_by(vendor=vendor)\
+            .order_by(desc(TestRun.date_ran)).first()
         if last_test is not None:
             latest_results[vendor] = last_test.summary
         else:

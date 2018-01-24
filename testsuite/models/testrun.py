@@ -11,9 +11,9 @@ class TestRun(db.Model):
     ''' The results of a single test run.
     '''
     _id = db.Column('id', db.String, primary_key=True)
-    _date_ran = db.Column('date_ran', db.Text)
-    _vendor = db.Column('vendor', db.Text)
-    _tags = db.Column('tags', db.Text)
+    date_ran = db.Column('date_ran', db.Text)
+    vendor = db.Column('vendor', db.Text)
+    tags = db.Column('tags', db.Text)
 
     snapshot = db.relationship('Snapshot',
                                uselist=False,
@@ -24,9 +24,9 @@ class TestRun(db.Model):
 
     def __init__(self, vendor, tags):
         self._id = str(uuid.uuid4())
-        self._date_ran = str(datetime.datetime.now())
-        self._vendor = vendor
-        self._tags = ",".join(tags)
+        self.date_ran = str(datetime.datetime.now())
+        self.vendor = vendor
+        self.tags = ",".join(tags)
 
     @property
     def event(self):
@@ -54,20 +54,12 @@ class TestRun(db.Model):
 
         return {
             'report_id': self._id,
-            'vendor': self._vendor,
+            'vendor': self.vendor,
             'snapshot': snapshot,
             'test_run': test_run,
-            'date_ran': self._date_ran,
-            'tags': self._tags,
+            'date_ran': self.date_ran,
+            'tags': self.tags,
         }
-
-    @property
-    def date_ran(self):
-        return self._date_ran
-
-    @property
-    def vendor(self):
-        return self._vendor
 
     def save_snapshot(self, snapshot, plan):
         ''' Update the latest snapshot from the test run.
