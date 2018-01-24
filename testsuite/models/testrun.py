@@ -38,11 +38,43 @@ class TestRun(db.Model):
             'plan': self.plan.state,
         }
 
+    @property
+    def summary(self):
+        '''
+        Get a summary of the run.
+        :return: Dictionary representing snapshot of information about the test run.
+        '''
+
+        snapshot = None
+        test_run = False
+
+        if self.snapshot:
+            snapshot = self.snapshot.state
+            test_run = True
+
+        return {
+            'report_id': self._id,
+            'vendor': self._vendor,
+            'snapshot': snapshot,
+            'test_run': test_run,
+            'date_ran': self._date_ran,
+            'tags': self._tags,
+        }
+
+    @property
+    def date_ran(self):
+        return self._date_ran
+
+    @property
+    def vendor(self):
+        return self._vendor
+
     def save_snapshot(self, snapshot, plan):
         ''' Update the latest snapshot from the test run.
         '''
         self.snapshot = Snapshot(self, snapshot)
         self.plan = Plan(self, plan)
+
 
 class JsonState():
     ''' Base class for objects with json-serialized state.

@@ -6,6 +6,8 @@ from flask import jsonify, render_template, request, session
 from werkzeug import exceptions
 import flask_socketio
 
+from sqlalchemy import desc
+
 from testsuite.application import app
 from testsuite.extensions import db, socketio
 from testsuite.models.testrun import TestRun
@@ -79,9 +81,18 @@ def authorized():
 @app.route('/health_summary/')
 def health_summary():
 
-    latest_results = TestRun.query.all()
-    print(latest_results)
-    return render_template('health_summary.html', latest_results=latest_results)
+    latest_results = {}
+    vendors = get_names()
+
+    for vendor in vendors:
+        last_test = TestRun.query.filter_by(_vendor=vendor)\
+            .order_by(desc(TestRun._date_ran)).first()
+        if last_test is not None:
+            latest_results[vendor] = last_test.summary
+        else:
+            latest_results[vendor] = None
+    app.logger.info(latest_results)
+    return render_template('health_summary.html', vendors=vendors, latest_results=latest_results)
 
 
 @socketio.on('connect')

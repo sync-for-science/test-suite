@@ -1,13 +1,64 @@
 {% extends "base.html" %}
 
 {% block body %}
+
+    <style>
+        .skipped {color: lightgray;}
+        .failed {color: red;}
+        .passed {color: green;}
+    </style>
+
     <div class="row">
-        <div class="col-md-4 fixed">
+        <div class="col-md-8">
             <h1>S4S Test Suite <span class="glyphicon glyphicon-ok"></span></h1>
 
-            <div id="summary">
-                {% for result in latest_results %}
-                    {{ result }}
+            <div id="summary" class="col-md-8">
+                {% for vendor in vendors %}
+                    <div class="panel panel-default">
+
+                    <div class="panel-heading"><h4>{{ vendor }}</h4></div>
+                    <div class="panel-body">
+                        {% if latest_results[vendor] %}
+                            Date of test - <b>{{ latest_results[vendor].date_ran }}</b>
+                            {% if latest_results[vendor].test_run %}
+                                <h3 class="text-success">Test Ran</h3>
+                            {% else %}
+                                <h3 class="text-danger">Test Failed</h3>
+                            {% endif %}
+                            <br />
+
+                            <a href="/?report_id={{ latest_results[vendor].report_id}}" target="_blank">Link to results</a>
+
+                            <br />
+                            <br />
+
+                            <h4>Tags</h4>
+                            <br />
+                            {{ latest_results[vendor].tags }}
+
+                            <br />
+                            <br />
+                            {% if latest_results[vendor].test_run %}
+                                <h4>Test Summary</h4>
+                                <br />
+
+                                {% for feature in latest_results[vendor].snapshot %}
+                                    <h5>{{ feature.name }}</h5>
+                                    <span class="{{ feature.status }}"><b>{{ feature.status }}</b></span>
+                                    {% if feature.status == "failed" %}
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    {% elif feature.status == "passed" %}
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <h3 class="text-danger">Failed before snapshot created.</h3>
+                            {% endif %}
+                        {% else %}
+                            No tests have been run for this vendor recently.
+                        {% endif %}
+                    </div>
+                    </div>
                 {% endfor %}
 
             </div>
