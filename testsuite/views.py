@@ -6,8 +6,6 @@ from flask import jsonify, render_template, request, session
 from werkzeug import exceptions
 import flask_socketio
 
-from sqlalchemy import desc
-
 from testsuite.application import app
 from testsuite.extensions import db, socketio
 from testsuite.models.testrun import TestRun
@@ -86,7 +84,7 @@ def health_summary():
 
     for vendor in vendors:
         last_test = TestRun.query.filter_by(vendor=vendor)\
-            .order_by(desc(TestRun.date_ran)).first()
+            .order_by(TestRun.date_ran.desc()).first()
         if last_test is not None:
             latest_results[vendor] = last_test.summary
         else:
