@@ -2,6 +2,7 @@
 '''
 import json
 import uuid
+import datetime
 
 from testsuite.extensions import db
 
@@ -10,6 +11,10 @@ class TestRun(db.Model):
     ''' The results of a single test run.
     '''
     _id = db.Column('id', db.String, primary_key=True)
+    date_ran = db.Column('date_ran', db.Text)
+    vendor = db.Column('vendor', db.Text)
+    tags = db.Column('tags', db.Text)
+
     snapshot = db.relationship('Snapshot',
                                uselist=False,
                                cascade='all, delete, delete-orphan')
@@ -17,8 +22,11 @@ class TestRun(db.Model):
                            uselist=False,
                            cascade='all, delete, delete-orphan')
 
-    def __init__(self):
+    def __init__(self, vendor, tags):
         self._id = str(uuid.uuid4())
+        self.date_ran = str(datetime.datetime.now())
+        self.vendor = vendor
+        self.tags = ",".join(tags)
 
     @property
     def event(self):
@@ -28,6 +36,29 @@ class TestRun(db.Model):
             'report_id': self._id,
             'snapshot': self.snapshot.state,
             'plan': self.plan.state,
+        }
+
+    @property
+    def summary(self):
+        '''
+        Get a summary of the run.
+        :return: Dictionary representing snapshot of information about the test run.
+        '''
+
+        snapshot = None
+        test_run = False
+
+        if self.snapshot:
+            snapshot = self.snapshot.state
+            test_run = True
+
+        return {
+            'report_id': self._id,
+            'vendor': self.vendor,
+            'snapshot': snapshot,
+            'test_run': test_run,
+            'date_ran': self.date_ran,
+            'tags': self.tags,
         }
 
     def save_snapshot(self, snapshot, plan):

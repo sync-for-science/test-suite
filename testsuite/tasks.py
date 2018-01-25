@@ -22,7 +22,7 @@ celery.config_from_object('testsuite.celeryconfig')
 def run_tests(room, vendor, tags, override):
     app = create_app()
     with app.app_context():
-        test_run = TestRun()
+        test_run = TestRun(vendor, tags)
         db.session.add(test_run)
         db.session.commit()
 

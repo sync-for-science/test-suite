@@ -76,6 +76,23 @@ def authorized():
     exceptions.abort(500)
 
 
+@app.route('/health_summary/')
+def health_summary():
+
+    latest_results = {}
+    vendors = get_names()
+
+    for vendor in vendors:
+        last_test = TestRun.query.filter_by(vendor=vendor)\
+            .order_by(TestRun.date_ran.desc()).first()
+        if last_test is not None:
+            latest_results[vendor] = last_test.summary
+        else:
+            latest_results[vendor] = None
+    app.logger.info(latest_results)
+    return render_template('health_summary.html', vendors=vendors, latest_results=latest_results)
+
+
 @socketio.on('connect')
 def cb_handle_connect():
     flask_socketio.send('connected')
