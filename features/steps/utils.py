@@ -16,7 +16,7 @@ import requests
 from functools import reduce
 
 
-CONTENT_LENGTH_LIMIT = 1024 * 5000  # 5MB
+CONTENT_LENGTH_LIMIT = 1024 * 7500  # 7.5MB
 ERROR_CONTENT_LENGTH = 'Content length "{}" exceeds expected content length limit of {}.'
 
 
