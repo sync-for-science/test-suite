@@ -3,7 +3,6 @@ api:
   versions:
     STU3:
       url: https://sandbox.bluebutton.cms.gov/v1/fhir/
-      patient: 20140000008325
 
 use_cases:
   security: STU3
