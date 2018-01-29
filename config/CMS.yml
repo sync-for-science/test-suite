@@ -30,7 +30,7 @@ auth:
       cancel_steps:
         - element: "button.deny"
           click: True
-      revoke_url: https://dev.bluebutton.cms.fhirservice.net/o/authorized_tokens/
+      revoke_url: https://sandbox.bluebutton.cms.gov/o/authorized_tokens/
       revoke_steps:
         - element: "[title~=test][value~=Remove]"
           click: True
