@@ -18,6 +18,8 @@ auth:
       scope: profile patient/Patient.read patient/ExplanationOfBenefit.read patient/Coverage.read
       confidential_client: True
       sign_in_steps:
+        - element: "h2 + p a.ds-c-button"
+          click: True
         - element: "#id_username"
           send_keys: "s4s-test-suite"
         - element: "#id_password"
@@ -25,10 +27,10 @@ auth:
         - element: "input[type='submit']"
           click: True
       authorize_steps:
-        - element: "input[value='Approve']"
-          execute_script: $("input[value='Approve']").click()
+        - element: "input#approve"
+          click: True
       cancel_steps:
-        - element: "button.deny"
+        - element: "a.ds-c-button"
           click: True
       revoke_url: https://sandbox.bluebutton.cms.gov/o/authorized_tokens/
       revoke_steps:
