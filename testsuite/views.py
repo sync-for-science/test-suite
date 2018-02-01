@@ -11,6 +11,16 @@ from testsuite.extensions import db, socketio
 from testsuite.models.testrun import TestRun
 from testsuite import tasks
 
+ALL_TAGS = ["allergies-and-intolerances", "immunizations",
+            "lab-results", "medication-administrations",
+            "medication-dispensations", "medication-requests",
+            "medication-orders",
+            "medication-statements", "patient-documents",
+            "patient-demographics", "problems", "procedures",
+            "smoking-status", "vital-signs", "s4s", "smart",
+            "ask-authorization", "evaluate-request", "exchange-code",
+            "use-refresh-token", "revoke-authorization"]
+
 
 def get_names():
     configs = glob.glob('./config/*.yml')
@@ -54,20 +64,27 @@ def headless_begin():
         print("Testing %s" % vendor)
         tasks.run_tests.delay(room='headless-room',
                               vendor=vendor,
-                              tags=["allergies-and-intolerances", "immunizations",
-                                    "lab-results", "medication-administrations",
-                                    "medication-dispensations", "medication-requests",
-                                    "medication-orders",
-                                    "medication-statements", "patient-documents",
-                                    "patient-demographics", "problems", "procedures",
-                                    "smoking-status", "vital-signs", "s4s", "smart",
-                                    "ask-authorization", "evaluate-request", "exchange-code",
-                                    "use-refresh-token", "revoke-authorization"],
+                              tags=ALL_TAGS,
                               override='')
 
     return jsonify({
         'testing': True,
         'targets': vendors
+    })
+
+
+@app.route('/begin-test/<single_vendor>', methods=['GET'])
+def headless_begin_single(single_vendor):
+
+    print("Testing %s" % single_vendor)
+    tasks.run_tests.delay(room='headless-room',
+                          vendor=single_vendor,
+                          tags=ALL_TAGS,
+                          override='')
+
+    return jsonify({
+        'testing': True,
+        'target': single_vendor
     })
 
 
@@ -89,7 +106,7 @@ def health_summary():
             latest_results[vendor] = last_test.summary
         else:
             latest_results[vendor] = None
-    app.logger.info(latest_results)
+
     return render_template('health_summary.html', vendors=vendors, latest_results=latest_results)
 
 

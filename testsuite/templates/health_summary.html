@@ -8,16 +8,25 @@
         .passed {color: green;}
     </style>
 
-    <div class="row">
-        <div class="col-md-8">
-            <h1>S4S Test Suite <span class="glyphicon glyphicon-ok"></span></h1>
+    <h1>S4S Test Suite <span class="glyphicon glyphicon-ok"></span></h1>
 
-            <div id="summary" class="col-md-8">
-                {% for vendor in vendors %}
+    {% set counter = 0 %}
+    {% for vendor in vendors %}
+
+    {% if counter == 0 %}
+    <div class="row">
+    {% endif %}
+
+            <div id="summary" class="col-md-4">
+
                     <div class="panel panel-default">
 
-                    <div class="panel-heading"><h4>{{ vendor }}</h4></div>
-                    <div class="panel-body">
+                    <div class="panel-heading">
+                        <h4>{{ vendor }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/begin-test/{{ vendor }}" target="_blank"><button type="button" class="btn btn-primary">Run Test</button></a></h4>
+
+                    </div>
+                    <div class="panel-body pre-scrollable" style="height:400px;">
+
                         {% if latest_results[vendor] %}
                             Date of test - <b>{{ latest_results[vendor].date_ran }}</b>
                             {% if latest_results[vendor].test_run %}
@@ -38,8 +47,15 @@
 
                             <br />
                             <br />
+
                             {% if latest_results[vendor].test_run %}
-                                <h4>Test Summary</h4>
+                                <h4>Test Summary</h4> <br />
+
+                                  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#feature_results_{{ vendor }}">
+                                    Show Results
+                                  </button>
+                                <div id="feature_results_{{ vendor }}">
+
                                 <br />
 
                                 {% for feature in latest_results[vendor].snapshot %}
@@ -51,6 +67,9 @@
                                         <span class="glyphicon glyphicon-ok"></span>
                                     {% endif %}
                                 {% endfor %}
+
+                                </div>
+
                             {% else %}
                                 <h3 class="text-danger">Failed before snapshot created.</h3>
                             {% endif %}
@@ -59,10 +78,21 @@
                         {% endif %}
                     </div>
                     </div>
-                {% endfor %}
+
+                    {% set counter = counter + 1 %}
+
 
             </div>
-        </div>
+
+    {% if counter >2 %}
+    </div>
+        {% set counter = 0 %}
+    {% endif %}
+
+    {% endfor %}
+
+    <div class="row">
+
         <div class="col-md-8 results">
             <footer class="footer">
                 <p class="pull-left">
