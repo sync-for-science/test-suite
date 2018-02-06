@@ -9,22 +9,31 @@
     </style>
 
     <h1>S4S Test Suite <span class="glyphicon glyphicon-ok"></span></h1>
-
+    <div class="container">
     {% set counter = 0 %}
     {% for vendor in vendors %}
 
     {% if counter == 0 %}
+
     <div class="row">
     {% endif %}
-
             <div id="summary" class="col-md-4">
 
-                    <div class="panel panel-default">
+                <div class="panel panel-default container-fluid">
 
-                    <div class="panel-heading">
-                        <h4>{{ vendor }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/begin-test/{{ vendor }}" target="_blank"><button type="button" class="btn btn-primary">Run Test</button></a></h4>
-
+                    <div class="panel-heading row">
+                        <div class="col-8">
+                            <h4 class="panel-title">
+                                {{ vendor }}
+                            </h4>
+                        </div>
+                        <div class="col-4">
+                            <a href="/begin-test/{{ vendor }}" target="_blank">
+                                <button type="button" class="btn btn-primary pull-right">Run Test</button>
+                            </a>
+                        </div>
                     </div>
+
                     <div class="panel-body pre-scrollable" style="height:400px;">
 
                         {% if latest_results[vendor] %}
@@ -76,6 +85,7 @@
                         {% else %}
                             No tests have been run for this vendor recently.
                         {% endif %}
+
                     </div>
                     </div>
 
@@ -104,5 +114,6 @@
                 </p>
             </footer>
         </div>
+    </div>
     </div>
 {% endblock %}
