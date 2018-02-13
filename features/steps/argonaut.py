@@ -1,6 +1,7 @@
 # pylint: disable=missing-docstring,function-redefined
 
 import json
+import re
 
 from behave import then
 
@@ -84,9 +85,16 @@ def step_impl(context, resource_type, field_name):
     for res in resources:
         try:
             reference = utils.traverse(res, path).get('reference')
+
+            reference_regex = '((http|https)://([A-Za-z0-9\\\.\:\%\$]\/)*)?(' + \
+                           resource_type + ')\/[A-Za-z0-9\-\.]{1,64}(\/_history\/[A-Za-z0-9\-\.]{1,64})?'
+            compiled_regex = re.compile(reference_regex)
+            regex_search_results = compiled_regex.search(reference)
+
         except AttributeError:
             reference = ''
-        assert reference.startswith(resource_type), \
+
+        assert regex_search_results, \
             utils.bad_response_assert(context.response,
                                       ERROR_REFERENCE_MATCH,
                                       reference=reference,
