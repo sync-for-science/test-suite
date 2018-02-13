@@ -87,7 +87,7 @@ def step_impl(context, resource_type, field_name):
             reference = utils.traverse(res, path).get('reference')
 
             reference_regex = '((http|https)://([A-Za-z0-9\\\.\:\%\$]\/)*)?(' + \
-                           resource_type + ')\/[A-Za-z0-9\-\.]{1,64}(\/_history\/[A-Za-z0-9\-\.]{1,64})?'
+                resource_type + ')\/[A-Za-z0-9\-\.]{1,64}(\/_history\/[A-Za-z0-9\-\.]{1,64})?'
             compiled_regex = re.compile(reference_regex)
             regex_search_results = compiled_regex.search(reference)
 
