@@ -85,7 +85,7 @@ def step_impl(context, resource_type, field_name):
     for res in resources:
         try:
             reference = utils.traverse(res, path).get('reference')
-            
+
             # Validate the reference for FHIR compliance formatting.
             # http://hl7.org/fhir/references.html
             reference_regex = r'((http|https)://([A-Za-z0-9\\\.\:\%\$]\/)*)?(' + \
