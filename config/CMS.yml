@@ -25,8 +25,7 @@ auth:
         - element: "#id_password"
           send_keys: "cms-demo"
         - element: "input[type='submit']"
-          execute_script: |
-            jQuery('input[type="submit"]').click();
+          click: True
       authorize_steps:
         - element: "input#approve"
           click: True
