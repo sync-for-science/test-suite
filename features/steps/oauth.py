@@ -265,6 +265,7 @@ def step_impl(context, request_type):
                                      context.conformance,
                                      request_type)
 
+
 @when('I exchange my authorization code without the {field_name} field')
 def step_impl(context, field_name):
     """ A step 3 implementation missing a named field.
