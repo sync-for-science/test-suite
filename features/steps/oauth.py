@@ -249,9 +249,9 @@ def step_impl(context, action, resource_type):
         assert False, error
 
 
-@when('I exchange my authorization code')
-def step_impl(context):
-    """ A fully formed and correct step 3 implementation.
+@when('I exchange my authorization code via a {request_type} request')
+def step_impl(context, request_type):
+    """ Step 3, using a variable request type.
     """
     fields = {
         'grant_type': 'authorization_code',
@@ -262,8 +262,8 @@ def step_impl(context):
 
     context.response = token_request(fields,
                                      context.vendor_config['versioned_auth'],
-                                     context.conformance)
-
+                                     context.conformance,
+                                     request_type)
 
 @when('I exchange my authorization code without the {field_name} field')
 def step_impl(context, field_name):
@@ -345,6 +345,7 @@ def step_impl(context):
 def step_impl(context, field_name):
     """ A step 5 implementation missing a named field.
     """
+
     fields = {
         'grant_type': 'refresh_token',
         'refresh_token': context.oauth.refresh_token,
@@ -358,7 +359,7 @@ def step_impl(context, field_name):
                                      context.conformance)
 
 
-def token_request(post_data, auth_config, conformance):
+def token_request(post_data, auth_config, conformance, request_method='POST'):
     """ Make a token request.
 
     Should be modeled after `testsuite.oauth.authorization_code._token_request`.
@@ -367,21 +368,30 @@ def token_request(post_data, auth_config, conformance):
         post_data (dict): The parameters to send.
         auth_config (dict): The vendor auth config.
         conformance (dict): The server's conformance statement so that URIs can be determined.
-
+        request_method (string): GET or POST, determines the request type used to obtain our token.
     Returns:
         A requests Response object.
     """
     auth = None
+    allow_redirects = False
+    timeout = 5
+
     if auth_config.get('confidential_client'):
         auth = requests.auth.HTTPBasicAuth(auth_config['client_id'],
                                            auth_config['client_secret'])
 
     uris = fhir.get_oauth_uris(conformance)
 
-    response = requests.post(uris['token'],
-                             data=post_data,
-                             allow_redirects=False,
-                             auth=auth,
-                             timeout=5)
-
+    if request_method == "GET":
+        response = requests.get(uris['token'],
+                                data=post_data,
+                                allow_redirects=allow_redirects,
+                                auth=auth,
+                                timeout=timeout)
+    else:
+        response = requests.post(uris['token'],
+                                 data=post_data,
+                                 allow_redirects=allow_redirects,
+                                 auth=auth,
+                                 timeout=timeout)
     return response
