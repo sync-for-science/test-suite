@@ -249,6 +249,22 @@ def step_impl(context, action, resource_type):
         assert False, error
 
 
+@when('I exchange my authorization code')
+def step_impl(context):
+    """ Step 3, exchange codes.
+    """
+    fields = {
+        'grant_type': 'authorization_code',
+        'code': context.code,
+        'client_id': context.vendor_config['versioned_auth']['client_id'],
+        'redirect_uri': context.vendor_config['versioned_auth']['redirect_uri'],
+    }
+
+    context.response = token_request(fields,
+                                     context.vendor_config['versioned_auth'],
+                                     context.conformance)
+
+
 @when('I exchange my authorization code via a {request_type} request')
 def step_impl(context, request_type):
     """ Step 3, using a variable request type.
@@ -264,7 +280,6 @@ def step_impl(context, request_type):
                                      context.vendor_config['versioned_auth'],
                                      context.conformance,
                                      request_type)
-
 
 @when('I exchange my authorization code without the {field_name} field')
 def step_impl(context, field_name):

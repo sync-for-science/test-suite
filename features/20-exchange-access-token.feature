@@ -5,7 +5,7 @@ Feature: App exchanges authorization code for access token
         Given OAuth is enabled
         And I am not logged in
         When I ask for authorization
-        And I exchange my authorization code via a POST request
+        And I exchange my authorization code
         Then the response code should be 200
         And the JSON response will contain access_token
         And the JSON response will contain token_type
@@ -17,7 +17,7 @@ Feature: App exchanges authorization code for access token
         And I am not logged in
         When I ask for authorization
         And I exchange my authorization code via a GET request
-        Then the response code should be 405
+        Then the response code should not be 200
 
     Scenario: Missing "grant_type"
         Given OAuth is enabled
@@ -71,6 +71,6 @@ Feature: App exchanges authorization code for access token
         Given OAuth is enabled
         And I am not logged in
         When I ask for authorization
-        And I exchange my authorization code via a POST request
-        And I exchange my authorization code via a POST request
+        And I exchange my authorization code
+        And I exchange my authorization code
         Then the response code should not be 200
