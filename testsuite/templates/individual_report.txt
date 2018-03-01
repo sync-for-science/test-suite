@@ -1,11 +1,11 @@
-S4S Test Suite Results
+S4S Test Suite Results for {{ run.vendor.upper() }}
 
 Date of test - {{ run.date_ran }}
 
-Tags
+TAGS
+----
 {{ run.tags }}
 
-TEST SUMMARY
 
 {% if run.summary.snapshot is not none -%}
 
