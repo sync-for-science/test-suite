@@ -45,7 +45,8 @@
                             {% endif %}
                             <br />
 
-                            <a href="/?report_id={{ latest_results[vendor].report_id}}" target="_blank">Link to results</a>
+                            <a href="/?report_id={{ latest_results[vendor].report_id}}" target="_blank">Link to results</a><br />
+                            <a href="/load-text-report/{{ latest_results[vendor].report_id}}" target="_blank">Text Results</a>
 
                             <br />
                             <br />
@@ -58,11 +59,8 @@
                             <br />
 
                             {% if latest_results[vendor].test_run %}
-                                <h4>Test Summary</h4> <br />
+                                <h4>Test Summary</h4>
 
-                                  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#feature_results_{{ vendor }}">
-                                    Show Results
-                                  </button>
                                 <div id="feature_results_{{ vendor }}">
 
                                 <br />

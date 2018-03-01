@@ -57,6 +57,14 @@ def report(test_run_id):
         return resp
 
 
+@app.route('/load-text-report/<test_run_id>', methods=['GET'])
+def text_report(test_run_id):
+    print("Load Text Report.")
+    run = TestRun.query.get(test_run_id)
+
+    return render_template('individual_report.txt', run=run), {'Content-Type': 'text/plain'}
+
+
 @app.route('/begin-tests')
 def headless_begin():
     vendors = get_names()
