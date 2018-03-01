@@ -15,24 +15,17 @@ FAILURES
 {% for feature in run.summary.snapshot -%}
 
 {% if feature.status == "failed" -%}
-***********
 {{ feature.name.upper() }} : {{ feature.status.upper() }}
-
-    Steps
-    *****
-        {% for element in feature.elements -%}
-            {% for step in element.steps -%}
-                {% if step.result is defined -%}
-                    {% if step.result.status != "passed" %}
-    Name : {{ step.name }}
-    Error : {{ step.result.error_message|first }}
-                    {% endif -%}
+    {% for element in feature.elements -%}
+        {% for step in element.steps -%}
+            {% if step.result is defined -%}
+                {% if step.result.status != "passed" %}
+Name : {{ step.name }}
+Error : {{ step.result.error_message|first }}
                 {% endif -%}
-            {% endfor -%}
-        {% endfor %}
-    *****
-***********
-
+            {% endif -%}
+        {% endfor -%}
+    {% endfor %}
 
 {% endif -%}
 {% endfor -%}
@@ -42,9 +35,7 @@ PASSES
 
 {% for feature in run.summary.snapshot -%}
 {% if feature.status == "passed" -%}
-***********
 {{ feature.name.upper() }} : {{ feature.status.upper() }}
-***********
 
 {% endif -%}
 {% endfor -%}
@@ -54,12 +45,8 @@ SKIPS
 
 {% for feature in run.summary.snapshot -%}
 {% if feature.status == "skipped" -%}
-***********
-    {{ feature.name.upper() }} : {{ feature.status.upper() }}
-
-    {{ feature.skip_reason }}
-***********
-
+{{ feature.name.upper() }} : {{ feature.status.upper() }}
+{{ feature.skip_reason }}
 
 {% endif -%}
 {% endfor -%}
