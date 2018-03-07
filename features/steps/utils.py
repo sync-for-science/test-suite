@@ -29,7 +29,7 @@ def bad_response_assert(response, message, **kwargs):
 
 
 def bad_response_assert_with_resource(response, message, resource, **kwargs):
-    with open('features/steps/response_with_bad_resource.jinja2') as handle:
+    with open('features/steps/response.jinja2') as handle:
         template = jinja2.Template(handle.read())
 
     return template.render(response=response,
