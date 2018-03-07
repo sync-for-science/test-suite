@@ -161,7 +161,6 @@ def step_impl(context, name, field_name):
                                                                           resource=res)
 
 
-
 @then(u'{field_name} is bound to {value_set_url_one} or {value_set_url_two}')
 def step_impl(context, field_name, value_set_url_one, value_set_url_two):
     path = field_name.split('.')
@@ -220,7 +219,10 @@ def step_impl(context, field_name, value_set_url):
                                                         resource=res,
                                                         field_name=field_name,
                                                         json=json.dumps(found, indent=2))
+<<<<<<< HEAD
 
+=======
+>>>>>>> sync-for-science/tracking#159 - pep8
             found = [coding.get('code') for coding in found.get('coding')
                      if in_value_set(coding, value_set_url)]
 
