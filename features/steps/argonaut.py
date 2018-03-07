@@ -156,9 +156,9 @@ def step_impl(context, name, field_name):
     for res in resources:
         found = utils.traverse(res, path)
         assert found is not None, utils.bad_response_assert_with_resource(context.response,
-                                                            ERROR_REQUIRED,
-                                                            name=name,
-                                                            resource=res)
+                                                                          ERROR_REQUIRED,
+                                                                          name=name,
+                                                                          resource=res)
 
 
 @then(u'{field_name} is bound to {value_set_url_one} or {value_set_url_two}')
@@ -215,10 +215,10 @@ def step_impl(context, field_name, value_set_url):
         elif isinstance(found, dict):
             assert 'coding' in found, \
                 utils.bad_response_assert_with_resource(response=context.response,
-                                          message=ERROR_CODING_MISSING,
-                                          resource=res,
-                                          field_name=field_name,
-                                          json=json.dumps(found, indent=2))
+                                                        message=ERROR_CODING_MISSING,
+                                                        resource=res,
+                                                        field_name=field_name,
+                                                        json=json.dumps(found, indent=2))
             found = [coding.get('code') for coding in found.get('coding')
                      if in_value_set(coding, value_set_url)]
 
