@@ -28,6 +28,15 @@ def bad_response_assert(response, message, **kwargs):
                            message=message.format(**kwargs))
 
 
+def bad_response_assert_with_resource(response, message, resource, **kwargs):
+    with open('features/steps/response_with_bad_resource.jinja2') as handle:
+        template = jinja2.Template(handle.read())
+
+    return template.render(response=response,
+                           message=message.format(**kwargs),
+                           bad_resource=resource)
+
+
 def bad_redirect_assert(message, sent, received):
     with open('features/steps/redirect.jinja2') as handle:
         template = jinja2.Template(handle.read())
