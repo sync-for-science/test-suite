@@ -1,5 +1,13 @@
 {{ message | trim }}
 
+{%- if bad_resource %}
+
+Offending Resource
+
+{{ bad_resource | pprint}}
+
+{% endif %}
+
 Request
 -------
 {{ response.request.method }} {{ response.request.url -}}
