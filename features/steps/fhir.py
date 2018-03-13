@@ -116,6 +116,9 @@ def step_impl(context, field_name):
 
 @then('all references will resolve')
 def step_impl(context):
+    if context.vendor_skip:
+        return
+
     resource = context.response.json()
 
     if resource['resourceType'] == 'Bundle':
