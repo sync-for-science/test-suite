@@ -199,18 +199,10 @@ def before_step(context, step):
         ignored_steps = context.vendor_config["ignored_steps"][step.location.filename]
 
         for ignored_step in ignored_steps:
-<<<<<<< HEAD
             if step.name == ignored_step:
                 context.vendor_skip = True
                 break
     except KeyError:
-=======
-            print(ignored_step)
-            if step.name == ignored_step:
-                context.vendor_skip = True
-                break
-    except KeyError as e:
->>>>>>> sync-for-science/tracking#160 - Initial commit that allows for the skipping of steps/features based on configurations.
         logging.info("ignored_steps not configured for this step.")
 
 
