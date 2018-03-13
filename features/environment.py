@@ -157,7 +157,7 @@ def before_feature(context, feature):
             if step == "all":
                 feature.skip("Feature (%s) requested skip by vendor." % feature)
 
-    except KeyError as e:
+    except KeyError:
         logging.info("ignored_steps not configured for this feature.")
 
     tags = list(FHIR_RESOURCE_TAGS.intersection(feature.tags))
@@ -203,7 +203,7 @@ def before_step(context, step):
             if step.name == ignored_step:
                 context.vendor_skip = True
                 break
-    except KeyError as e:
+    except KeyError:
         logging.info("ignored_steps not configured for this step.")
 
 
