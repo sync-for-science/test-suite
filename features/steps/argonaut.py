@@ -291,7 +291,7 @@ def step_impl(context, field_name, value):
     resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
-        if ResourceDecider(res).needs_argo_validation():
+        if ResourceDecider(res).should_validate():
             found = utils.traverse(res, path)
 
             assert found, utils.bad_response_assert_with_resource(response=context.response,
