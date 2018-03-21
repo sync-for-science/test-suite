@@ -199,7 +199,6 @@ def before_step(context, step):
         ignored_steps = context.vendor_config["ignored_steps"][step.location.filename]
 
         for ignored_step in ignored_steps:
-            print(ignored_step)
             if step.name == ignored_step:
                 context.vendor_skip = True
                 break
