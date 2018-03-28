@@ -150,6 +150,16 @@ def before_feature(context, feature):
     if skip_use_case:
         feature.skip("Feature (%s) not in any use case." % feature)
 
+    try:
+        ignored_steps = context.vendor_config["ignored_steps"][feature.location.filename]
+
+        for step in ignored_steps:
+            if step == "all":
+                feature.skip("Feature (%s) requested skip by vendor." % feature)
+
+    except KeyError:
+        logging.info("ignored_steps not configured for this feature.")
+
     tags = list(FHIR_RESOURCE_TAGS.intersection(feature.tags))
 
     if len(tags) > 1:
@@ -179,6 +189,21 @@ def before_scenario(context, scenario):
             if matches and matches.groups()[0] != use_case_version:
                 scenario.skip("Scenario's version (%s) not in Use Case (%s)."
                               % (matches.groups()[0], scenario.feature.use_case))
+
+
+def before_step(context, step):
+
+    context.vendor_skip = False
+
+    try:
+        ignored_steps = context.vendor_config["ignored_steps"][step.location.filename]
+
+        for ignored_step in ignored_steps:
+            if step.name == ignored_step:
+                context.vendor_skip = True
+                break
+    except KeyError:
+        logging.info("ignored_steps not configured for this step.")
 
 
 class Cache(object):
