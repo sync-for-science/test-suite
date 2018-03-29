@@ -130,7 +130,7 @@ def step_impl(context, field_string, resource):
 
     valid_resource_ids = set([
         res.get("id") for res in resources
-        if not ResourceDecider(res).needs_argo_validation() or utils.has_one_of(res, fields_to_find)])
+        if not ResourceDecider(res).should_validate() or utils.has_one_of(res, fields_to_find)])
 
     all_resource_ids = set([res.get("id") for res in resources])
 
@@ -245,7 +245,7 @@ def step_impl(context, field_name, value_set_url):
     resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
-        if ResourceDecider(res).needs_argo_validation():
+        if ResourceDecider(res).should_validate():
             found = utils.traverse(res, path)
             if isinstance(found, str):
                 found = [found]

@@ -52,6 +52,8 @@ class ResourceDecider:
                             validate = True
         except KeyError:
             validate = False
+        except TypeError:
+            validate = False
 
         if not found_validation_toggle:
             validate = True
