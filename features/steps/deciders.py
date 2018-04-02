@@ -14,7 +14,7 @@ class StepDecider:
         return self.context.vendor_skip
 
     def should_run_test(self):
-        return self.__skip_context()
+        return not self.__skip_context()
 
 
 class ResourceDecider:

@@ -50,7 +50,7 @@ def in_value_set(coding, value_set_url):
 @then(u'there exists one or more {name} in {field_name}')
 def step_impl(context, name, field_name):
 
-    if context.vendor_skip:
+    if not StepDecider(context).should_run_test():
         return
 
     path = field_name.split('.')
@@ -67,7 +67,7 @@ def step_impl(context, name, field_name):
 @then(u'each {field_name} must have a {sub_field}')
 def step_impl(context, field_name, sub_field):
 
-    if context.vendor_skip:
+    if not StepDecider(context).should_run_test():
         return
 
     path = field_name.split('.')
@@ -90,7 +90,7 @@ def step_impl(context, field_name, sub_field):
 @then(u'there exists one reference to a {resource_type} in {field_name}')
 def step_impl(context, resource_type, field_name):
 
-    if context.vendor_skip:
+    if not StepDecider(context).should_run_test():
         return
 
     path = field_name.split('.')
@@ -121,7 +121,7 @@ def step_impl(context, resource_type, field_name):
 @then(u'one of the following paths exist: {field_string} in {resource}')
 def step_impl(context, field_string, resource):
 
-    if context.vendor_skip:
+    if not StepDecider(context).should_run_test():
         return
 
     fields_to_find = field_string.split(",")
@@ -146,7 +146,7 @@ def step_impl(context, field_string, resource):
 @then(u'there exists one {name} in {field_one_name} or {field_two_name}')
 def step_impl(context, name, field_one_name, field_two_name):
 
-    if context.vendor_skip:
+    if not StepDecider(context).should_run_test():
         return
 
     path_one = field_one_name.split('.')
@@ -172,7 +172,7 @@ def step_impl(context, name, field_one_name, field_two_name):
 @then(u'there exists one {name} in {field_name}')
 def step_impl(context, name, field_name):
 
-    if context.vendor_skip:
+    if not StepDecider(context).should_run_test():
         return
 
     path = field_name.split('.')
@@ -190,7 +190,7 @@ def step_impl(context, name, field_name):
 @then(u'{field_name} is bound to {value_set_url_one} or {value_set_url_two}')
 def step_impl(context, field_name, value_set_url_one, value_set_url_two):
 
-    if context.vendor_skip:
+    if not StepDecider(context).should_run_test():
         return
 
     path = field_name.split('.')
@@ -237,7 +237,7 @@ def step_impl(context, field_name, value_set_url_one, value_set_url_two):
 
 @then(u'{field_name} is bound to {value_set_url}')
 def step_impl(context, field_name, value_set_url):
-    if context.vendor_skip:
+    if not StepDecider(context).should_run_test():
         return
 
     path = field_name.split('.')
