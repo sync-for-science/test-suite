@@ -272,12 +272,13 @@ def step_impl(context, field_name, value_set_url):
                 except systems.SystemNotRecognized:
                     valid = False
 
-                assert valid, utils.bad_response_assert_with_resource(response=context.response,
-                                                                      message=ERROR_INVALID_BINDING,
-                                                                      resource=res,
-                                                                      code=code,
-                                                                      system=value_set_url,
-                                                                      json=json.dumps(res, indent=2))
+                assert valid, utils.bad_response_assert_with_resource(
+                    response=context.response,
+                    message=ERROR_INVALID_BINDING,
+                    resource=res,
+                    code=code,
+                    system=value_set_url,
+                    json=json.dumps(res, indent=2))
 
 
 @then(u'there exists a fixed {field_name}={value}')
@@ -294,13 +295,16 @@ def step_impl(context, field_name, value):
         if ResourceDecider(res).should_validate():
             found = utils.traverse(res, path)
 
-            assert found, utils.bad_response_assert_with_resource(response=context.response,
-                                                                  message=ERROR_FIELD_NOT_PRESENT,
-                                                                  resource=res,
-                                                                  field=field_name,
-                                                                  json=json.dumps(res, indent=2))
-            assert value in found, utils.bad_response_assert_with_resource(response=context.response,
-                                                                           message=ERROR_WRONG_FIXED,
-                                                                           resource=res,
-                                                                           values=found,
-                                                                           value=value)
+            assert found, utils.bad_response_assert_with_resource(
+                response=context.response,
+                message=ERROR_FIELD_NOT_PRESENT,
+                resource=res,
+                field=field_name,
+                json=json.dumps(res, indent=2))
+
+            assert value in found, utils.bad_response_assert_with_resource(
+                response=context.response,
+                message=ERROR_WRONG_FIXED,
+                resource=res,
+                values=found,
+                value=value)
