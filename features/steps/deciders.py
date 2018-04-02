@@ -6,7 +6,7 @@ class StepDecider:
     def __init__(self, context):
         """
         Behave context of currently running step.
-        :param context: 
+        :param context: A Behave framework context
         """
         self.context = context
 
