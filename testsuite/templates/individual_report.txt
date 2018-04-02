@@ -9,19 +9,23 @@ TAGS
 
 {% if run.summary.snapshot is not none -%}
 
-FAILURES
+WARNINGS AND FAILURES
 --------
 
 {% for feature in run.summary.snapshot -%}
 
 {% if feature.status == "failed" -%}
-{{ feature.name.upper() }} : {{ feature.status.upper() }}
+{{ feature.name.upper() }} : WARNINGS OR FAILURES
     {% for element in feature.elements -%}
         {% for step in element.steps -%}
             {% if step.result is defined -%}
                 {% if step.result.status != "passed" %}
 Name : {{ step.name }}
+{% if 'warning' in element.tags -%}
+Warning : {{ step.result.error_message|first }}
+{% else -%}
 Error : {{ step.result.error_message|first }}
+{% endif -%}
                 {% endif -%}
             {% endif -%}
         {% endfor -%}
