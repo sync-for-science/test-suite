@@ -7,23 +7,46 @@ Vendor config files define the FHIR API and authentication/authorization process
 ```yaml
 ---
 api:
-  url:  # The FHIR base url
-  patient:  # A patient ID to run tests against
+  versions:
+    DSTU2: # Specify the version of FHIR the URL below should be used for.
+      url:  # The FHIR base url
+      patient:  # A patient ID to run tests against
+
+use_cases: # This defines which test 'groups' are to be run. (security, ehr, financial)
+  security: DSTU2 # Define an FHIR version for each
+  ehr: DSTU2
+
+# You can use this configuration to skip individual steps, or whole features, if they don't apply to your installation.
+ignored_steps:
+  features/00-patient-documents.feature: # Skip a single test, use the test text from within feature file.
+    - DocumentReference.type is bound to http://hl7.org/fhir/ValueSet/c80-doc-typecodes
+  features/00-smoking.feature: # Skip whole feature
+    - all
 
 auth:
-  strategy:  # The oAuth strategy to use. One of refresh_token|client_credentials|none
-  client_id:  # The oAuth client_id
-  client_secret:  # The oAuth client_secret
-  scope: launch/patient patient/*.read offline_access
-  confidential_client:  # Should the test suite use basic auth while requesting tokens.
-  token_url:  # Use when the token URL cannot be derived from a conformance statement
-  revoke_url:  # The URL of a page where a user would revoke authorizations
-  sign_in_steps: []
-  authorize_steps: []
-  revoke_steps: []
-  browser:
-    preferences:  # Preferences passed directly to the FireFox webdriver
+  versions:
+    DSTU2:
+      strategy:  # The oAuth strategy to use. One of refresh_token|client_credentials|none
+      client_id:  # The oAuth client_id
+      client_secret:  # The oAuth client_secret
+      scope: launch/patient patient/*.read offline_access
+      confidential_client:  # Should the test suite use basic auth while requesting tokens.
+      token_url:  # Use when the token URL cannot be derived from a conformance statement
+      revoke_url:  # The URL of a page where a user would revoke authorizations
+      sign_in_steps: []
+      authorize_steps: []
+      revoke_steps: []
+      browser:
+        preferences:  # Preferences passed directly to the FireFox webdriver
 ```
+
+## Use Cases
+
+The Use Case block can be one of *security*, *ehr* or *financial*. This defines which tests will be run to avoid a large number of reported failures if your installation doesn't support the full complement of FHIR Resources (We don't expect them to!) *Financial* will test ExplanationOfBenefit and Coverage where *ehr* will test the Meaningful Use Common Clinical Data Set. Security is a required test for all installations.
+
+## Versioning
+
+The FHIR Version is used throughout the configuration to enable more complex setups where there are multiple versions of FHIR in use. The use_cases block defines what the test suite should expect the version to be for the different use case groups. For each use case it will look in the auth and api blocks for the matching version string in order to determine which parameters to use.
 
 ## Steps
 

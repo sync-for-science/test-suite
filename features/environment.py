@@ -158,7 +158,7 @@ def before_feature(context, feature):
                 feature.skip("Feature (%s) requested skip by vendor." % feature)
 
     except KeyError:
-        logging.info("ignored_steps not configured for this feature.")
+        pass
 
     tags = list(FHIR_RESOURCE_TAGS.intersection(feature.tags))
 
@@ -203,7 +203,7 @@ def before_step(context, step):
                 context.vendor_skip = True
                 break
     except KeyError:
-        logging.info("ignored_steps not configured for this step.")
+        pass
 
 
 class Cache(object):
