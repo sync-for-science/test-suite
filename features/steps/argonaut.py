@@ -309,10 +309,10 @@ def found_at_least_one(resources, path, value):
     :return: Boolean
     """
     for res in resources:
-            found_path = utils.traverse(res, path)
+        found_path = utils.traverse(res, path)
 
-            if found_path and value in found_path:
-                return True
+        if found_path and value in found_path:
+            return True
 
     return False
 
