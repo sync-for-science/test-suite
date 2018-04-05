@@ -17,10 +17,22 @@ class StepDecider:
         return not self.__skip_context()
 
 
-class ResourceDecider:
+class ResourceDecider(object):
     """
     Determines if a resource should be validated based on Argonaut Value Sets.
     """
+    def __init__(self, resource):
+        self.resource = resource
+
+    def _needs_argo_validation(self):
+        pass
+
+    def should_validate(self):
+        return self._needs_argo_validation()
+
+
+class ArgonautObservationDecider(ResourceDecider):
+
     argo_vital_codes = ["8716-3",
                         "9279-1",
                         "8867-4",
@@ -35,30 +47,19 @@ class ResourceDecider:
                         "8480-6",
                         "8462-4"]
 
-    def __init__(self, resource):
-        self.resource = resource
+    def _needs_argo_validation(self):
 
-    def __needs_argo_validation(self):
+        if self.resource["resourceType"] != "Observation":
+            return True
 
-        validate = False
-        found_validation_toggle = False
+        category_codes = [category.get('code', None)
+                          for category in self.resource.get("category", {}).get("coding", {})]
 
-        try:
-            for category_coding in self.resource["category"]["coding"]:
-                if category_coding["code"] == "vital-signs":
-                    found_validation_toggle = True
-                    for code in self.resource['code']['coding']:
-                        if code["code"] in self.argo_vital_codes:
-                            validate = True
-        except KeyError:
-            validate = False
-        except TypeError:
-            validate = False
+        if 'vital-signs' not in category_codes:
+            return True
 
-        if not found_validation_toggle:
-            validate = True
+        codings = [code.get("code", None)
+                   for code in self.resource.get('code', {}).get('coding', {})]
 
-        return validate
-
-    def should_validate(self):
-        return self.__needs_argo_validation()
+        if any(code in self.argo_vital_codes for code in codings):
+            return True

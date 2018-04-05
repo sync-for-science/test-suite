@@ -9,7 +9,7 @@ from features.steps import utils
 
 from testsuite import systems
 
-from features.steps.deciders import StepDecider, ResourceDecider
+from features.steps.deciders import StepDecider, ArgonautObservationDecider
 
 ERROR_CODING_MISSING = '''
 {field_name} is missing field "coding".
@@ -30,6 +30,8 @@ ERROR_MISSING_FIELD = ('The resources identified by ids ({resource_ids}) were ab
                        ' all of the following fields: {field_list}')
 
 ERROR_WRONG_FIXED = 'None of {values} match {value}.'
+
+ERROR_NO_VALID_ENTRIES = 'No resources have {field_name} set to {value}.'
 
 
 def get_resources(resource, filter_type):
@@ -130,7 +132,8 @@ def step_impl(context, field_string, resource):
 
     valid_resource_ids = set([
         res.get("id") for res in resources
-        if not ResourceDecider(res).should_validate() or utils.has_one_of(res, fields_to_find)])
+        if not ArgonautObservationDecider(res).should_validate() or
+        utils.has_one_of(res, fields_to_find)])
 
     all_resource_ids = set([res.get("id") for res in resources])
 
@@ -245,7 +248,7 @@ def step_impl(context, field_name, value_set_url):
     resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
-        if ResourceDecider(res).should_validate():
+        if ArgonautObservationDecider(res).should_validate():
             found = utils.traverse(res, path)
             if isinstance(found, str):
                 found = [found]
@@ -281,6 +284,39 @@ def step_impl(context, field_name, value_set_url):
                     json=json.dumps(res, indent=2))
 
 
+@then(u'there is at least one entry with a fixed {field_name}={value}')
+def step_impl(context, field_name, value):
+    path = field_name.split('.')
+    filter_type = path.pop(0)
+    resources = get_resources(context.response.json(), filter_type)
+
+    found_one = found_at_least_one(resources, path, value)
+
+    assert found_one, utils.bad_response_assert(
+        response=context.response,
+        message=ERROR_NO_VALID_ENTRIES,
+        field_name=field_name,
+        value=value)
+
+
+def found_at_least_one(resources, path, value):
+    """
+    Return a boolean indicating if we found a resource with
+    the specified path declared, having the specified value.
+    :param resources: A list of dictionaries.
+    :param path: A list representing the steps in the path, top element is NOT the resource type.
+    :param value: The value you want the last element in the path to have.
+    :return: Boolean
+    """
+    for res in resources:
+            found_path = utils.traverse(res, path)
+
+            if found_path and value in found_path:
+                return True
+
+    return False
+
+
 @then(u'there exists a fixed {field_name}={value}')
 def step_impl(context, field_name, value):
 
@@ -292,7 +328,7 @@ def step_impl(context, field_name, value):
     resources = get_resources(context.response.json(), filter_type)
 
     for res in resources:
-        if ResourceDecider(res).should_validate():
+        if ArgonautObservationDecider(res).should_validate():
             found = utils.traverse(res, path)
 
             assert found, utils.bad_response_assert_with_resource(

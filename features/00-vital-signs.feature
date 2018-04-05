@@ -44,6 +44,7 @@ Feature: Vital signs
     Scenario: Resources fulfill the Argonaut Vital Signs profile
         Given I have a Vital signs response
         And there is at least 1 Observation entry
+        Then there is at least one entry with a fixed Observation.category.coding.code=vital-signs
         Then there exists one status in Observation.status
         Then there exists one category in Observation.category
         And there exists a fixed Observation.category.coding.system=http://hl7.org/fhir/observation-category
