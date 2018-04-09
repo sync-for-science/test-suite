@@ -43,6 +43,7 @@ def get_resources(resource, filter_type):
 
 
 def in_value_set(coding, value_set_url):
+
     try:
         return systems.validate_code(coding.get('code'), value_set_url)
     except systems.SystemNotRecognized:
@@ -344,3 +345,60 @@ def step_impl(context, field_name, value):
                 resource=res,
                 values=found,
                 value=value)
+
+
+def vital_unit_validation(field_name, resource, system_url):
+
+    path = field_name.split('.')
+    path.pop(0)
+
+    if path[0] == "valueQuantity":
+        found = utils.traverse(resource, path + ["system"])
+        if found != system_url:
+            return {"id": resource["id"], "status": "Wrong System"}
+
+        if not in_value_set({"code": utils.traverse(resource, path + ["code"])}, system_url):
+            return {"id": resource["id"], "status": "Invalid Code"}
+
+        return None
+    elif path[0] == "component":
+        print(utils.traverse(resource, path + ["system"]))
+        if any(system != system_url for system in utils.traverse(resource, path + ["system"])):
+            return {"id": resource["id"], "status": "Wrong System"}
+
+        if any(not in_value_set({"code": code}, system_url) for code in utils.traverse(resource, path + ["code"])):
+            return {"id": resource["id"], "status": "Invalid Code"}
+
+        return None
+    else:
+        return None
+
+
+
+@then(u'Proper UCUM codes ({system_url}) are used if {field_name} is present.')
+def step_impl(context, system_url, field_name):
+    if not StepDecider(context).should_run_test():
+        return
+
+    path = field_name.split('.')
+    filter_type = path.pop(0)
+    resources = get_resources(context.response.json(), filter_type)
+
+    bad_resource_results = []
+
+    for res in resources:
+        if ArgonautObservationDecider(res).should_validate():
+            found = utils.traverse(res, path)
+
+            if found:
+                vital_validation_status = vital_unit_validation(field_name, res, system_url)
+
+                if vital_validation_status:
+                    bad_resource_results.append(vital_validation_status)
+
+    assert False, utils.bad_response_assert_with_resource(
+        response=context.response,
+        message=ERROR_FIELD_NOT_PRESENT,
+        resource=res,
+        field=field_name,
+        json=json.dumps(res, indent=2))

@@ -52,6 +52,7 @@ Feature: Vital signs
         Then there exists one code in Observation.code
         And there exists a fixed Observation.code.coding.system=http://loinc.org
         And Observation.code is bound to http://fhir.org/guides/argonaut/ValueSet/observation-ccdavitalsignresult
-        # Then when using a panel code...
         Then there exists one patient in Observation.subject
         Then there exists one date and time in Observation.effectiveDateTime or Observation.effectivePeriod
+        Then Proper UCUM codes (http://unitsofmeasure.org/) are used if Observation.valueQuantity is present.
+        Then Proper UCUM codes (http://unitsofmeasure.org/) are used if Observation.component.valueQuantity is present.
