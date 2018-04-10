@@ -54,5 +54,5 @@ Feature: Vital signs
         And Observation.code is bound to http://fhir.org/guides/argonaut/ValueSet/observation-ccdavitalsignresult
         Then there exists one patient in Observation.subject
         Then there exists one date and time in Observation.effectiveDateTime or Observation.effectivePeriod
-        Then Proper UCUM codes (http://unitsofmeasure.org/) are used if Observation.valueQuantity is present.
-        Then Proper UCUM codes (http://unitsofmeasure.org/) are used if Observation.component.valueQuantity is present.
+        Then Proper UCUM codes (http://unitsofmeasure.org) are used if Observation.valueQuantity is present.
+        Then Proper UCUM codes (http://unitsofmeasure.org) are used if Observation.component.valueQuantity is present.

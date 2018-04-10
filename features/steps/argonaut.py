@@ -31,6 +31,8 @@ ERROR_MISSING_FIELD = ('The resources identified by ids ({resource_ids}) were ab
 
 ERROR_WRONG_FIXED = 'None of {values} match {value}.'
 
+ERROR_UCUM_CODES = 'Unit validation failed for {field_name}.'
+
 ERROR_NO_VALID_ENTRIES = 'No resources have {field_name} set to {value}.'
 
 
@@ -353,26 +355,24 @@ def vital_unit_validation(field_name, resource, system_url):
     path.pop(0)
 
     if path[0] == "valueQuantity":
-        found = utils.traverse(resource, path + ["system"])
-        if found != system_url:
-            return {"id": resource["id"], "status": "Wrong System"}
+        if utils.traverse(resource, path + ["system"]) != system_url:
+            return {"resource": resource, "status": "Wrong System"}
 
         if not in_value_set({"code": utils.traverse(resource, path + ["code"])}, system_url):
-            return {"id": resource["id"], "status": "Invalid Code"}
+            return {"resource": resource, "status": "Invalid Code"}
 
         return None
     elif path[0] == "component":
-        print(utils.traverse(resource, path + ["system"]))
+
         if any(system != system_url for system in utils.traverse(resource, path + ["system"])):
-            return {"id": resource["id"], "status": "Wrong System"}
+            return {"resource": resource, "status": "Wrong System"}
 
         if any(not in_value_set({"code": code}, system_url) for code in utils.traverse(resource, path + ["code"])):
-            return {"id": resource["id"], "status": "Invalid Code"}
+            return {"resource": resource, "status": "Invalid Code"}
 
         return None
     else:
         return None
-
 
 
 @then(u'Proper UCUM codes ({system_url}) are used if {field_name} is present.')
@@ -396,9 +396,8 @@ def step_impl(context, system_url, field_name):
                 if vital_validation_status:
                     bad_resource_results.append(vital_validation_status)
 
-    assert False, utils.bad_response_assert_with_resource(
+    assert len(bad_resource_results) == 0, utils.bad_response_assert_with_resource(
         response=context.response,
-        message=ERROR_FIELD_NOT_PRESENT,
-        resource=res,
-        field=field_name,
-        json=json.dumps(res, indent=2))
+        message=ERROR_UCUM_CODES,
+        resource=bad_resource_results,
+        field_name=field_name)

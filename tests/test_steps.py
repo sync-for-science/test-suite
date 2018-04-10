@@ -31,11 +31,11 @@ def test_ucum_validation():
     resource_path = "Observation.category.coding.code".split(".")
     resource_path.pop(0)
 
-    wrong_system_response = {'id': 'weight', 'status': 'Wrong System'}
-    wrong_code_response = {'id': 'weight', 'status': 'Invalid Code'}
+    wrong_system_response = {'resource': "", 'status': 'Wrong System'}
+    wrong_code_response = {'resource': "", 'status': 'Invalid Code'}
 
-    wrong_system_response_bp = {'id': 'blood-pressure', 'status': 'Wrong System'}
-    wrong_code_response_bp = {'id': 'blood-pressure', 'status': 'Invalid Code'}
+    wrong_system_response_bp = {'resource': "", 'status': 'Wrong System'}
+    wrong_code_response_bp = {'resource': "", 'status': 'Invalid Code'}
 
     system_url = "http://unitsofmeasure.org"
 
@@ -48,19 +48,23 @@ def test_ucum_validation():
 
     # Bad system valueQuantity
     fake_resource["valueQuantity"]["system"] = "http://notunitsofmeasure.org"
+    wrong_system_response["resource"] = fake_resource
     assert vital_unit_validation(value_path, fake_resource, system_url) == wrong_system_response
 
     # Bad code valueQuantity
     fake_resource = copy.deepcopy(resources[0])
     fake_resource["valueQuantity"]["code"] = "kgg"
+    wrong_code_response["resource"] = fake_resource
     assert vital_unit_validation(value_path, fake_resource, system_url) == wrong_code_response
 
     fake_resource = copy.deepcopy(resources[2])
     assert vital_unit_validation(component_value_path, fake_resource, system_url) is None
 
     fake_resource["component"][0]["valueQuantity"]["system"] = "http://notunitsofmeasure.org"
+    wrong_system_response_bp["resource"] = fake_resource
     assert vital_unit_validation(component_value_path, fake_resource, system_url) == wrong_system_response_bp
 
     fake_resource = copy.deepcopy(resources[2])
     fake_resource["component"][0]["valueQuantity"]["code"] = "kgg"
+    wrong_code_response_bp["resource"] = fake_resource
     assert vital_unit_validation(component_value_path, fake_resource, system_url) == wrong_code_response_bp
