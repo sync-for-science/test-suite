@@ -3,6 +3,7 @@ from tests.testvitals import VitalsResource
 from features.steps.argonaut import found_at_least_one, vital_unit_validation
 import copy
 
+
 def test_argonaut_validation():
     resources = VitalsResource().get_resources()
 
@@ -62,9 +63,11 @@ def test_ucum_validation():
 
     fake_resource["component"][0]["valueQuantity"]["system"] = "http://notunitsofmeasure.org"
     wrong_system_response_bp["resource"] = fake_resource
-    assert vital_unit_validation(component_value_path, fake_resource, system_url) == wrong_system_response_bp
+    assert vital_unit_validation(component_value_path, fake_resource, system_url) \
+        == wrong_system_response_bp
 
     fake_resource = copy.deepcopy(resources[2])
     fake_resource["component"][0]["valueQuantity"]["code"] = "kgg"
     wrong_code_response_bp["resource"] = fake_resource
-    assert vital_unit_validation(component_value_path, fake_resource, system_url) == wrong_code_response_bp
+    assert vital_unit_validation(component_value_path, fake_resource, system_url) \
+        == wrong_code_response_bp

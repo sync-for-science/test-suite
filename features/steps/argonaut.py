@@ -367,7 +367,8 @@ def vital_unit_validation(field_name, resource, system_url):
         if any(system != system_url for system in utils.traverse(resource, path + ["system"])):
             return {"resource": resource, "status": "Wrong System"}
 
-        if any(not in_value_set({"code": code}, system_url) for code in utils.traverse(resource, path + ["code"])):
+        if any(not in_value_set({"code": code}, system_url)
+               for code in utils.traverse(resource, path + ["code"])):
             return {"resource": resource, "status": "Invalid Code"}
 
         return None
