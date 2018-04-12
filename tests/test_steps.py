@@ -36,9 +36,11 @@ def test_ucum_validation():
 
     wrong_system_response = {'resource': "", 'status': 'Wrong System'}
     wrong_code_response = {'resource': "", 'status': 'Invalid Code'}
+    mismatch_code_response = {'resource': "", 'status': 'Mismatched vital unit and vital type'}
 
     wrong_system_response_bp = {'resource': "", 'status': 'Wrong System'}
     wrong_code_response_bp = {'resource': "", 'status': 'Invalid Code'}
+    mismatch_code_response_bp = {'resource': "", 'status': 'Mismatched vital unit and vital type'}
 
     system_url = "http://unitsofmeasure.org"
 
@@ -60,16 +62,32 @@ def test_ucum_validation():
     wrong_code_response["resource"] = fake_resource
     assert vital_unit_validation(value_path, fake_resource, system_url) == wrong_code_response
 
+    # Mismatched valueQuantity
+    fake_resource = copy.deepcopy(resources[0])
+    fake_resource["valueQuantity"]["code"] = "/min"
+    mismatch_code_response["resource"] = fake_resource
+    assert vital_unit_validation(value_path, fake_resource, system_url) == mismatch_code_response
+
+    # Correct component valueQuantity
     fake_resource = copy.deepcopy(resources[2])
     assert vital_unit_validation(component_value_path, fake_resource, system_url) is None
 
+    # Bad component system valueQuantity
     fake_resource["component"][0]["valueQuantity"]["system"] = "http://notunitsofmeasure.org"
     wrong_system_response_bp["resource"] = fake_resource
     assert vital_unit_validation(component_value_path, fake_resource, system_url) \
         == wrong_system_response_bp
 
+    # Bad component code valueQuantity
     fake_resource = copy.deepcopy(resources[2])
     fake_resource["component"][0]["valueQuantity"]["code"] = "kgg"
     wrong_code_response_bp["resource"] = fake_resource
     assert vital_unit_validation(component_value_path, fake_resource, system_url) \
         == wrong_code_response_bp
+
+    # Mismatched component valueQuantity
+    fake_resource = copy.deepcopy(resources[2])
+    fake_resource["component"][0]["valueQuantity"]["code"] = "/min"
+    mismatch_code_response_bp["resource"] = fake_resource
+    assert vital_unit_validation(component_value_path, fake_resource, system_url) \
+        == mismatch_code_response_bp

@@ -35,6 +35,18 @@ ERROR_UCUM_CODES = 'Unit validation failed for {field_name}.'
 
 ERROR_NO_VALID_ENTRIES = 'No resources have {field_name} set to {value}.'
 
+vitals_code_lookup = {"9279-1": ["/min"],
+                      "8867-4": ["/min"],
+                      "59408-5": ["%"],
+                      "8310-5": ["Cel", "degF]"],
+                      "8302-2": ["cm", "[in_i]"],
+                      "8306-3": ["cm", "[in_i]"],
+                      "8287-5": ["cm", "[in_i]"],
+                      "29463-7": ["g", "kg", "[lb_av]"],
+                      "39156-5": ["kg/m2"],
+                      "8480-6": ["mm[Hg]"],
+                      "8462-4": ["mm[Hg]"]}
+
 
 def get_resources(resource, filter_type):
     if 'entry' in resource:
@@ -354,26 +366,33 @@ def vital_unit_validation(field_name, resource, system_url):
     path = field_name.split('.')
     path.pop(0)
 
-    if path[0] == "valueQuantity":
-        if utils.traverse(resource, path + ["system"]) != system_url:
-            return {"resource": resource, "status": "Wrong System"}
+    systems_to_validate = utils.traverse(resource, path + ["system"])
+    codes_to_validate = utils.traverse(resource, path + ["code"])
+    values_to_validate = utils.traverse(resource, ["component"])
 
-        if not in_value_set({"code": utils.traverse(resource, path + ["code"])}, system_url):
-            return {"resource": resource, "status": "Invalid Code"}
+    if not isinstance(systems_to_validate, list):
+        systems_to_validate = [systems_to_validate]
 
-        return None
-    elif path[0] == "component":
+    if not isinstance(codes_to_validate, list):
+        codes_to_validate = [codes_to_validate]
 
-        if any(system != system_url for system in utils.traverse(resource, path + ["system"])):
-            return {"resource": resource, "status": "Wrong System"}
+    if not values_to_validate:
+        values_to_validate = [resource]
 
-        if any(not in_value_set({"code": code}, system_url)
-               for code in utils.traverse(resource, path + ["code"])):
-            return {"resource": resource, "status": "Invalid Code"}
+    if any(system != system_url for system in systems_to_validate):
+        return {"resource": resource, "status": "Wrong System"}
 
-        return None
-    else:
-        return None
+    if any(not in_value_set({"code": code}, system_url) for code in codes_to_validate):
+        return {"resource": resource, "status": "Invalid Code"}
+
+    for value in values_to_validate:
+
+        required_code_list = vitals_code_lookup[value["code"]["coding"][0]["code"]]
+
+        if not value["valueQuantity"]["code"] in required_code_list:
+            return {"resource": resource, "status": "Mismatched vital unit and vital type"}
+
+    return None
 
 
 @then(u'Proper UCUM codes ({system_url}) are used if {field_name} is present.')
