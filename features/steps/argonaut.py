@@ -38,7 +38,7 @@ ERROR_NO_VALID_ENTRIES = 'No resources have {field_name} set to {value}.'
 vitals_code_lookup = {"9279-1": ["/min"],
                       "8867-4": ["/min"],
                       "59408-5": ["%"],
-                      "8310-5": ["Cel", "degF]"],
+                      "8310-5": ["Cel", "[degF]"],
                       "8302-2": ["cm", "[in_i]"],
                       "8306-3": ["cm", "[in_i]"],
                       "8287-5": ["cm", "[in_i]"],
