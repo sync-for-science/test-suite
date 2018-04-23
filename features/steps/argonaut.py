@@ -387,10 +387,14 @@ def vital_unit_validation(field_name, resource, system_url):
 
     for value in values_to_validate:
 
-        required_code_list = vitals_code_lookup[value["code"]["coding"][0]["code"]]
+        current_code = value["code"]["coding"][0]["code"]
 
-        if not value["valueQuantity"]["code"] in required_code_list:
-            return {"resource": resource, "status": "Mismatched vital unit and vital type"}
+        if current_code in vitals_code_lookup:
+
+            required_code_list = vitals_code_lookup[current_code]
+
+            if not value["valueQuantity"]["code"] in required_code_list:
+                return {"resource": resource, "status": "Mismatched vital unit and vital type"}
 
     return None
 
