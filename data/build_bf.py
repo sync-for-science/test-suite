@@ -28,7 +28,7 @@ DATA_DIR = path.dirname(__file__)
 
 # SOURCES
 LOINC_PATH = path.join(DATA_DIR, 'loinc', 'loinc.csv')
-SNOMED_PATH = path.join(DATA_DIR, 'snomed', 'SnomedCT_USEditionRF2_Production_20170301T120000', 'Full', 'Terminology', 'sct2_Concept_Full_US1000124_20170301.txt')
+SNOMED_PATH = path.join(DATA_DIR, 'snomed', 'SnomedCT_USEditionRF2_Production', 'Full', 'Terminology', 'sct2_Concept_Full_US1000124_20170901.txt')
 RXNORM_PATH = path.join(DATA_DIR, 'rxnorm', 'rrf', 'RXNCONSO.RRF')
 RXNORM_DEPRECATED_PATH = path.join(DATA_DIR, 'rxnorm', 'rrf', 'RXNCUI.RRF')
 ICD9_PATH = path.join(DATA_DIR, 'icd9', 'CMS32_DESC_LONG_DX.txt')
@@ -36,7 +36,14 @@ ICD10_PATH = path.join(DATA_DIR, 'icd10', 'icd10cm_tabular_2017.xml')
 CPT_PATH = path.join(DATA_DIR, 'cpt', 'MRCONSO.RRF')
 CVX_PATH = path.join(DATA_DIR, 'cvx', 'cvx.txt')
 ARGO_VITAL_SIGNS_PATH = path.join(DATA_DIR, 'fhir', 'argo-vital-signs.json')
+ARGO_VITAL_SIGNS_UNITS_PATH = path.join(DATA_DIR, 'fhir', 'argo-vital-signs-units.json')
 ARGO_EXTENSIONS_PATH = path.join(DATA_DIR, 'fhir', 'argo-extension-codes.json')
+ARGO_ALLERGY_STATUS_PATH = path.join(DATA_DIR, 'fhir', 'argo-allergy-status.json')
+ARGO_DOC_TYPECODES_PATH = path.join(DATA_DIR, 'fhir', 'c80-doc-typecodes.json')
+ARGO_OBS_STATUS_PATH = path.join(DATA_DIR, 'fhir', 'argo-observation-status.json')
+ARGO_COND_VER_STATUS_PATH = path.join(DATA_DIR, 'fhir', 'argo-condition-ver-status.json')
+ARGO_PROCEDURE_STATUS_PATH = path.join(DATA_DIR, 'fhir', 'argo-procedure-status.json')
+ARGO_DOC_REF_STATUS_PATH = path.join(DATA_DIR, 'fhir', 'argo-doc-ref-status.json')
 
 # DESTINATIONS
 ARGO_SYSTEMS_PATH = path.join(DATA_DIR, 'fhir', 'argo.json')
@@ -104,6 +111,7 @@ def import_icd9(bf):
 
             # Splice a "." into the code at position 3
             dot_code = '.'.join((code[:3], code[3:]))
+
             bf.add(ICD9 + '|' + dot_code)
 
 
@@ -198,7 +206,15 @@ def import_daf(bf):
 
 
 def import_argo(bf):
-    paths = ARGO_VITAL_SIGNS_PATH, ARGO_EXTENSIONS_PATH
+    paths = ARGO_VITAL_SIGNS_PATH, \
+            ARGO_ALLERGY_STATUS_PATH, \
+            ARGO_EXTENSIONS_PATH, \
+            ARGO_DOC_TYPECODES_PATH, \
+            ARGO_OBS_STATUS_PATH, \
+            ARGO_COND_VER_STATUS_PATH, \
+            ARGO_PROCEDURE_STATUS_PATH, \
+            ARGO_DOC_REF_STATUS_PATH, \
+            ARGO_VITAL_SIGNS_UNITS_PATH
 
     argo_systems = []
 
@@ -237,7 +253,6 @@ def import_cvx(bf):
 
         for row in reader:
             bf.add(CVX + '|' + row['cvx code'].strip())
-
 
 try:
     # If the bloom filter already exists, we're probably just appending to it
