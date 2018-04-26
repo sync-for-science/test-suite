@@ -1,0 +1,27 @@
+{
+  "resourceType": "ValueSet",
+  "id": "argo-procedure-status",
+  "url": "http://hl7.org/fhir/DSTU2/procedure-status",
+  "name": "Argonaut Procedure Status",
+  "compose": {
+    "include": [
+      {
+        "system": "hhttp://hl7.org/fhir/DSTU2/procedure-status",
+        "concept": [
+          {
+            "code": "active"
+          },
+          {
+            "code": "aborted"
+          },
+                    {
+            "code": "completed"
+          },
+                    {
+            "code": "entered-in-error"
+          }
+        ]
+      }
+    ]
+  }
+}

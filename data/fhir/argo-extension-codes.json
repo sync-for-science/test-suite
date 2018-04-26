@@ -1,7 +1,7 @@
 {
   "resourceType": "ValueSet",
   "id": "argo-extension-codes",
-  "url": "http://hl7.org/fhir/us/argonaut/ValueSet/extension-codes",
+  "url": "http://hl7.org/fhir/DSTU2/us/argonaut/ValueSet/extension-codes",
   "name": "Argonaut Extension Codes",
   "publisher": "Argonaut Project",
   "date": "2016-05-26",
@@ -9,7 +9,7 @@
   "compose": {
     "include": [
       {
-        "system": "http://argonaut.hl7.org",
+        "system": "http://hl7.org/fhir/DSTU2/us/argonaut/ValueSet/extension-codes",
         "concept": [
           {
             "code": "problem"

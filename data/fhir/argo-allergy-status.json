@@ -1,0 +1,36 @@
+{
+  "resourceType": "ValueSet",
+  "id": "argo-allergy-status",
+  "url": "http://hl7.org/fhir/DSTU2/allergy-intolerance-status",
+  "name": "Argonaut Allergy Status",
+  "compose": {
+    "include": [
+      {
+        "system": "http://hl7.org/fhir/DSTU2/allergy-intolerance-status",
+        "concept": [
+          {
+            "code": "active"
+          },
+          {
+            "code": "unconfirmed"
+          },
+                    {
+            "code": "confirmed"
+          },
+                    {
+            "code": "inactive"
+          },
+                    {
+            "code": "resolved"
+          },
+                    {
+            "code": "refuted"
+          },
+                    {
+            "code": "entered-in-error"
+          }
+        ]
+      }
+    ]
+  }
+}

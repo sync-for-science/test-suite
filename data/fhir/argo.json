@@ -1,1 +1,9 @@
-["http://fhir.org/guides/argonaut/ValueSet/observation-ccdavitalsignresult", "http://hl7.org/fhir/allergy-intolerance-status", "http://hl7.org/fhir/us/argonaut/ValueSet/extension-codes", "http://hl7.org/fhir/ValueSet/c80-doc-typecodes", "http://hl7.org/fhir/observation-status", "http://hl7.org/fhir/ValueSet/condition-ver-status", "http://hl7.org/fhir/procedure-status", "http://hl7.org/fhir/document-reference-status", "http://unitsofmeasure.org"]
+[ "http://fhir.org/guides/argonaut/ValueSet/observation-ccdavitalsignresult",
+  "http://hl7.org/fhir/DSTU2/allergy-intolerance-status",
+  "http://hl7.org/fhir/DSTU2/us/argonaut/ValueSet/extension-codes",
+  "http://hl7.org/fhir/DSTU2/ValueSet/c80-doc-typecodes",
+  "http://hl7.org/fhir/DSTU2/observation-status",
+  "http://hl7.org/fhir/DSTU2/ValueSet/condition-ver-status",
+  "http://hl7.org/fhir/DSTU2/procedure-status",
+  "http://hl7.org/fhir/DSTU2/document-reference-status",
+  "http://unitsofmeasure.org"]

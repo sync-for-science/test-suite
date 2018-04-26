@@ -1,0 +1,45 @@
+{
+  "resourceType": "ValueSet",
+  "id": "argo-condition-ver-status",
+  "url": "http://hl7.org/fhir/DSTU2/ValueSet/condition-ver-status",
+  "name": "ConditionVerificationStatus",
+  "compose": {
+    "include": [
+      {
+        "system": "http://hl7.org/fhir/DSTU2/ValueSet/condition-ver-status",
+        "concept": [
+          {
+      "code": "provisional",
+      "display": "Provisional",
+      "definition": "This is a tentative diagnosis - still a candidate that is under consideration."
+    },
+    {
+      "code": "differential",
+      "display": "Differential",
+      "definition": "One of a set of potential (and typically mutually exclusive) diagnoses asserted to further guide the diagnostic process and preliminary treatment."
+    },
+    {
+      "code": "confirmed",
+      "display": "Confirmed",
+      "definition": "There is sufficient diagnostic and/or clinical evidence to treat this as a confirmed condition."
+    },
+    {
+      "code": "refuted",
+      "display": "Refuted",
+      "definition": "This condition has been ruled out by diagnostic and clinical evidence."
+    },
+    {
+      "code": "entered-in-error",
+      "display": "Entered In Error",
+      "definition": "The statement was entered in error and is not valid."
+    },
+    {
+      "code": "unknown",
+      "display": "Unknown",
+      "definition": "The condition status is unknown.  Note that \"unknown\" is a value of last resort and every attempt should be made to provide a meaningful value other than \"unknown\"."
+    }
+        ]
+      }
+    ]
+  }
+}
