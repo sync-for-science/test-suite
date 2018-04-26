@@ -2,7 +2,7 @@
 import glob
 import os
 
-from flask import jsonify, render_template, request, session
+from flask import jsonify, render_template, request, session, current_app
 from werkzeug import exceptions
 import flask_socketio
 
@@ -10,6 +10,9 @@ from testsuite.application import app
 from testsuite.extensions import db, socketio
 from testsuite.models.testrun import TestRun
 from testsuite import tasks
+
+import requests
+import os.path
 
 ALL_TAGS = ["allergies-and-intolerances", "immunizations",
             "lab-results", "medication-administrations",
@@ -115,6 +118,19 @@ def health_summary():
             latest_results[vendor] = None
 
     return render_template('health_summary.html', vendors=vendors, latest_results=latest_results)
+
+
+@app.route('/update_bloom', methods=['GET'])
+def update_bloom_filter():
+
+    bloom_file = './data/codes.bf'
+
+    r = requests.get(current_app.config['BLOOM_FILTER_URL'])
+    open(bloom_file, 'wb').write(r.content)
+
+    return jsonify({
+        'bloom_in_place': os.path.isfile(bloom_file)
+    })
 
 
 @socketio.on('connect')
