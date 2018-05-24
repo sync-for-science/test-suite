@@ -88,6 +88,23 @@ def step_impl(context):
                                   codings=json.dumps(bad_codings, indent=2))
 
 
+@then('the {field_name} field will be the queried ID')
+def step_impl(context, field_name):
+    resource = context.response.json()
+    patient_id = context.vendor_config['versioned_api'].get('patient')
+
+    assert resource.get(field_name) is not None, \
+        utils.bad_response_assert(context.response,
+                                  ERROR_FIELD_MISSING,
+                                  field_name=field_name)
+    assert resource[field_name] == patient_id, \
+        utils.bad_response_assert(context.response,
+                                  ERROR_FIELD_UNEXPECTED_VALUE,
+                                  field_name=field_name,
+                                  expected=patient_id,
+                                  actual=resource[field_name])
+
+
 @then('the {field_name} field will be {value}')
 def step_impl(context, field_name, value):
     resource = context.response.json()
