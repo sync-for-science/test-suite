@@ -17,6 +17,22 @@ ERROR_NO_NEXT_LINK = 'Link with relation "next" not found.'
 ERROR_UNRESOLVED_REFERENCE = "Reference '{reference}' failed to resolve."
 
 
+def assert_field_exists(context, resource, field_name):
+    assert resource.get(field_name) is not None, \
+        utils.bad_response_assert(context.response,
+                                  ERROR_FIELD_MISSING,
+                                  field_name=field_name)
+
+
+def assert_field_value_matches(context, resource, field_name, expected_value):
+    assert resource[field_name] == expected_value, \
+        utils.bad_response_assert(context.response,
+                                  ERROR_FIELD_UNEXPECTED_VALUE,
+                                  field_name=field_name,
+                                  expected=expected_value,
+                                  actual=resource[field_name])
+
+
 @given(u'I have access to Patient demographics')
 def step_impl(context):
     query = s4s.MU_CCDS_MAPPINGS['Patient demographics']
@@ -93,42 +109,23 @@ def step_impl(context, field_name):
     resource = context.response.json()
     patient_id = context.vendor_config['versioned_api'].get('patient')
 
-    assert resource.get(field_name) is not None, \
-        utils.bad_response_assert(context.response,
-                                  ERROR_FIELD_MISSING,
-                                  field_name=field_name)
-    assert resource[field_name] == patient_id, \
-        utils.bad_response_assert(context.response,
-                                  ERROR_FIELD_UNEXPECTED_VALUE,
-                                  field_name=field_name,
-                                  expected=patient_id,
-                                  actual=resource[field_name])
+    assert_field_exists(context, resource, field_name)
+    assert_field_value_matches(context, resource, field_name, patient_id)
 
 
 @then('the {field_name} field will be {value}')
 def step_impl(context, field_name, value):
     resource = context.response.json()
 
-    assert resource.get(field_name) is not None, \
-        utils.bad_response_assert(context.response,
-                                  ERROR_FIELD_MISSING,
-                                  field_name=field_name)
-    assert resource[field_name] == value, \
-        utils.bad_response_assert(context.response,
-                                  ERROR_FIELD_UNEXPECTED_VALUE,
-                                  field_name=field_name,
-                                  expected=value,
-                                  actual=resource[field_name])
+    assert_field_exists(context, resource, field_name)
+    assert_field_value_matches(context, resource, field_name, value)
 
 
 @then('the {field_name} field will exist')
 def step_impl(context, field_name):
     resource = context.response.json()
 
-    assert resource.get(field_name) is not None, \
-        utils.bad_response_assert(context.response,
-                                  ERROR_FIELD_MISSING,
-                                  field_name=field_name)
+    assert_field_exists(context, resource, field_name)
 
 
 @then('all references will resolve')
@@ -185,10 +182,7 @@ def step_impl(context, field_name):
         entries = [resource]
 
     for entry in entries:
-        assert entry.get(field_name) is not None, \
-            utils.bad_response_assert(context.response,
-                                      ERROR_FIELD_MISSING,
-                                      field_name=field_name)
+        assert_field_exists(context, entry, field_name)
 
 
 def check_reference(reference, orig, context):
