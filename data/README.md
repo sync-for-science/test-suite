@@ -31,3 +31,19 @@
 ## CVX
 
 * Source: [http://www2a.cdc.gov/vaccines/iis/iisstandards/vaccines.asp?rpt=cvx] (NB: "notes" column for code 132 is a multiline field and needs to be quoted)
+
+## Units of Measure
+
+* Source: http://unitsofmeasure.org
+
+## FHIR ARGONAUT
+
+* Source: http://fhir.org/guides/argonaut/ValueSet/observation-ccdavitalsignresult
+* Source: http://hl7.org/fhir/allergy-intolerance-status
+* Source: http://hl7.org/fhir/us/argonaut/ValueSet/extension-codes
+* Source: http://hl7.org/fhir/ValueSet/c80-doc-typecodes
+* Source: http://hl7.org/fhir/observation-status
+* Source: http://hl7.org/fhir/ValueSet/condition-ver-status
+* Source: http://hl7.org/fhir/procedure-status
+* Source: http://hl7.org/fhir/document-reference-status
+* Source: http://www.fhir.org/guides/argonaut/r2/StructureDefinition-argo-vitalsigns.json

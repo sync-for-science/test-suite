@@ -1,0 +1,74 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "observation-ccdavitalsignunitresult",
+  "text" : {
+    "status" : "generated"
+  },
+  "url" : "http://unitsofmeasure.org",
+  "identifier" : {
+    "system" : "urn:ietf:rfc:3986",
+    "value" : "urn:oid:2.16.840.1.113883.3.88.12.80.62"
+  },
+  "version" : "1.6.0",
+  "name" : "Argonaut Vital Sign Unit Codes",
+  "status" : "active",
+  "publisher" : "Argonaut Project",
+  "contact" : [
+    {
+      "telecom" : [
+        {
+          "system" : "other",
+          "value" : "http://hl7.org/fhir",
+          "rank" : 0
+        }
+      ]
+    }
+  ],
+  "date" : "2016-08-10T00:00:00+10:00",
+  "extensible" : true,
+  "compose" : {
+    "include" : [
+      {
+        "system" : "http://unitsofmeasure.org",
+        "concept" : [
+          {
+            "code" : "%"
+          },
+          {
+            "code" : "cm"
+          },
+          {
+            "code" : "kg"
+          },
+          {
+            "code" : "Cel"
+          },
+          {
+            "code" : "mm[Hg]"
+          },
+          {
+            "code" : "/min"
+          },
+          {
+            "code" : "kg/m2"
+          },
+          {
+            "code" : "m2"
+          },
+          {
+            "code" : "[in_i]"
+          },
+          {
+            "code" : "[lb_av]"
+          },
+          {
+            "code" : "deg[F]"
+          },
+          {
+            "code" : "g"
+          }
+        ]
+      }
+    ]
+  }
+}
