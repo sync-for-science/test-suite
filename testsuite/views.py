@@ -123,14 +123,23 @@ def health_summary():
 @app.route('/update_bloom', methods=['GET'])
 def update_bloom_filter():
 
+    bloom_file_status = {}
     bloom_file = './data/codes.bf'
 
-    r = requests.get(current_app.config['BLOOM_FILTER_URL'])
-    open(bloom_file, 'wb').write(r.content)
+    try:
+        r = requests.get(current_app.config['BLOOM_FILTER_URL'])
 
-    return jsonify({
-        'bloom_in_place': os.path.isfile(bloom_file)
-    })
+        with open(bloom_file, 'wb') as f:
+            f.write(r.content)
+
+    except requests.exceptions.RequestException as e:
+        bloom_file_status['error'] = "Error requesting Bloom Filter -- %s" % str(e)
+    except IOError as e:
+        bloom_file_status['error'] = "Error writing Bloom Filter File -- %s" % str(e)
+
+    bloom_file_status['bloom_in_place'] = os.path.isfile(bloom_file)
+
+    return jsonify(bloom_file_status)
 
 
 @socketio.on('connect')
