@@ -128,6 +128,7 @@ def update_bloom_filter():
 
     try:
         r = requests.get(current_app.config['BLOOM_FILTER_URL'])
+        r.raise_for_status()
 
         with open(bloom_file, 'wb') as f:
             f.write(r.content)
