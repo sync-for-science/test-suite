@@ -37,3 +37,7 @@ Feature: Patient demographics
         And each Patient.name must have a name.family
         And each Patient.name must have a name.given
         Then there exists one administrative gender in Patient.gender
+
+    Scenario: Returned patient ID matches queried patient ID
+        Given I have a Patient demographics response
+        Then the id field will be the queried ID
