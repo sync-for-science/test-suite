@@ -83,6 +83,81 @@ class VitalsResource:
             "valueCodeableConcept": {
                 "text": "Room Air"
             }
+        }, {
+            "resourceType": "Observation",
+            "id": "blood-pressure",
+            "meta": {
+                "profile": [
+                    "http://fhir.org/guides/argonaut/StructureDefinition/argo-vitalsigns"
+                ]
+            },
+            "status": "final",
+            "category": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/observation-category",
+                        "code": "vital-signs",
+                        "display": "Vital Signs"
+                    }
+                ],
+                "text": "Vital Signs"
+            },
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://loinc.org",
+                        "code": "55284-4",
+                        "display": "Blood pressure systolic and diastolic"
+                    }
+                ],
+                "text": "Blood pressure systolic and diastolic"
+            },
+            "subject": {
+                "reference": "Patient/peter-chalmers",
+                "display": "Peter Chalmers"
+            },
+            "encounter": {
+                "reference": "Encounter/691"
+            },
+            "effectiveDateTime": "1999-07-02",
+            "component": [
+                {
+                    "code": {
+                        "coding": [
+                            {
+                                "system": "http://loinc.org",
+                                "code": "8480-6",
+                                "display": "Systolic blood pressure"
+                            }
+                        ],
+                        "text": "Systolic blood pressure"
+                    },
+                    "valueQuantity": {
+                        "value": 109,
+                        "unit": "mmHg",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "mm[Hg]"
+                    }
+                },
+                {
+                    "code": {
+                        "coding": [
+                            {
+                                "system": "http://loinc.org",
+                                "code": "8462-4",
+                                "display": "Diastolic blood pressure"
+                            }
+                        ],
+                        "text": "Diastolic blood pressure"
+                    },
+                    "valueQuantity": {
+                        "value": 44,
+                        "unit": "mmHg",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "mm[Hg]"
+                    }
+                }
+            ]
         }]
 
     def get_resources(self):

@@ -12,8 +12,9 @@ ICD9 = 'http://hl7.org/fhir/sid/icd-9-cm'
 ICD10 = 'http://hl7.org/fhir/sid/icd-10'
 CPT = 'http://www.ama-assn.org/go/cpt'
 CVX = 'http://hl7.org/fhir/sid/cvx'
+UNITS_OF_MEASURE = "http://unitsofmeasure.org"
 
-RECOGNIZED = [LOINC, SNOMED, RXNORM, ICD9, ICD10, CPT, CVX]
+RECOGNIZED = [LOINC, SNOMED, RXNORM, ICD9, ICD10, CPT, CVX, UNITS_OF_MEASURE]
 
 # Enumerating all the FHIR systems here would be a waste of time,
 # so load them from the constructed json file.

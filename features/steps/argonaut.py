@@ -31,7 +31,21 @@ ERROR_MISSING_FIELD = ('The resources identified by ids ({resource_ids}) were ab
 
 ERROR_WRONG_FIXED = 'None of {values} match {value}.'
 
+ERROR_UCUM_CODES = 'Unit validation failed for {field_name}.'
+
 ERROR_NO_VALID_ENTRIES = 'No resources have {field_name} set to {value}.'
+
+vitals_code_lookup = {"9279-1": ["/min"],
+                      "8867-4": ["/min"],
+                      "59408-5": ["%"],
+                      "8310-5": ["Cel", "[degF]"],
+                      "8302-2": ["cm", "[in_i]"],
+                      "8306-3": ["cm", "[in_i]"],
+                      "8287-5": ["cm", "[in_i]"],
+                      "29463-7": ["g", "kg", "[lb_av]"],
+                      "39156-5": ["kg/m2"],
+                      "8480-6": ["mm[Hg]"],
+                      "8462-4": ["mm[Hg]"]}
 
 
 def get_resources(resource, filter_type):
@@ -43,6 +57,7 @@ def get_resources(resource, filter_type):
 
 
 def in_value_set(coding, value_set_url):
+
     try:
         return systems.validate_code(coding.get('code'), value_set_url)
     except systems.SystemNotRecognized:
@@ -344,3 +359,67 @@ def step_impl(context, field_name, value):
                 resource=res,
                 values=found,
                 value=value)
+
+
+def vital_unit_validation(field_name, resource, system_url):
+
+    path = field_name.split('.')
+    path.pop(0)
+
+    systems_to_validate = utils.traverse(resource, path + ["system"])
+    codes_to_validate = utils.traverse(resource, path + ["code"])
+    resource_components = utils.traverse(resource, ["component"])
+    values_to_validate = [resource] + (resource_components or [])
+
+    if not isinstance(systems_to_validate, list):
+        systems_to_validate = [systems_to_validate]
+
+    if not isinstance(codes_to_validate, list):
+        codes_to_validate = [codes_to_validate]
+
+    if any(system != system_url for system in systems_to_validate):
+        return {"resource": resource, "status": "Wrong System"}
+
+    if any(not in_value_set({"code": code}, system_url) for code in codes_to_validate):
+        return {"resource": resource, "status": "Invalid Code"}
+
+    for value in values_to_validate:
+        codes_with_unit_requirements = [c["code"] for c in value["code"]["coding"]
+                                        if c["code"] in vitals_code_lookup]
+
+        for code_with_unit_requirement in codes_with_unit_requirements:
+
+            required_code_list = vitals_code_lookup[code_with_unit_requirement]
+
+            if not value["valueQuantity"]["code"] in required_code_list:
+                return {"resource": resource, "status": "Mismatched vital unit and vital type"}
+
+    return None
+
+
+@then(u'Proper UCUM codes ({system_url}) are used if {field_name} is present.')
+def step_impl(context, system_url, field_name):
+    if not StepDecider(context).should_run_test():
+        return
+
+    path = field_name.split('.')
+    filter_type = path.pop(0)
+    resources = get_resources(context.response.json(), filter_type)
+
+    bad_resource_results = []
+
+    for res in resources:
+        if ArgonautObservationDecider(res).should_validate():
+            found = utils.traverse(res, path)
+
+            if found:
+                vital_validation_status = vital_unit_validation(field_name, res, system_url)
+
+                if vital_validation_status:
+                    bad_resource_results.append(vital_validation_status)
+
+    assert len(bad_resource_results) == 0, utils.bad_response_assert_with_resource(
+        response=context.response,
+        message=ERROR_UCUM_CODES,
+        resource=bad_resource_results,
+        field_name=field_name)
