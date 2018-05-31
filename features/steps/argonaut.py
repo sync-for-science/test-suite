@@ -370,7 +370,7 @@ def vital_unit_validation(field_name, resource, system_url):
     codes_to_validate = utils.traverse(resource, path + ["code"])
     resource_components = utils.traverse(resource, ["component"])
     values_to_validate = [resource] + \
-                         (resource_components if resource_components is not None else [])
+        (resource_components if resource_components is not None else [])
 
     if not isinstance(systems_to_validate, list):
         systems_to_validate = [systems_to_validate]
