@@ -56,3 +56,9 @@ Feature: Implements all the S4S requirements
     Scenario: Server implements Patient documents
         Given I have a valid conformance statement
         And this server supports Patient documents
+
+    Scenario: Conformance statement specifies authorize and token endpoints
+        Given I have a valid conformance statement
+        And OAuth is enabled
+        Then the conformance statement provides a authorize endpoint
+        And the conformance statement provides a token endpoint

@@ -6,6 +6,8 @@ from behave import given, then, when, register_type
 import parse
 import requests
 
+from testsuite import fhir
+
 from features.steps import utils
 
 ERROR_MISSING_CONFORMANCE_STATEMENT = '''
@@ -18,6 +20,9 @@ ERROR_VALIDATION_ISSUES = '''
 Resource failed to validate.
 
 {issues}
+'''
+ERROR_CONFORMANCE_MISSING_ENDPOINT = '''
+OAuth2 endpoint "{0}" not found in the conformance statement.
 '''
 MU_CCDS_MAPPINGS = {
     'Server metadata': 'metadata',
@@ -159,3 +164,9 @@ def step_impl(context, version_name):
         utils.bad_response_assert(context.response,
                                   ERROR_VALIDATION_ISSUES,
                                   issues=json.dumps(issues, indent=4))
+
+@then('the conformance statement provides a {endpoint_type} endpoint')
+def step_impl(context, endpoint_type):
+    urls = fhir.get_oauth_uris(context.conformance)
+    assert endpoint_type in urls, \
+        ERROR_CONFORMANCE_MISSING_ENDPOINT.format(endpoint_type)
