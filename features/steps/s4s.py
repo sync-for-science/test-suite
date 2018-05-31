@@ -170,17 +170,25 @@ def step_impl(context, version_name):
                                   issues=json.dumps(issues, indent=4))
 
 
-@then('the conformance statement provides a valid {endpoint_type} endpoint')
+@then('the conformance statement provides a {endpoint_type} endpoint')
 def step_impl(context, endpoint_type):
     urls = fhir.get_oauth_uris(context.conformance)
     endpoint_url = urls.get(endpoint_type)
     assert endpoint_url is not None, \
         ERROR_CONFORMANCE_MISSING_ENDPOINT.format(endpoint_type)
 
-    try:
-        parsed_url = urlparse(endpoint_url)
-        if not parsed_url.scheme:
-            raise ValueError
-    except ValueError:
-        assert False, ERROR_CONFORMANCE_MALFORMED_ENDPOINT.format(endpoint_type,
-                                                                  endpoint_url)
+
+@then('all endpoints in the conformance statement are valid')
+def step_impl(context):
+    urls = fhir.get_oauth_uris(context.conformance)
+
+    for endpoint_type, endpoint_url in urls.items():
+        try:
+            parsed_url = urlparse(endpoint_url)
+            if not parsed_url.scheme:
+                raise ValueError
+        except ValueError:
+            assert False, ERROR_CONFORMANCE_MALFORMED_ENDPOINT.format(
+                endpoint_type,
+                endpoint_url
+            )
