@@ -60,5 +60,5 @@ Feature: Implements all the S4S requirements
     Scenario: Conformance statement specifies authorize and token endpoints
         Given I have a valid conformance statement
         And OAuth is enabled
-        Then the conformance statement provides a authorize endpoint
-        And the conformance statement provides a token endpoint
+        Then the conformance statement provides a valid authorize endpoint
+        And the conformance statement provides a valid token endpoint

@@ -1,6 +1,7 @@
 # pylint: disable=missing-docstring,function-redefined
 import json
 import re
+from urllib.parse import urlparse
 
 from behave import given, then, when, register_type
 import parse
@@ -22,7 +23,10 @@ Resource failed to validate.
 {issues}
 '''
 ERROR_CONFORMANCE_MISSING_ENDPOINT = '''
-OAuth2 endpoint "{0}" not found in the conformance statement.
+OAuth2 "{0}" endpoint not found in the conformance statement.
+'''
+ERROR_CONFORMANCE_MALFORMED_ENDPOINT = '''
+OAuth2 "{0}" endpoint "{1}" is not a valid URI.
 '''
 MU_CCDS_MAPPINGS = {
     'Server metadata': 'metadata',
@@ -166,8 +170,17 @@ def step_impl(context, version_name):
                                   issues=json.dumps(issues, indent=4))
 
 
-@then('the conformance statement provides a {endpoint_type} endpoint')
+@then('the conformance statement provides a valid {endpoint_type} endpoint')
 def step_impl(context, endpoint_type):
     urls = fhir.get_oauth_uris(context.conformance)
-    assert endpoint_type in urls, \
+    endpoint_url = urls.get(endpoint_type)
+    assert endpoint_url is not None, \
         ERROR_CONFORMANCE_MISSING_ENDPOINT.format(endpoint_type)
+
+    try:
+        parsed_url = urlparse(endpoint_url)
+        if not parsed_url.scheme:
+            raise ValueError
+    except ValueError:
+        assert False, ERROR_CONFORMANCE_MALFORMED_ENDPOINT.format(endpoint_type,
+                                                                  endpoint_url)
