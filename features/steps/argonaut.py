@@ -368,16 +368,14 @@ def vital_unit_validation(field_name, resource, system_url):
 
     systems_to_validate = utils.traverse(resource, path + ["system"])
     codes_to_validate = utils.traverse(resource, path + ["code"])
-    values_to_validate = utils.traverse(resource, ["component"])
+    resource_components = utils.traverse(resource, ["component"])
+    values_to_validate = [resource] + (resource_components if resource_components is not None else [])
 
     if not isinstance(systems_to_validate, list):
         systems_to_validate = [systems_to_validate]
 
     if not isinstance(codes_to_validate, list):
         codes_to_validate = [codes_to_validate]
-
-    if not values_to_validate:
-        values_to_validate = [resource]
 
     if any(system != system_url for system in systems_to_validate):
         return {"resource": resource, "status": "Wrong System"}
@@ -386,12 +384,11 @@ def vital_unit_validation(field_name, resource, system_url):
         return {"resource": resource, "status": "Invalid Code"}
 
     for value in values_to_validate:
+        codes_with_unit_requirements = [c["code"] for c in value["code"]["coding"] if c["code"] in vitals_code_lookup]
 
-        current_code = value["code"]["coding"][0]["code"]
+        for code_with_unit_requirement in codes_with_unit_requirements:
 
-        if current_code in vitals_code_lookup:
-
-            required_code_list = vitals_code_lookup[current_code]
+            required_code_list = vitals_code_lookup[code_with_unit_requirement]
 
             if not value["valueQuantity"]["code"] in required_code_list:
                 return {"resource": resource, "status": "Mismatched vital unit and vital type"}
