@@ -165,6 +165,7 @@ def step_impl(context, version_name):
                                   ERROR_VALIDATION_ISSUES,
                                   issues=json.dumps(issues, indent=4))
 
+
 @then('the conformance statement provides a {endpoint_type} endpoint')
 def step_impl(context, endpoint_type):
     urls = fhir.get_oauth_uris(context.conformance)
