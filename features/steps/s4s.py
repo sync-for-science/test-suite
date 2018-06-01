@@ -163,6 +163,7 @@ def step_impl(context, version_name):
                                   ERROR_VALIDATION_ISSUES,
                                   issues=json.dumps(issues, indent=4))
 
+
 @then('a patient ID is supplied')
 def step_impl(context):
     patient_id = getattr(context.oauth, 'patient')
