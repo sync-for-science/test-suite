@@ -19,6 +19,9 @@ Resource failed to validate.
 
 {issues}
 '''
+ERROR_NO_PATIENT_ID = '''
+The authorization server did not return a patient ID.
+'''
 MU_CCDS_MAPPINGS = {
     'Server metadata': 'metadata',
     'Patient demographics': 'Patient/{patientId}',
@@ -159,3 +162,9 @@ def step_impl(context, version_name):
         utils.bad_response_assert(context.response,
                                   ERROR_VALIDATION_ISSUES,
                                   issues=json.dumps(issues, indent=4))
+
+
+@then('a patient ID is supplied')
+def step_impl(context):
+    patient_id = getattr(context.oauth, 'patient')
+    assert patient_id, ERROR_NO_PATIENT_ID

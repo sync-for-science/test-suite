@@ -56,3 +56,7 @@ Feature: Implements all the S4S requirements
     Scenario: Server implements Patient documents
         Given I have a valid conformance statement
         And this server supports Patient documents
+
+    Scenario: Authorization server returns a patient ID
+        Given OAuth is enabled
+        Then a patient ID is supplied
