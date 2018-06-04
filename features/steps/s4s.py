@@ -31,7 +31,7 @@ OAuth2 "{0}" endpoint "{1}" is not a valid URI.
 MU_CCDS_MAPPINGS = {
     'Server metadata': 'metadata',
     'Patient demographics': 'Patient/{patientId}',
-    'Smoking status': 'Observation?category=social-history&patient={patientId}',
+    'Smoking status': 'Observation?code=http://loinc.org%7C72166-2&patient={patientId}',
     'Problems': 'Condition?patient={patientId}',
     'Lab results': 'Observation?category=laboratory&patient={patientId}',
     'Medication orders': 'MedicationOrder?patient={patientId}',
