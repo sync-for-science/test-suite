@@ -7,6 +7,8 @@ import six
 class ChunkedJsonFormatter(PrettyJSONFormatter):
     """ Return JSON in chunks so we can use it with websockets.
     """
+    split_text_into_lines = False
+
     def __init__(self, a, b):
         super(ChunkedJsonFormatter, self).__init__(a, b)
         self.snapshot = []
