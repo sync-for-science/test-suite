@@ -140,9 +140,6 @@ def step_impl(context, mu_ccds_query):  # pylint: disable=W0613
 
     context.execute_steps('then the response code should be 200')
 
-    assert not context.response.history, \
-        'Request was redirected'
-
 
 @then('the correct URI was used')
 def step_impl(context):
