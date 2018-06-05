@@ -134,9 +134,7 @@ def step_impl(context, mu_ccds_query):
 
 
 @given('I have a {mu_ccds_query:MU_CCDS} response')
-def step_impl(context, mu_ccds_query):
-    query = mu_ccds_query.format(patientId=context.vendor_config['versioned_api'].get('patient'))
-
+def step_impl(context, mu_ccds_query):  # pylint: disable=W0613
     assert context.response is not None, \
         'Missing response.'
 
