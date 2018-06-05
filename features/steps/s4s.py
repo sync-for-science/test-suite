@@ -32,6 +32,7 @@ MU_CCDS_MAPPINGS = {
     'Server metadata': 'metadata',
     'Patient demographics': 'Patient/{patientId}',
     'Smoking status': 'Observation?code=http://loinc.org%7C72166-2&patient={patientId}',
+    'Smoking status fallback': 'Observation?category=social-history&patient={patientId}',
     'Problems': 'Condition?patient={patientId}',
     'Lab results': 'Observation?category=laboratory&patient={patientId}',
     'Medication orders': 'MedicationOrder?patient={patientId}',
@@ -115,6 +116,20 @@ def step_impl(context, mu_ccds_query):
     query = mu_ccds_query.format(patientId=context.vendor_config['versioned_api'].get('patient'))
     response = utils.get_resource(context, query)
 
+    context.is_fallback = False
+
+    # we want to support an older way to retrieve smoking status, using the
+    # social-history parameter instead of the code; if the code-based method
+    # fails, fall back to the social-history method
+    if mu_ccds_query == MU_CCDS_MAPPINGS['Smoking status'] and not response.ok:
+        fallback_query = MU_CCDS_MAPPINGS['Smoking status fallback'].format(
+            patientId=context.vendor_config['versioned_api'].get('patient')
+        )
+        response = utils.get_resource(context, fallback_query)
+        context.primary_uri = query
+        context.fallback_uri = fallback_query
+        context.is_fallback = True
+
     context.response = response
 
 
@@ -127,8 +142,14 @@ def step_impl(context, mu_ccds_query):
 
     context.execute_steps('then the response code should be 200')
 
-    assert query in context.response.request.url, \
-        'Missing {query}'.format(query=query)
+
+@then('the correct URI was used')
+def step_impl(context):
+    assert not context.is_fallback, \
+        'Primary URI {primary} failed - used fallback URI {fallback} for remaining tests'.format(
+            primary=context.primary_uri,
+            fallback=context.fallback_uri
+        )
 
 
 @then('the resource parses as valid FHIR {version_name} content')

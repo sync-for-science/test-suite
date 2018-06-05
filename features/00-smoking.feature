@@ -1,6 +1,10 @@
 @use.with_use_case=ehr @smoking-status
 Feature: Smoking status
 
+    Scenario: Correct URI
+        Given I have a Smoking status response
+        Then the correct URI was used
+
     Scenario: Correct resourceType
         Given I have a Smoking status response
         Then the resourceType field will be Bundle
