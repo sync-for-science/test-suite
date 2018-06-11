@@ -17,14 +17,6 @@ Feature: EHR evaluates authorization request
             | state | `%2B~!@#$%^&*()-_=+[{]}\;:'",<.>/? |
         Then the authorization response redirect should validate
 
-    Scenario: UTF-8 characters in "state"
-        Given OAuth is enabled
-        And I am not logged in
-        When I ask for authorization with the following override
-            | key | value |
-            | state | ‘’“”✓☃èÉéÊ¿¡Ææ汉语 |
-        Then the authorization response redirect should validate
-
     Scenario: Authorization request is aborted
         Given OAuth is enabled
         And I am not logged in
