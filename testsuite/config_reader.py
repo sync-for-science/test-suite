@@ -40,7 +40,6 @@ def get_vendor_config(vendor, override=''):
     config["versioned_api"] = config["api"]["versions"][config['security_version']]
 
     config['host'] = os.getenv('BASE_URL', 'http://localhost:9003')
-    config['versioned_auth']['redirect_uri'] = config['host'] + '/authorized/'
 
     return config
 

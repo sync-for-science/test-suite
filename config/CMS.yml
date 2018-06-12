@@ -16,6 +16,7 @@ auth:
       # client_secret intentionally included
       client_secret: hiD2RapR14bkdPERUnyPXEUoWA1fKLitoacHvmyI3igAmXuMbV8JenQjo6LI1lQwuEeToHzbameF8dIth2QxZ0KVswAXzGKe3yWMwbhGcri4pXAVAeAe5zmaQPWgyJYP
       scope: profile patient/Patient.read patient/ExplanationOfBenefit.read patient/Coverage.read
+      redirect_uri: http://tests.dev.syncfor.science:9003/authorized/
       confidential_client: True
       sign_in_steps:
         - element: "#SWEUserName"
