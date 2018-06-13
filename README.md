@@ -2,6 +2,10 @@
 
 Framework for testing S4S API implementations. The interface is a [Flask](http://flask.pocoo.org/) application, and the tests themselves are run as [Celery](http://www.celeryproject.org/) tasks. The tests are written using the [behave](http://behave.readthedocs.io/en/stable/index.html) framework.
 
+## S4S reference stack
+
+The test suite is one component of the [Sync for Science reference stack](https://github.com/sync-for-science/reference-stack-docker), which contains additional services such as DSTU2 and STU3 FHIR servers. The `SMART EHR` servers in the vendor list of the test suite refer to the servers that run with the reference stack, so they will be unavailable if you choose to run the test suite independently. *Additionally*, the FHIR resource validation steps will fail when the test suite is run independently, because those FHIR servers are used to perform the validation.
+
 ## Build and run in Docker
 
 We use [Docker](https://www.docker.com/) to set up all the required services and run the test server.
