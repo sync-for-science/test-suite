@@ -1,33 +1,28 @@
 # S4S Testsuite
 
-Framework for testing S4S API implementations
+Framework for testing S4S API implementations. The interface is a Flask application, and the tests themselves are run as Celery tasks. The tests are written using the behave framework.
 
-## Build and run in docker
+## Build and run in Docker
+
+We use Docker to set up all the required services and run the test server.
 
     git clone https://github.com/sync-for-science/test-suite
     cd test-suite
     docker build -t tests .
     docker run --rm -it \
-      -e BASE_URL=http://tests.dev.syncfor.science:9003 \
-      -p 5000:5000 \
+      -p 9003:5000 \
       tests
+
+`9003` is the default port, but you can configure it to run on other ports - just be sure to add `-e BASE_URL=http://localhost:<port>` to the Docker command as well.
       
-### Develop in docker
+### Develop in Docker
+
+If you want to develop on the app using Docker, mount the repository on the container. Note that the container still has to be restarted to reflect any changes.
 
     docker run --rm -it \
-      -e BASE_URL=http://tests.dev.syncfor.science:9003 \
-      -p 5000:5000 \
+      -p 9003:5000 \
       -v /host/path/to/test-suite:/usr/src/app \
-      tests \
-      /bin/bash
-      
-... and from inside docker, run "behave" to execute tests.
-
-## Installation
-
-This suite was developed for python 3. To install dependencies run `pip install -r requirements.txt`.
-
-To configure your own project, copy `behave.ini.dist` to `behave.ini`, and change the relevant configuration values.
+      tests
 
 ### Building the js app (for development)
 
@@ -35,35 +30,13 @@ Install npm, then `npm install` and `npm run-script build`. If you're editing
 JS, you can run `npm run-script watch` to automatically re-build when files
 change.
 
+## Bloom filter
+
+The test suite uses a Bloom filter to validate known codes. The filter is built with the `data/build_bf.py` script, but requires a number of external databases to be downloaded first. As a convenience, we maintain a prebuilt filter, which is downloaded every time the container starts.
+
 ## Running the test suite
 
-To run the suite, run `behave` with `VENDOR` like `smart` or another value from https://github.com/sync-for-science/test-suite/tree/master/config.
-
-```
-$ VENDOR=smart xvfb-run --server-args="-screen 0, 1024x768x24" -a behave
-Feature: requesting FHIR objects
-
-  Scenario: Secret data is secret
-    Given I am not logged in                     # 0.000s
-    When I request a Patient by id smart-1288992 # 0.007s
-    Then the response code should be 401         # 0.000s
-
-  Scenario: Patients have IDs
-    Given I am logged in                         # 0.006s
-    When I request a Patient by id smart-1288992 # 0.019s
-    Then the response code should be 200         # 0.000s
-    And it will have an ID                       # 0.000s
-
-  Scenario: Bundles have the right type
-    Given I am logged in                   # 0.015s
-    When I search for Patients             # 0.036s
-    Then the bundle type will be searchset # 0.000s
-
-1 feature passed, 0 failed, 0 skipped
-3 scenarios passed, 0 failed, 0 skipped
-10 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 0m0.085s
-```
+Navigate to `http://localhost:9003/` (or whichever port you've selected), then select the vendor you'd like to test and the types of test you'd like to perform, and optionally any custom configuration as outlined [here](config/README.md). The tests are run as Celery tasks, and the interface is updated in realtime as the results are ready.
 
 ## Testing the test suite
 
