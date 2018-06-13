@@ -20,11 +20,12 @@ WARNINGS AND FAILURES
         {% for step in element.steps -%}
             {% if step.result is defined -%}
                 {% if step.result.status != "passed" %}
+                    {% set error = step.result.get('error_message', '').split('\n') %}
 Name : {{ step.name }}
 {% if 'warning' in element.tags -%}
-Warning : {{ step.result.error_message|first }}
+Warning : {{ error|first }}
 {% else -%}
-Error : {{ step.result.error_message|first }}
+Error : {{ error|first }}
 {% endif -%}
                 {% endif -%}
             {% endif -%}
