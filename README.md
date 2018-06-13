@@ -1,10 +1,10 @@
 # S4S Testsuite
 
-Framework for testing S4S API implementations. The interface is a Flask application, and the tests themselves are run as Celery tasks. The tests are written using the behave framework.
+Framework for testing S4S API implementations. The interface is a [Flask](http://flask.pocoo.org/) application, and the tests themselves are run as [Celery](http://www.celeryproject.org/) tasks. The tests are written using the [behave](http://behave.readthedocs.io/en/stable/index.html) framework.
 
 ## Build and run in Docker
 
-We use Docker to set up all the required services and run the test server.
+We use [Docker](https://www.docker.com/) to set up all the required services and run the test server.
 
     git clone https://github.com/sync-for-science/test-suite
     cd test-suite
@@ -26,13 +26,13 @@ If you want to develop on the app using Docker, mount the repository on the cont
 
 ### Building the js app (for development)
 
-Install npm, then `npm install` and `npm run-script build`. If you're editing
+Install [npm](https://www.npmjs.com/), then `npm install` and `npm run-script build`. If you're editing
 JS, you can run `npm run-script watch` to automatically re-build when files
 change.
 
 ## Bloom filter
 
-The test suite uses a Bloom filter to validate known codes. The filter is built with the `data/build_bf.py` script, but requires a number of external databases to be downloaded first. As a convenience, we maintain a prebuilt filter, which is downloaded every time the container starts.
+The test suite uses a [Bloom filter](https://en.wikipedia.org/wiki/Bloom_filter) to validate known codes. The filter is built with the `data/build_bf.py` script, but requires a number of external databases to be downloaded first. As a convenience, we maintain a prebuilt filter, which is downloaded every time the container starts.
 
 ## Running the test suite
 
