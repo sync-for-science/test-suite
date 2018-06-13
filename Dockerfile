@@ -37,5 +37,6 @@ COPY . /usr/src/app
 ENV FLASK_APP "/usr/src/app/app.py"
 ENV FLASK_SECRET_KEY "ssssssssssh"
 ENV SQLALCHEMY_DATABASE_URI "sqlite:///db/db.sqlite3"
+ENV BLOOM_FILTER_URL https://s3.amazonaws.com/fhir-code-validation/codes.bf
 
 CMD supervisord -c supervisord.conf
