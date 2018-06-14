@@ -1,5 +1,5 @@
 #!/bin/sh
 
 flask initdb
-flask update_bloom_filter
+flask get_bloom_filter
 supervisorctl start after:*

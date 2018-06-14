@@ -6,6 +6,8 @@ from flask import jsonify, render_template, request, session, current_app
 from werkzeug import exceptions
 import flask_socketio
 
+import click
+
 from testsuite.application import app
 from testsuite.extensions import db, socketio
 from testsuite.models.testrun import TestRun
@@ -13,6 +15,8 @@ from testsuite import tasks
 
 import requests
 import os.path
+
+BLOOM_FILE = './data/codes.bf'
 
 ALL_TAGS = ["allergies-and-intolerances", "immunizations",
             "lab-results", "medication-administrations",
@@ -103,7 +107,7 @@ def authorized():
     exceptions.abort(500)
 
 
-@app.route('/health_summary/')
+@app.route('/health_summary')
 def health_summary():
 
     latest_results = {}
@@ -120,7 +124,7 @@ def health_summary():
     return render_template('health_summary.html', vendors=vendors, latest_results=latest_results)
 
 
-@app.route('/update_bloom', methods=['GET'])
+@app.route('/update_bloom_filter', methods=['POST'])
 def update_bloom_filter_endpoint():
     return jsonify(update_bloom_filter())
 
@@ -158,13 +162,12 @@ def initdb():
 
 def update_bloom_filter():
     bloom_file_status = {}
-    bloom_file = './data/codes.bf'
 
     try:
         r = requests.get(current_app.config['BLOOM_FILTER_URL'])
         r.raise_for_status()
 
-        with open(bloom_file, 'wb') as f:
+        with open(BLOOM_FILE, 'wb') as f:
             f.write(r.content)
 
     except requests.exceptions.RequestException as e:
@@ -172,11 +175,13 @@ def update_bloom_filter():
     except IOError as e:
         bloom_file_status['error'] = "Error writing Bloom Filter File -- %s" % str(e)
 
-    bloom_file_status['bloom_in_place'] = os.path.isfile(bloom_file)
+    bloom_file_status['bloom_in_place'] = os.path.isfile(BLOOM_FILE)
 
     return bloom_file_status
 
 
-@app.cli.command(name='update_bloom_filter')
-def cmd():
-    update_bloom_filter()
+@app.cli.command(help='Download the Bloom filter (does not overwrite by default)')
+@click.option('--force', '-f', is_flag=True, help='overwrite existing Bloom filter')
+def get_bloom_filter(force):
+    if force or not os.path.isfile(BLOOM_FILE):
+        update_bloom_filter()
