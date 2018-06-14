@@ -613,7 +613,6 @@ $(function () {
   });
 
   $('.container').on('click', '.info-window', function (event) {
-    console.log('running');
     var data = $(event.currentTarget).data('info');
     window.open().document.write(info_tmpl({message: atob(data)}));
   });

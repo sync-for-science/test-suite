@@ -19,13 +19,15 @@ WARNINGS AND FAILURES
     {% for element in feature.elements -%}
         {% for step in element.steps -%}
             {% if step.result is defined -%}
-                {% if step.result.status != "passed" %}
-                    {% set error = step.result.get('error_message', '').split('\n') %}
+                {% if step.result.status != "passed" -%}
+                    {# grab only the first line of the error message, which
+                       typically contains the summary of the problem -#}
+                    {% set error = step.result.get('error_message', '').split('\n')[0] %}
 Name : {{ step.name }}
 {% if 'warning' in element.tags -%}
-Warning : {{ error|first }}
+Warning : {{ error }}
 {% else -%}
-Error : {{ error|first }}
+Error : {{ error }}
 {% endif -%}
                 {% endif -%}
             {% endif -%}
