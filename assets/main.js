@@ -10,6 +10,7 @@ var features_tmpl = require('./templates/features.hbs');
 var loading_tmpl = require('./templates/loading.hbs');
 var report_tmpl = require('./templates/report.hbs');
 var error_tmpl = require('./templates/error.hbs');
+var info_tmpl = require('./templates/info.hbs');
 var errorNavigation = require('./error-navigation.js');
 var summarize = require('./summarize.js');
 var report = require('./report.js');
@@ -189,6 +190,11 @@ $(function () {
   });
   $('#toggle-none-tags').on('click', function (event) {
     $('#tags').find('.label-info').click();
+  });
+
+  $('.container').on('click', '.info-window', function (event) {
+    var data = $(event.currentTarget).data('info');
+    window.open().document.write(info_tmpl({message: atob(data)}));
   });
 
   var state = stateManager.load();

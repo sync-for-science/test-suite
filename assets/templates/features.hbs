@@ -30,8 +30,9 @@
                                     <td>{{ method }}</td>
                                     <td>
                                         <a
-                                            href="data:text/plain;base64,{{ base64 response }}"
-                                            target="_blank">
+                                            href="#"
+                                            class="info-window"
+                                            data-info="{{ base64 response }}">
                                             {{ url }}
                                         </a>
                                     </td>
@@ -81,8 +82,9 @@
                                     -->
                                     <br>
                                     <a
-                                        href="data:text/plain;base64,{{ base64 result.error_message }}"
-                                        target="_blank">
+                                        href="#"
+                                        class="info-window"
+                                        data-info="{{ base64 result.error_message }}">
                                         See failure details <span class="glyphicon glyphicon-new-window"></span>
                                     </a>
                                     <br>
