@@ -17,6 +17,7 @@ auth:
       # client_secret intentionally included
       client_secret: argonaut
       scope: launch/patient patient/*.read offline_access
+      redirect_uri: http://tests.dev.syncfor.science:9003/authorized/
       confidential_client: True
       sign_in_steps:
         - element: "#Login"

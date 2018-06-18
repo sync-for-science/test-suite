@@ -16,6 +16,7 @@ auth:
       # client_secret intentionally included
       client_secret: demo-secret-s4s
       scope: launch/patient patient/*.read offline_access
+      redirect_uri: http://tests.dev.syncfor.science:9003/authorized/
       confidential_client: True
       sign_in_steps:
         - element: '#sign-in'

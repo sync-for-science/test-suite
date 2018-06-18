@@ -17,6 +17,7 @@ auth:
       # client_secret intentionally included
       client_secret: Ym0ZYTtSjrQM7ZqLfkMKuj1exRmuIKbBCQR+HDoDQgtEb4ZiDhyE1dDk9S3h2vfMRdxvzV18KMhv7Fz0dPiP6w==
       scope: launch/patient patient/*.read offline_access
+      redirect_uri: http://tests.dev.syncfor.science:9003/authorized/
       confidential_client: True
       sign_in_steps:
         - element: "[translate='DEFAULT_LOGIN_BUTTON']"
