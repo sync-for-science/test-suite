@@ -11,6 +11,9 @@ use_cases:
 auth:
   versions:
     STU3:
+      authorize_url_rewrite:
+        from_host: localhost:9006
+        to_host: smart-stu3:5000
       strategy: authorization_code
       client_id: test-suite
       # client_secret intentionally included
