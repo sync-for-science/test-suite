@@ -229,7 +229,7 @@ class Authorizer(object):
                 authorize_url_rewrite['from_host'],
                 authorize_url_rewrite['to_host']
             )
-            self.log.info('Rewriting authorize URL to: {}'.format(authorize_url))
+            self.log.info('Rewriting authorize URL to: %s', authorize_url)
 
         self.runner.get(authorize_url)
 
