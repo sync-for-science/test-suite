@@ -109,9 +109,9 @@ def step_impl(context, field_name):
 
     del fields[field_name]
 
-    uris = fhir.get_oauth_uris(context.conformance)
+    authorize_uri = get_authorize_uri(context)
 
-    response = requests.get(uris['authorize'],
+    response = requests.get(authorize_uri,
                             params=fields,
                             allow_redirects=False,
                             timeout=5)
@@ -133,9 +133,9 @@ def step_impl(context):
 
     fields.update(dict(context.table))
 
-    uris = fhir.get_oauth_uris(context.conformance)
+    authorize_uri = get_authorize_uri(context)
 
-    response = requests.get(uris['authorize'],
+    response = requests.get(authorize_uri,
                             params=fields,
                             allow_redirects=False,
                             timeout=5)
@@ -412,3 +412,20 @@ def token_request(post_data, auth_config, conformance, request_method='POST'):
                                  auth=auth,
                                  timeout=timeout)
     return response
+
+
+def get_authorize_uri(context):
+    uris = fhir.get_oauth_uris(context.conformance)
+    authorize_uri = uris['authorize']
+
+    # in some cases, we might need to rewrite the authorize URL that comes
+    # from the conformance statement, such as when all the components are
+    # interacting through the docker network
+    authorize_url_rewrite = context.vendor_config['versioned_auth'].get('authorize_url_rewrite')
+    if authorize_url_rewrite:
+        authorize_uri = authorize_uri.replace(
+            authorize_url_rewrite['from_host'],
+            authorize_url_rewrite['to_host']
+        )
+
+    return authorize_uri

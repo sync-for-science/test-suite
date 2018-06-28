@@ -220,6 +220,17 @@ class Authorizer(object):
         authorize_url = self.authorize_url + '?' + parse.urlencode(parameters)
         self.log.info('AUTHORIZE URL: %s', authorize_url)
 
+        # in some cases, we might need to rewrite the authorize URL that comes
+        # from the conformance statement, such as when all the components are
+        # interacting through the docker network
+        authorize_url_rewrite = self.config.get('authorize_url_rewrite')
+        if authorize_url_rewrite:
+            authorize_url = authorize_url.replace(
+                authorize_url_rewrite['from_host'],
+                authorize_url_rewrite['to_host']
+            )
+            self.log.info('Rewriting authorize URL to: %s', authorize_url)
+
         self.runner.get(authorize_url)
 
     def provide_user_input(self):

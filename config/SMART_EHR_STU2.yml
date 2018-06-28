@@ -11,6 +11,9 @@ use_cases:
 auth:
   versions:
     DSTU2:
+      authorize_url_rewrite:
+        from_host: localhost:9000
+        to_host: smart:5000
       strategy: authorization_code
       client_id: test-suite
       # client_secret intentionally included
