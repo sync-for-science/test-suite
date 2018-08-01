@@ -11,7 +11,7 @@
         {{#testWasSkipped}}
             <span class="label label-default">skipped</span>
             {{#if skip_reason}}
-                <p class="alert alert-danger" style="white-space: pre-line">{{ skip_reason }}</p>
+                <div class="collapse in text-muted small" id="scenarios-{{dashify location}}">{{ skip_reason }}</div>
             {{/if}}
         {{else}}
             <div class="collapse {{#featureFailed}}in{{/featureFailed}}" id="scenarios-{{dashify location}}">
