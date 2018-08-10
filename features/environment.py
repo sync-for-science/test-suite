@@ -148,14 +148,15 @@ def before_feature(context, feature):
                              % (version, use_case))
 
     if skip_use_case:
-        feature.skip("Feature (%s) not in any use case." % feature)
+        feature.skip("Feature (%s) not in any use case." % feature.name)
+        return
 
     try:
         ignored_steps = context.vendor_config["ignored_steps"][feature.location.filename]
 
         for step in ignored_steps:
             if step == "all":
-                feature.skip("Feature (%s) requested skip by vendor." % feature)
+                feature.skip("Feature (%s) requested skip by vendor." % feature.name)
 
     except KeyError:
         pass
