@@ -27,9 +27,15 @@ auth:
         - element: "#submit"
           click: True
       authorize_steps:
+        - element: "#continueButton"
+          click: True
+        - element: "label[for=termsOfUseCheckbox]"
+          click: True
         - element: "[name=allowDataSharing]"
           click: True
       cancel_steps:
+        - element: "#continueButton"
+          click: True
         - element: "[name=denyDataSharing]"
           click: True
       revoke_url: https://open-ic.epic.com/MyChart/inside.asp?mode=oauthreview
