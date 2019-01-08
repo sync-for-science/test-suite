@@ -35,10 +35,10 @@ Feature: Vital signs
         And there is at least 1 Observation entry
         Then all the codes will be valid
 
-    Scenario: Observations have a value or DataAbsentReason
+    Scenario: Observations have a value or dataAbsentReason
         Given I have a Vital signs response
         And there is at least 1 Observation entry
-        Then one of the following paths exist: valueQuantity.value,component.valueQuantity.value,DataAbsentReason in Observation
+        Then one of the following paths exist: valueQuantity.value,component.valueQuantity.value,dataAbsentReason in Observation
 
     @warning
     Scenario: Resources fulfill the Argonaut Vital Signs profile
