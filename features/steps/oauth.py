@@ -330,6 +330,17 @@ def step_impl(context):
                                                 response)
 
 
+@then('the redirect URL should not be POSTed to')
+def step_impl(context):
+    try:
+        response = context.authorization_received
+        context.authorizer._validate_method(response)  # pylint: disable=protected-access
+    except AssertionError as err:
+        assert False, utils.bad_redirect_assert(err,
+                                                context.authorization_sent,
+                                                response)
+
+
 @then('the authorization error response error code should be "{error}"')
 def step_impl(context, error):
     try:

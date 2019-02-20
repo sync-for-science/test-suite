@@ -17,6 +17,14 @@ Feature: EHR evaluates authorization request
             | state | `%2B~!@#$%^&*()-_=+[{]}\;:'",<.>/? |
         Then the authorization response redirect should validate
 
+    Scenario: Request redirects with GET
+        Given OAuth is enabled
+        And I am not logged in
+        When I ask for authorization with the following override
+            | key | value |
+            | state | normal-state |
+        Then the redirect URL should not be POSTed to
+
     Scenario: Authorization request is aborted
         Given OAuth is enabled
         And I am not logged in

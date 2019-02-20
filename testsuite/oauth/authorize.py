@@ -18,6 +18,8 @@ from selenium.common.exceptions import (
 from selenium.webdriver.remote.remote_connection import RemoteConnection
 from selenium.webdriver.support.expected_conditions import visibility_of
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.remote.command import Command
 
 
 AUTHORIZE_TIMEOUT = 15
@@ -73,6 +75,14 @@ class StepRunner(object):
 
         try:
             elem = self.browser.find_element_by_css_selector(step['element'])
+
+            # redirect to HTTP URL may trigger an alert warning in Firefox
+            # which causes `elem` to be a string with the alert message;
+            # in this case just accept the alert and retry the step
+            if type(elem) is not WebElement:
+                self.browser.execute(Command.ACCEPT_ALERT)
+                self.execute_step(step)
+                return
 
             # Make sure the element is visible before we continue
             wait = WebDriverWait(self.browser, VISIBILITY_TIMEOUT)
@@ -297,6 +307,11 @@ class Authorizer(object):
         assert 'code' in query, 'Missing code parameter.'
 
         assert len(query['code']) == 1, 'Too many code parameters.'
+
+    def _validate_method(self, query):
+        method = query.get('method')
+        if method:
+            assert method[0].lower() != 'post', 'Redirect URL was POSTed to.'
 
 
 class AuthorizationRevoker(object):
