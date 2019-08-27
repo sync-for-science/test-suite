@@ -9,12 +9,11 @@ RUN apt-get install -y \
     supervisor
 
 #========
-# Firefox
+# Firefox ESR
 #========
-ENV FIREFOX_VERSION 45.0.2
-# Install iceweasel so that we have all the firefox dependencies
-RUN apt-get install -y iceweasel \
-    && apt-get purge -y iceweasel
+ENV FIREFOX_VERSION 68.0
+RUN apt-get install -y firefox-esr \
+    && apt-get purge -y firefox-esr
 # Install the firefox binary
 RUN wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2 \
     && rm -rf /opt/firefox \
@@ -39,4 +38,4 @@ ENV FLASK_SECRET_KEY "ssssssssssh"
 ENV SQLALCHEMY_DATABASE_URI "sqlite:///db/db.sqlite3"
 ENV BLOOM_FILTER_URL https://s3.amazonaws.com/fhir-code-validation/codes.bf
 
-CMD supervisord -c supervisord.conf
+CMD ["supervisord", "-c", "supervisord.conf"]
