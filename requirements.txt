@@ -43,7 +43,7 @@ pytest-cov==2.2.1
 python-engineio==1.0.3
 python-socketio==1.6.0
 pytz==2016.7
-PyYAML==3.11
+PyYAML==5.4
 redis==2.10.5
 requests==2.18.4
 selenium==2.53.2
